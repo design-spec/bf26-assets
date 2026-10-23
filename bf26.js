@@ -786,7 +786,7 @@
   // фон hero «Side Rays» (WebGL): окремий файл, лише десктоп, після повного завантаження; інакше — CSS-сяйво
   function initRays() {
     if (!$('[data-bf-rays]') || reduceMotion || !(window.matchMedia && matchMedia('(min-width: 992px)').matches)) return;
-    var me = $('script[src*="bf26.js"]'), base = me ? me.src.replace(/bf26\.js.*$/, '') : 'https://bf26-allright.netlify.app/';
+    var me = $('script[src*="bf26.js"]'), base = me ? me.src.replace(/bf26\.js.*$/, '') : 'https://cdn.jsdelivr.net/gh/design-spec/bf26-assets@v1.0.0/';
     var go = function () {
       (window.requestIdleCallback || function (f) { setTimeout(f, 300); })(function () {
         var s = doc.createElement('script'); s.src = base + 'bf26-rays.js'; s.async = true; doc.head.appendChild(s);
