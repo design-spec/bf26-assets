@@ -1,0 +1,104 @@
+/* BF26 Black Friday — CSS станів і анімацій (підключається в <head> з Netlify). Кольори — лише змінні BF26 Dark */
+html[data-bf-state="ended"] [data-bf-show="before"],html:not([data-bf-state="ended"]) [data-bf-show="after"]{display:none !important}
+html:not([data-bf-eu]) [data-bf-eu-only]{display:none !important}
+html:not(.bf-js) [data-bf-countdown]{display:none !important}
+.bf_page [hidden]{display:none !important}
+.bf-js [data-bf-card]:not(.is-ready) [data-step]:not([data-step="1"]),.bf-js [data-bf-card].is-ready [data-step]:not(.is-active){display:none !important}
+html:not(.bf-js) [data-bf-card] [data-act],html:not(.bf-js) [data-bf-card] [data-stepc]{display:none !important}
+html:not(.bf-js) [data-bf-card] [data-step]+[data-step]{margin-top:32px}
+[data-bf-card]:not(.is-done) [data-bf-done]{display:none !important}
+[data-bf-card].is-done .w-form{display:none !important}
+[data-bf-card][data-quiz-step="1"] [data-act="back"]{visibility:hidden}
+.bf_tile input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+html:not(.bf-js) .bf_tile input{position:static;opacity:1;width:auto;height:auto;pointer-events:auto}
+.bf_tile:has(input:checked),.bf_tile.is-selected{border-color:var(--_bf26-dark---bf-accent,#fe8b21) !important;background-color:var(--_bf26-dark---bf-accent-soft,rgba(254,139,33,.16)) !important}
+.bf_tile:has(input:focus-visible),[data-bf-card] :focus-visible,[data-bf-cta]:focus-visible,[data-bf-faq-q]:focus-visible,[data-bf-video-play]:focus-visible{outline:2px solid var(--_bf26-dark---bf-accent,#fe8b21);outline-offset:2px}
+.bf-js .bf_tile.w-radio,.bf-js .bf_tile.w-checkbox{padding-left:16px}
+.bf-js .bf_qgrid-age .bf_tile{justify-content:center;padding-left:4px;padding-right:4px}
+.bf_qgrid-age .bf_tile-label{flex-grow:0;text-align:center}
+.bf_tile:hover{border-color:var(--_bf26-dark---bf-border-strong,rgba(255,255,255,.32))}
+.bf_qlegend:focus,.bf_qtitle:focus{outline:none}
+.bf_qerr:empty{display:none}
+.bf_qnext.is-disabled,.bf_qnext[disabled]{opacity:.45;cursor:not-allowed}
+.bf_qnext[aria-busy="true"]{cursor:progress}
+.bf_input.is-error{border-color:var(--_bf26-dark---bf-error,#ff6b6b) !important}
+.bf_check input{width:20px;height:20px;flex:none;margin:0}
+.bf_phone .bf_input{flex:1;min-width:0}
+.bf_phone.has-iti [data-phone-code]{display:none !important}
+.bf_phone .iti{display:block;width:100%}
+.bf_phone .iti input.bf_input{width:100%}
+.iti__country-list{z-index:60;max-height:280px;width:min(440px,86vw);color:var(--haiti,#180d25);font-size:16px;border-radius:12px}
+.iti--separate-dial-code .iti__selected-dial-code{color:var(--haiti,#180d25);font-size:16px}
+[dir="rtl"] .bf_phone,[dir="rtl"] .bf_phone .iti{direction:ltr}
+[dir="rtl"] .bf_input[type="tel"],[dir="rtl"] .bf_input[type="email"]{direction:ltr;text-align:right}
+.bf_chips:empty{display:none}
+.bf_packages:empty{display:none}
+[data-bf-faq-a][hidden]{display:none !important}
+[data-bf-video]{position:relative}
+.bf_video-frame{position:absolute;inset:0;width:100%;height:100%;border:0}
+[data-bf-video].is-playing [data-bf-video-play]{display:none}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* «Як працює резервування» — колода карт (як Stuff we've done на CAH) */
+.bf_sticker{clip-path:polygon(50.0% 0.0%,59.3% 9.1%,71.7% 5.0%,76.2% 17.2%,89.1% 18.8%,87.8% 31.8%,98.7% 38.9%,92.0% 50.0%,98.7% 61.1%,87.8% 68.2%,89.1% 81.2%,76.2% 82.8%,71.7% 95.0%,59.3% 90.9%,50.0% 100.0%,40.7% 90.9%,28.3% 95.0%,23.8% 82.8%,10.9% 81.2%,12.2% 68.2%,1.3% 61.1%,8.0% 50.0%,1.3% 38.9%,12.2% 31.8%,10.9% 18.8%,23.8% 17.2%,28.3% 5.0%,40.7% 9.1%);animation:bf-wobble 5s ease-in-out infinite}
+@keyframes bf-wobble{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(8deg) scale(1.04)}}
+[data-bf-deal]:nth-child(1){--bf-r:-2deg}[data-bf-deal]:nth-child(2){--bf-r:1.5deg;transition-delay:.12s}[data-bf-deal]:nth-child(3){--bf-r:-1deg;transition-delay:.24s}
+[data-bf-deal]{transform:rotate(var(--bf-r,0deg));transition:opacity .6s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.bf-js [data-bf-deck]:not(.is-in) [data-bf-deal]{opacity:0;transform:translateY(90px) rotate(calc(var(--bf-r,0deg) * 4))}
+[data-bf-deck].is-in [data-bf-deal]:hover{transform:translateY(-10px) rotate(0deg);transition-delay:0s}
+@media (max-width:991px){[data-bf-deal]{--bf-r:0deg !important}}
+@media (prefers-reduced-motion:reduce){.bf_sticker{animation:none}.bf-js [data-bf-deck] [data-bf-deal],[data-bf-deal]{opacity:1 !important;transform:none !important;transition:none !important}}
+/* стрічка нагород */
+[data-bf-marquee]{position:relative;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%)}
+[data-bf-marquee].is-dragging{cursor:grabbing}
+[data-bf-marquee] .is-marquee{width:max-content;will-change:transform}
+[data-bf-marquee] img{pointer-events:none;-webkit-user-drag:none}
+/* hero: розкидані карти (як CAH) або фото */
+html[data-bf-hero="cards"] [data-bf-hero-photo]{display:none !important}
+html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
+[data-bf-pcard]:nth-child(1){left:0;top:46px;--bf-r:-9deg;--bf-fx:-80px}
+[data-bf-pcard]:nth-child(2){left:22%;top:0;--bf-r:6deg;--bf-fx:-20px}
+[data-bf-pcard]:nth-child(3){left:46%;top:58px;--bf-r:-4deg;--bf-fx:40px}
+[data-bf-pcard]:nth-child(4){left:8%;top:180px;--bf-r:11deg;--bf-fx:-60px}
+[data-bf-pcard]:nth-child(5){left:34%;top:196px;--bf-r:-13deg;--bf-fx:10px}
+[data-bf-pcard]:nth-child(6){left:62%;top:168px;--bf-r:7deg;--bf-fx:80px}
+[data-bf-pcard]{transform:rotate(var(--bf-r,0deg));transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.bf-js [data-bf-pcard]{animation:bf-deal-in .9s cubic-bezier(.2,.8,.2,1) backwards}
+.bf-js [data-bf-pcard]:nth-child(1){animation-delay:.2s}.bf-js [data-bf-pcard]:nth-child(2){animation-delay:.32s}.bf-js [data-bf-pcard]:nth-child(3){animation-delay:.44s}.bf-js [data-bf-pcard]:nth-child(4){animation-delay:.56s}.bf-js [data-bf-pcard]:nth-child(5){animation-delay:.68s}.bf-js [data-bf-pcard]:nth-child(6){animation-delay:.8s}
+.bf-js [data-bf-pcard].is-redeal{animation:bf-redeal 1.1s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:0s}
+@keyframes bf-deal-in{from{opacity:0;transform:translate(var(--bf-fx,0),120%) rotate(calc(var(--bf-r,0deg) + 38deg))}to{opacity:1;transform:rotate(var(--bf-r,0deg))}}
+@keyframes bf-redeal{0%{transform:rotate(var(--bf-r,0deg))}38%{opacity:0;transform:translate(30%,-90%) rotate(calc(var(--bf-r,0deg) - 30deg))}39%{opacity:0;transform:translate(var(--bf-fx,0),120%) rotate(calc(var(--bf-r,0deg) + 38deg))}100%{opacity:1;transform:rotate(var(--bf-r,0deg))}}
+[data-bf-pcard]:hover{transform:translateY(-14px) rotate(0deg);z-index:9}
+@media (prefers-reduced-motion:reduce){.bf-js [data-bf-pcard],.bf-js [data-bf-pcard].is-redeal{animation:none}}
+/* FAQ як на CAH: лінії (20% прозорості), «+» → «−», плавне розгортання; шрифти — як на всій сторінці */
+[data-bf-faq-q]::before,[data-bf-faq-q]::after{content:"";position:absolute;right:8px;top:50%;width:18px;height:2px;margin-top:-1px;border-radius:1px;background:currentColor;transition:transform .4s cubic-bezier(.12,.67,.53,1)}
+[data-bf-faq-q]::after{transform:rotate(90deg)}
+.is-open>[data-bf-faq-q]::after{transform:rotate(0deg)}
+.bf-js [data-bf-faq-a]{overflow:hidden;transition:height .4s cubic-bezier(.12,.67,.53,1)}
+[data-bf-faq-a] .w-richtext{padding-bottom:24px}
+@media (max-width:767px){[data-bf-faq-q]::before,[data-bf-faq-q]::after{width:16px;right:4px}[data-bf-faq-a] .w-richtext{padding-bottom:18px}}
+@media (prefers-reduced-motion:reduce){.bf-js [data-bf-faq-a],[data-bf-faq-q]::after{transition:none}}
+/* фон hero: Side Rays (WebGL з bf26-rays.js) поверх CSS-сяйва з того ж кута; на мобільному і з «зменшенням руху» — лише сяйво */
+.bf_hero{position:relative;isolation:isolate}
+[data-bf-rays]{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse 75% 65% at 100% 0%,rgba(124,58,237,.42),rgba(124,58,237,0) 70%)}
+[data-bf-rays].is-webgl{background:none}
+.bf_rays-canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
+/* «Що входить у навчання» як на pika.art: десктоп — липке зображення ліворуч + розкриті картки, зображення перемикається під активну;
+   мобільний — картки з власним зображенням «наїжджають» одна на одну. Іконки — SVG-маски нижче */
+.bf_feat-icon::before{content:"";position:absolute;inset:0;margin:auto;width:50%;height:50%;background-color:currentColor;-webkit-mask:var(--bf-icon) center/contain no-repeat;mask:var(--bf-icon) center/contain no-repeat}
+[data-icon="lesson"]{--bf-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='13' rx='2'/%3E%3Ccircle cx='12' cy='9.5' r='2.5'/%3E%3Cpath d='M7.5 17c.8-2.3 2.5-3.5 4.5-3.5s3.7 1.2 4.5 3.5'/%3E%3Cpath d='M9 21h6'/%3E%3C/svg%3E")}
+[data-icon="interests"]{--bf-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 8h10a4 4 0 0 1 4 4v2a2.5 2.5 0 0 1-4.6 1.4L15 14H9l-1.4 1.4A2.5 2.5 0 0 1 3 14v-2a4 4 0 0 1 4-4z'/%3E%3Cpath d='M8 10.5v3M6.5 12h3'/%3E%3Cpath d='M15.5 11h.01M17.5 13h.01'/%3E%3C/svg%3E")}
+[data-icon="clubs"]{--bf-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h10a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H9l-3.5 3v-3H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z'/%3E%3Cpath d='M18 8h2a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1v3l-3.5-3H12a2 2 0 0 1-2-2'/%3E%3C/svg%3E")}
+[data-icon="refund"]{--bf-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z'/%3E%3Cpath d='M8.5 12l2.5 2.5 4.5-5'/%3E%3C/svg%3E")}
+[data-bf-feat-media]{opacity:0;transform:scale(1.04);transition:opacity .6s ease,transform 1s cubic-bezier(.2,.8,.2,1)}
+[data-bf-feat-media].is-active,html:not(.bf-js) [data-bf-feat-media]:first-child{opacity:1;transform:none}
+@media (min-width:992px){
+  .bf_feat-card{min-height:var(--bf-feat-h,420px);transition:background-color .4s}
+  .bf-js .bf_feat-card.is-active,.bf-js .bf_feat-card:hover{background-color:var(--_bf26-dark---bf-surface-raised,#251c33)}
+}
+@media (max-width:991px){
+  .bf_feat-slot [data-bf-feat-media]{opacity:1;transform:none}
+  [data-bf-feat]:nth-child(2){top:78px}[data-bf-feat]:nth-child(3){top:88px}[data-bf-feat]:nth-child(4){top:98px}
+  .bf_feat-card{box-shadow:0 -10px 30px rgba(0,0,0,.35)}
+}
+@media (prefers-reduced-motion:reduce){[data-bf-feat-media],.bf_feat-card{transition:none !important}}
+
