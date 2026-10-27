@@ -475,6 +475,21 @@
     setHidden(form, 'child_hobby', S.child_hobby.join(','));
     setHidden(form, 'quiz_version', CFG.quizVersion);
     setHidden(form, 'lead_temp', leadTemp());
+    setHidden(form, 'goals', goalsText());
+  }
+
+  // index.js не пропускає activities/study_period/start_timing/consent_marketing/quiz_version/lead_temp,
+  // тому за запасним планом ТЗ (розділ 5) склеюємо їх у goals; маркер bf26 — для пошуку лідів у CRM
+  function goalsText() {
+    var parts = [CFG.quizVersion,
+      'гуртки: ' + (S.activities.join(', ') || '—'),
+      'частота: ' + (S.lessons_frequency || '—'),
+      'період: ' + (S.study_period || '—'),
+      'старт: ' + (S.start_timing || '—'),
+      'інтереси: ' + (S.child_hobby.join(', ') || '—'),
+      'lead_temp: ' + leadTemp()];
+    if (L.eu) parts.push('згода на розсилку: ' + (S.consent_marketing ? 'yes' : 'no'));
+    return parts.join(' | ');
   }
 
   var pending = null;   // { card, place, timer }
