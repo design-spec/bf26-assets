@@ -102,3 +102,11 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 }
 @media (prefers-reduced-motion:reduce){[data-bf-feat-media],.bf_feat-card{transition:none !important}}
 
+
+/* ціни як на allright.com: світіння картки й помаранчева кнопка при наведенні, клікабельна вся картка */
+.bf_pkg{transition:box-shadow .3s cubic-bezier(.4,0,.2,1);cursor:pointer}
+.bf_pkg:hover,.bf_pkg:focus-within{box-shadow:0 0 64px 0 rgba(255,255,255,.16)}
+.bf_pkg-cta{border:1px solid transparent;transition:all .3s cubic-bezier(.4,0,.2,1)}
+.bf_pkg-cta::after{content:"";position:absolute;inset:0;border-radius:32px}
+.bf_pkg:hover .bf_pkg-cta,.bf_pkg-cta:focus-visible{background-color:#f2790a;border-color:#f2790a;color:#fff;box-shadow:0 4px 20px 0 rgba(32,32,41,.08)}
+@media (prefers-reduced-motion:reduce){.bf_pkg,.bf_pkg-cta{transition:none}}
