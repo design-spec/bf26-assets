@@ -10,7 +10,7 @@
   box.__bfRays = true;
 
   var O = Object.assign({
-    rayColor1: '#7c3aed', rayColor2: '#7c3aed', blend: 0.6, origin: 'top-right', speed: 2.5, intensity: 2, spread: 2,
+    rayColor1: '#9762fd', rayColor2: '#9762fd', blend: 0.6, origin: 'top-right', speed: 2.5, intensity: 2, spread: 2,
     density: 5, sharpness: 0.5, tilt: 0, falloff: 1.6, glow: 1, saturation: 1, dust: 0, followMouse: true,
     mouseInfluence: 0.5, intro: true, opacity: 1, maxDevicePixelRatio: 1, pixelBudget: 1.2e6
   }, window.BF26_RAYS || {});
