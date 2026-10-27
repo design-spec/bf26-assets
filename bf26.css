@@ -111,29 +111,18 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf_pkg:hover .bf_pkg-cta,.bf_pkg-cta:focus-visible{background-color:#f2790a;border-color:#f2790a;color:#fff;box-shadow:0 4px 20px 0 rgba(32,32,41,.08)}
 @media (prefers-reduced-motion:reduce){.bf_pkg,.bf_pkg-cta{transition:none}}
 
-/* фінальний блок «Зарезервуйте» як CTA-11 на React Bits: об'ємна фіолетова панель зі світловими смугами і сяйвом позаду.
-   Панель і сяйво мають фіксовану висоту й тануть донизу (mask), тож не стрибають, коли висота квізу змінюється між кроками */
-.bf_repeat{position:relative;isolation:isolate}
-.bf_repeat>.bf_container{position:relative;isolation:isolate;max-width:min(1280px,calc(100% - 64px));min-height:var(--bf-panel-h,520px);padding:72px 64px}
-.bf_repeat>.bf_container::before,.bf_repeat>.bf_container::after{content:"";position:absolute;left:0;right:0;top:0;height:var(--bf-panel-h,520px);pointer-events:none}
-.bf_repeat>.bf_container::after{-webkit-mask-image:linear-gradient(180deg,#000 45%,transparent 100%);mask-image:linear-gradient(180deg,#000 45%,transparent 100%)}
-/* сяйво позаду — лише радіальні градієнти: filter:blur з анімацією на macOS Chrome дає GPU-шар з іншим відтінком фону (темна смуга на всю ширину) */
-.bf_repeat>.bf_container::before{z-index:-2;left:-80px;right:-80px;top:-60px;height:calc(var(--bf-panel-h,520px) * .9);background:radial-gradient(45% 50% at 28% 40%,rgba(255,122,39,.16),rgba(255,122,39,0) 70%),radial-gradient(50% 55% at 70% 35%,rgba(82,39,255,.30),rgba(82,39,255,0) 70%),radial-gradient(40% 45% at 50% 15%,rgba(255,159,252,.14),rgba(255,159,252,0) 70%)}
-.bf_repeat>.bf_container::after{z-index:-1;border-radius:32px 32px 0 0;border:1px solid rgba(255,255,255,.16);border-bottom:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 24px 64px rgba(255,255,255,.08);
-  background:linear-gradient(90deg,transparent 0 22%,rgba(255,255,255,.08) 24%,transparent 27% 34%,rgba(255,255,255,.13) 35.5%,transparent 37% 44%,rgba(255,255,255,.06) 47%,transparent 50% 56%,rgba(255,255,255,.11) 57%,transparent 58.5% 66%,rgba(255,255,255,.06) 69%,transparent 72%),
-    radial-gradient(ellipse 60% 70% at 18% 0%,rgba(196,160,255,.55),rgba(196,160,255,0) 60%),linear-gradient(160deg,#7b45f0 0%,#5a24d6 50%,#3a1499 100%);
-  background-size:140% 100%,100% 100%,100% 100%;background-repeat:no-repeat;animation:bf-beams 14s ease-in-out infinite alternate}
-@keyframes bf-beams{from{background-position:0 0,0 0,0 0}to{background-position:100% 0,0 0,0 0}}
+/* фінальний блок «Зарезервуйте»: статична фіолетова панель (без анімацій і сяйва). Мінімальна висота тримає розмір панелі на кроках 1–6 квізу,
+   вміст притиснутий до верху — квіз не «плаває», коли змінюється його висота */
+.bf_repeat>.bf_container{max-width:min(1280px,calc(100% - 64px));min-height:600px;padding:72px 64px;align-items:start;border-radius:32px;border:1px solid rgba(255,255,255,.14);
+  background:radial-gradient(ellipse 60% 70% at 15% 0%,rgba(196,160,255,.45),rgba(196,160,255,0) 60%),linear-gradient(160deg,#7b45f0 0%,#5a24d6 50%,#3a1499 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 30px 60px -24px rgba(8,4,24,.8)}
 .bf_repeat .bf_quiz{background-color:#140f24;border-color:rgba(255,255,255,.12);box-shadow:0 30px 60px -12px rgba(10,4,32,.7),0 12px 24px -8px rgba(10,4,32,.5)}
-@media (max-width:991px){.bf_repeat>.bf_container::before{left:0;right:0;top:-30px}.bf_repeat>.bf_container{max-width:none;margin-left:16px;margin-right:16px;padding:48px 24px 32px;--bf-panel-h:500px}.bf_repeat>.bf_container::after{border-radius:28px 28px 0 0}}
-@media (max-width:479px){.bf_repeat>.bf_container{padding:40px 16px 16px;--bf-panel-h:460px}.bf_repeat>.bf_container::after{border-radius:24px 24px 0 0}}
-@media (prefers-reduced-motion:reduce){.bf_repeat>.bf_container::after{animation:none}}
+@media (max-width:991px){.bf_repeat>.bf_container{max-width:none;min-height:0;margin-left:16px;margin-right:16px;padding:48px 24px 32px;border-radius:28px}}
+@media (max-width:479px){.bf_repeat>.bf_container{margin-left:8px;margin-right:8px;padding:40px 8px 8px;border-radius:24px}.bf_repeat .bf_hero-text{padding-left:12px;padding-right:12px}}
 /* clearfix-псевдоелементи .w-radio/.w-checkbox у flex-плитці стають елементами ряду і забирають 2 × gap — прибираємо */
 .bf_tile.w-radio::before,.bf_tile.w-radio::after,.bf_tile.w-checkbox::before,.bf_tile.w-checkbox::after{display:none}
 /* мобільний квіз: ширша картка і менші відступи, щоб довгі варіанти («Програмування», «Англійська з репетитором…») вміщалися */
 @media (max-width:479px){
-  .bf_repeat>.bf_container{margin-left:8px;margin-right:8px;padding:40px 8px 8px}
-  .bf_repeat .bf_hero-text{padding-left:12px;padding-right:12px}
   .bf_quiz{padding:24px 16px}
   .bf-js .bf_tile.w-radio,.bf-js .bf_tile.w-checkbox,.bf_tile{padding-left:12px;padding-right:12px}
   .bf_tile-label{font-size:15px;overflow-wrap:break-word}
