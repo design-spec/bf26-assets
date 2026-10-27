@@ -111,11 +111,11 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf_pkg:hover .bf_pkg-cta,.bf_pkg-cta:focus-visible{background-color:#f2790a;border-color:#f2790a;color:#fff;box-shadow:0 4px 20px 0 rgba(32,32,41,.08)}
 @media (prefers-reduced-motion:reduce){.bf_pkg,.bf_pkg-cta{transition:none}}
 
-/* фінальний блок «Зарезервуйте»: статична фіолетова панель (без анімацій і сяйва). Мінімальна висота тримає розмір панелі на кроках 1–6 квізу,
+/* фінальний блок «Зарезервуйте»: статична фіолетова панель, градієнт тане до прозорого донизу (без анімацій, маски й blur). Мінімальна висота тримає розмір панелі на кроках 1–6 квізу,
    вміст притиснутий до верху — квіз не «плаває», коли змінюється його висота */
-.bf_repeat>.bf_container{max-width:min(1280px,calc(100% - 64px));min-height:600px;padding:72px 64px;align-items:start;border-radius:32px;border:1px solid rgba(255,255,255,.14);
-  background:radial-gradient(ellipse 60% 70% at 15% 0%,rgba(196,160,255,.45),rgba(196,160,255,0) 60%),linear-gradient(160deg,#7b45f0 0%,#5a24d6 50%,#3a1499 100%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 30px 60px -24px rgba(8,4,24,.8)}
+.bf_repeat>.bf_container{max-width:min(1280px,calc(100% - 64px));min-height:600px;padding:72px 64px;align-items:start;border-radius:32px;
+  background:radial-gradient(ellipse 60% 70% at 15% 0%,rgba(196,160,255,.45),rgba(196,160,255,0) 60%),linear-gradient(180deg,#6e38ec 0%,rgba(84,36,214,.9) 40%,rgba(58,20,153,0) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
 .bf_repeat .bf_quiz{background-color:#140f24;border-color:rgba(255,255,255,.12);box-shadow:0 30px 60px -12px rgba(10,4,32,.7),0 12px 24px -8px rgba(10,4,32,.5)}
 @media (max-width:991px){.bf_repeat>.bf_container{max-width:none;min-height:0;margin-left:16px;margin-right:16px;padding:48px 24px 32px;border-radius:28px}}
 @media (max-width:479px){.bf_repeat>.bf_container{margin-left:8px;margin-right:8px;padding:40px 8px 8px;border-radius:24px}.bf_repeat .bf_hero-text{padding-left:12px;padding-right:12px}}
