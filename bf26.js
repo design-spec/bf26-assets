@@ -336,6 +336,7 @@
     card.setAttribute('data-quiz-step', S.step);
     $$('[data-step]', form).forEach(function (f) { f.classList.toggle('is-active', +f.getAttribute('data-step') === S.step); });
     $$('[data-stepc]', card).forEach(function (el) { el.textContent = tpl(T.step, { n: S.step }); });
+    renderProgress(card);
     $$('[data-child-hint]', form).forEach(function (el) { el.hidden = S.who_user_is !== 'child'; });
     $$('[data-child-next]', form).forEach(function (el) { el.hidden = S.who_user_is !== 'child'; });
     $$('[data-step] [data-act=next]', form).forEach(function (b) {
@@ -590,6 +591,22 @@
     track('bf_booking_click', { place: place, transport_type: 'beacon' });
     var url = S.booking_url;
     setTimeout(function () { location.assign(url); }, 200);
+  }
+
+  // прогрес-бар під шапкою квізу (як на 10thbirthday): створюється один раз, ширина = крок / кількість кроків
+  function renderProgress(card) {
+    var bar = $('[data-bf-progress]', card), head = $('.bf_quiz-head', card);
+    if (!bar && head) {
+      bar = doc.createElement('div');
+      bar.className = 'bf_qprogress'; bar.setAttribute('data-bf-progress', ''); bar.setAttribute('role', 'progressbar');
+      bar.setAttribute('aria-valuemin', '1'); bar.setAttribute('aria-valuemax', String(LAST));
+      bar.innerHTML = '<span class="bf_qprogress-fill"></span>';
+      head.parentNode.insertBefore(bar, head.nextSibling);
+    }
+    if (!bar) return;
+    bar.setAttribute('aria-valuenow', String(S.step));
+    bar.setAttribute('aria-valuetext', tpl(T.step, { n: S.step }));
+    bar.firstChild.style.width = (S.step / LAST * 100) + '%';
   }
 
   function initQuiz() {

@@ -158,3 +158,9 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf_omnibus{margin-top:16px;margin-bottom:0;color:#b5b4be}
 @media (max-width:767px){.bf_terms .w-richtext p{font-size:17px}}
 @media (prefers-reduced-motion:reduce){.bf_hl,.bf_terms .w-richtext{transition:none}}
+
+/* прогрес-бар квізу (вставляє bf26.js під .bf_quiz-head), як на 10thbirthday */
+.bf_qprogress{height:8px;margin:0 0 24px;border-radius:8px;background:rgba(255,255,255,.1);overflow:hidden}
+.bf_qprogress-fill{display:block;width:0;height:100%;border-radius:inherit;background:#9762fd;transition:width .4s cubic-bezier(.4,0,.2,1)}
+[data-bf-card].is-done .bf_qprogress{display:none}
+@media (prefers-reduced-motion:reduce){.bf_qprogress-fill{transition:none}}
