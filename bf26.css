@@ -128,13 +128,15 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 @media (max-width:991px){.bf_repeat>.bf_container{margin-left:16px;margin-right:16px;padding:48px 24px 32px;--bf-panel-h:500px}.bf_repeat>.bf_container::after{border-radius:28px 28px 0 0}}
 @media (max-width:479px){.bf_repeat>.bf_container{padding:40px 16px 16px;--bf-panel-h:460px}.bf_repeat>.bf_container::after{border-radius:24px 24px 0 0}.bf_repeat>.bf_container::before{filter:blur(32px)}}
 @media (prefers-reduced-motion:reduce){.bf_repeat>.bf_container::before,.bf_repeat>.bf_container::after{animation:none}}
+/* clearfix-псевдоелементи .w-radio/.w-checkbox у flex-плитці стають елементами ряду і забирають 2 × gap — прибираємо */
+.bf_tile.w-radio::before,.bf_tile.w-radio::after,.bf_tile.w-checkbox::before,.bf_tile.w-checkbox::after{display:none}
 /* мобільний квіз: ширша картка і менші відступи, щоб довгі варіанти («Програмування», «Англійська з репетитором…») вміщалися */
 @media (max-width:479px){
   .bf_repeat>.bf_container{margin-left:8px;margin-right:8px;padding:40px 8px 8px}
   .bf_repeat .bf_hero-text{padding-left:12px;padding-right:12px}
   .bf_quiz{padding:24px 16px}
   .bf-js .bf_tile.w-radio,.bf-js .bf_tile.w-checkbox,.bf_tile{padding-left:12px;padding-right:12px}
-  .bf_tile-label{font-size:15px;overflow-wrap:break-word;hyphens:auto}
+  .bf_tile-label{font-size:15px;overflow-wrap:break-word}
   .bf_tile:has(.bf_badge){position:relative}
   .bf_tile .bf_badge{position:absolute;top:-11px;right:10px;margin:0}
 }
