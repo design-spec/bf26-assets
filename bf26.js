@@ -837,6 +837,37 @@
     decks.forEach(function (d) { io.observe(d); });
   }
 
+  // умови знижки у футері як Blur Highlight (React Bits): фрази з T.termsHighlight обгортаються в span.bf_hl,
+  // абзац проявляється з розмиття, підсвітка «заливається» зліва направо, коли футер з'являється на екрані
+  function markPhrase(p, phrase, i) {
+    var walker = doc.createTreeWalker(p, NodeFilter.SHOW_TEXT), node;
+    while ((node = walker.nextNode())) {
+      if (node.parentNode.classList && node.parentNode.classList.contains('bf_hl')) continue;
+      var at = node.nodeValue.indexOf(phrase);
+      if (at < 0) continue;
+      var hit = node.splitText(at); hit.splitText(phrase.length);
+      var span = doc.createElement('span');
+      span.className = 'bf_hl'; span.style.setProperty('--bf-i', i);
+      hit.parentNode.replaceChild(span, hit); span.appendChild(hit);
+      return true;
+    }
+    return false;
+  }
+
+  function initTerms() {
+    var box = $('[data-bf-terms]');
+    if (!box) return;
+    var n = 0;
+    $$('.w-richtext p', box).forEach(function (p) {
+      (T.termsHighlight || []).forEach(function (ph) { if (markPhrase(p, ph, n)) n++; });
+    });
+    if (!window.IntersectionObserver || reduceMotion) { box.classList.add('is-in'); return; }
+    var io = new IntersectionObserver(function (en) {
+      if (en[0].isIntersecting) { box.classList.add('is-in'); io.disconnect(); }
+    }, { rootMargin: '0px 0px -20% 0px', threshold: 0.3 });
+    io.observe(box);
+  }
+
   function initScroll() {
     var done = {}, busy = false;
     addEventListener('scroll', function () {
@@ -862,6 +893,7 @@
     initFaq();
     initEmptyBlocks();
     initDeck();
+    initTerms();
     initMarquee();
     initTable();
     initRays();
