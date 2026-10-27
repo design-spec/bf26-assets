@@ -114,7 +114,7 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 /* фінальний блок «Зарезервуйте» як CTA-11 на React Bits: об'ємна фіолетова панель зі світловими смугами і сяйвом позаду.
    Панель і сяйво мають фіксовану висоту й тануть донизу (mask), тож не стрибають, коли висота квізу змінюється між кроками */
 .bf_repeat{position:relative;isolation:isolate}
-.bf_repeat>.bf_container{position:relative;isolation:isolate;max-width:1200px;min-height:var(--bf-panel-h,520px);padding:72px 64px}
+.bf_repeat>.bf_container{position:relative;isolation:isolate;max-width:min(1280px,calc(100% - 64px));min-height:var(--bf-panel-h,520px);padding:72px 64px}
 .bf_repeat>.bf_container::before,.bf_repeat>.bf_container::after{content:"";position:absolute;left:0;right:0;top:0;height:var(--bf-panel-h,520px);pointer-events:none}
 .bf_repeat>.bf_container::after{-webkit-mask-image:linear-gradient(180deg,#000 45%,transparent 100%);mask-image:linear-gradient(180deg,#000 45%,transparent 100%)}
 .bf_repeat>.bf_container::before{z-index:-2;height:calc(var(--bf-panel-h,520px) * .55);margin:-10px;border-radius:40px;background:linear-gradient(135deg,#ff7a27,#5227ff,#ff9ffc,#b19eef,#ff9ffc,#ff7a27);background-size:300% 300%;filter:blur(48px);opacity:.35;animation:bf-glow 10s ease infinite}
@@ -125,7 +125,7 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 @keyframes bf-glow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 @keyframes bf-beams{from{background-position:0 0,0 0,0 0}to{background-position:100% 0,0 0,0 0}}
 .bf_repeat .bf_quiz{background-color:#140f24;border-color:rgba(255,255,255,.12);box-shadow:0 30px 60px -12px rgba(10,4,32,.7),0 12px 24px -8px rgba(10,4,32,.5)}
-@media (max-width:991px){.bf_repeat>.bf_container{margin-left:16px;margin-right:16px;padding:48px 24px 32px;--bf-panel-h:500px}.bf_repeat>.bf_container::after{border-radius:28px 28px 0 0}}
+@media (max-width:991px){.bf_repeat>.bf_container{max-width:none;margin-left:16px;margin-right:16px;padding:48px 24px 32px;--bf-panel-h:500px}.bf_repeat>.bf_container::after{border-radius:28px 28px 0 0}}
 @media (max-width:479px){.bf_repeat>.bf_container{padding:40px 16px 16px;--bf-panel-h:460px}.bf_repeat>.bf_container::after{border-radius:24px 24px 0 0}.bf_repeat>.bf_container::before{filter:blur(32px)}}
 @media (prefers-reduced-motion:reduce){.bf_repeat>.bf_container::before,.bf_repeat>.bf_container::after{animation:none}}
 /* clearfix-псевдоелементи .w-radio/.w-checkbox у flex-плитці стають елементами ряду і забирають 2 × gap — прибираємо */
