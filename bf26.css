@@ -92,7 +92,7 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 [data-bf-feat-media]{opacity:0;transform:scale(1.04);transition:opacity .6s ease,transform 1s cubic-bezier(.2,.8,.2,1)}
 [data-bf-feat-media].is-active,html:not(.bf-js) [data-bf-feat-media]:first-child{opacity:1;transform:none}
 @media (min-width:992px){
-  .bf_feat-card{min-height:var(--bf-feat-h,420px);transition:background-color .4s}
+  .bf_feat-card{transition:background-color .4s}
   .bf-js .bf_feat-card.is-active,.bf-js .bf_feat-card:hover{background-color:var(--_bf26-dark---bf-surface-raised,#251c33)}
 }
 @media (max-width:991px){
