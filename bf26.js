@@ -919,6 +919,8 @@
   // швидке меню у верхній смузі: пункти — T.nav [[id секції, підпис], …]; на всіх екранах — кнопка-«бургер» зі списком.
   // Пункт поточної секції підсвічується (IntersectionObserver)
   function initNav() {
+    // якір для блоку цін (він усередині секції «Що входить» і власного id у Designer не має)
+    var pk = $('[data-bf-packages]'); if (pk && !pk.id) pk.id = 'bf-prices';
     var bar = $('.bf_bar-inner'), items = (T.nav || []).filter(function (n) { return doc.getElementById(n[0]); });
     if (!bar || !items.length || $('.bf_nav', bar)) return;
     var nav = doc.createElement('nav'), btn = doc.createElement('button');
