@@ -928,7 +928,16 @@
     items.forEach(function (n) {
       var a = doc.createElement('a');
       a.href = '#' + n[0]; a.textContent = n[1]; a.className = 'bf_nav-link';
-      a.addEventListener('click', function () { track('bf_nav_click', { section: n[0] }); close(); });
+      a.addEventListener('click', function (e) {
+        track('bf_nav_click', { section: n[0] }); close();
+        // скролимо самі: Webflow рахує позицію з transform, а ще не показаний .bf_reveal зсунутий на 100px
+        var t = doc.getElementById(n[0]); if (!t) return;
+        e.preventDefault(); e.stopPropagation();
+        var y = 0; for (var el = t; el; el = el.offsetParent) y += el.offsetTop;
+        y -= parseFloat(getComputedStyle(t).scrollMarginTop) || 0;
+        window.scrollTo({ top: Math.max(0, y), behavior: reduceMotion ? 'auto' : 'smooth' });
+        try { history.replaceState(null, '', '#' + n[0]); } catch (er) {}
+      });
       nav.appendChild(a);
     });
     btn.type = 'button'; btn.className = 'bf_nav-toggle';
