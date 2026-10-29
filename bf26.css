@@ -360,3 +360,5 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf_lang-item.is-soon{opacity:.4;cursor:default}
 @media (max-width:767px){.bf_lang-btn{height:36px;padding:0 6px;font-size:13px}.bf_lang-ico{display:none}}
 @media (prefers-reduced-motion:reduce){.bf_lang-menu,.bf_lang-chev{transition:none}}
+/* RTL (he): «-60%» на зірках і плашках не перевертати */
+[dir=rtl] .bf_sticker-text,[dir=rtl] .bf_pill60,[dir=rtl] .bf_ctah-star,[dir=rtl] .bf_tag{direction:ltr;unicode-bidi:isolate}
