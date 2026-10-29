@@ -230,10 +230,7 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .is-nav-open .bf_nav-toggle span:nth-child(1){transform:translateY(6px) rotate(45deg)}
 .is-nav-open .bf_nav-toggle span:nth-child(2){opacity:0}
 .is-nav-open .bf_nav-toggle span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
-@media (min-width:1600px){
-  .bf_nav{display:flex;align-items:center;gap:2px}
-}
-@media (max-width:1599px){
+@media (min-width:0px){
   .bf_nav-toggle{display:flex}
   .bf_bar-inner.has-nav > .bf_btn-bar{margin-left:0}
   .bf_nav-logo{margin-right:auto}
@@ -336,3 +333,8 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf_bar{margin-bottom:-68px}
 .bf_hero{padding-top:132px}
 @media (max-width:767px){.bf_bar{margin-bottom:-64px}.bf_hero{padding-top:88px}}
+/* шапка: без лого; ліворуч «-60% до Чорної пʼятниці» + таймер, праворуч CTA + бургер (меню розділів — у бургері на всіх ширинах) */
+.bf_nav-logo{display:none !important}
+.bf_bar-inner.has-nav .bf_bar-text{margin-left:0 !important;margin-right:4px}
+.bf_bar-inner.has-nav .bf_cd{margin-left:0 !important;margin-right:auto}
+.bf_bar-inner.has-nav > .bf_btn-bar{margin-left:0 !important}
