@@ -567,11 +567,11 @@
     if (!S.event_id) S.event_id = uuid();
     save();
     fillHidden(form);
-    var tel = field(form, 'phone'), shown = tel ? tel.value : '';
-    if (tel) tel.value = phoneE164(digits);
-
     var handler = form.onsubmit;                      // обробник index.js (перепризначається його MutationObserver)
     ui.sending = true; ui.sendErr = ''; renderAll();
+    // номер у форматі +380… ставимо ПІСЛЯ renderAll: renderCard повертає в поле введений вигляд, і index.js узяв би номер без коду
+    var tel = field(form, 'phone'), shown = tel ? tel.value : '';
+    if (tel) tel.value = phoneE164(digits);
     pending = { card: card, place: place, timer: setTimeout(function () { onFail(); }, CFG.submitTimeoutMs || 15000) };
     try {
       if (typeof handler !== 'function') throw new Error('index.js handler missing');
@@ -631,6 +631,8 @@
     list.forEach(function (er) {
       var f = String(er.field || (er.source && er.source.pointer) || '').split('/').pop().split('.').pop();
       var msg = er.detail || er.message || er.title;
+      // «вже зареєстровано» з API приходить англійською — показуємо свій текст
+      if (/NOT_UNIQUE/.test(er.code || '') || /already in use/i.test(msg || '')) msg = (f === 'email' ? T.emailTaken : T.phoneTaken) || msg;
       if ((f === 'phone' || f === 'email') && msg) out[f] = String(msg);
     });
     if (!Object.keys(out).length) return onFail();
