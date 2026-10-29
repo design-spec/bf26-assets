@@ -267,3 +267,6 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 
 /* фон hero «поле з кільцем» (bf26-ring.js) — під променями та контентом */
 .bf_ring{position:absolute;inset:0;z-index:-2;display:block;width:100%;height:100%;pointer-events:none}
+/* фон hero «Light Bloom» (bf26-bloom.js) — найнижчий шар; старі промені Side Rays приховані */
+.bf_bloom{position:absolute;inset:0;z-index:-3;display:block;width:100%;height:100%;pointer-events:none}
+.bf_hero [data-bf-rays]{display:none}

@@ -11,7 +11,7 @@
   if (!host || host.querySelector('.bf_ring')) return;
 
   var P = Object.assign({
-    background: '#04050A',
+    background: null,
     colors: ['#2F0D68', '#2B0668'],
     density: 300,
     dotSize: 75,
@@ -301,7 +301,7 @@
   /* ---------------------------------------------------------------- setup */
   var canvas = document.createElement('canvas');
   canvas.className = 'bf_ring'; canvas.setAttribute('aria-hidden', 'true');
-  canvas.style.background = P.background;
+  if (P.background) canvas.style.background = P.background;   // за замовчуванням прозорий — під ним Light Bloom (bf26-bloom.js)
   host.insertBefore(canvas, host.firstChild);
 
   var ctx = makeContext(canvas);

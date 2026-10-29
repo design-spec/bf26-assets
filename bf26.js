@@ -875,17 +875,13 @@
     });
   }
 
-  // фон hero «Side Rays» (WebGL): окремий файл, лише десктоп, після повного завантаження; інакше — CSS-сяйво
+  // фон hero «Light Bloom» (Originkit, WebGL): окремий файл, найнижчий шар hero; замінив «Side Rays» (bf26-rays.js лишився в репо)
   function initRays() {
-    if (!$('[data-bf-rays]') || reduceMotion || !(window.matchMedia && matchMedia('(min-width: 992px)').matches)) return;
+    if (!$('.bf_hero') || window.BF26_BLOOM === false) return;
     var me = $('script[src*="bf26.js"]'), base = me ? me.src.replace(/bf26\.js.*$/, '') : 'https://cdn.jsdelivr.net/gh/design-spec/bf26-assets@v1.0.0/';
-    var go = function () {
-      (window.requestIdleCallback || function (f) { setTimeout(f, 300); })(function () {
-        var s = doc.createElement('script'); s.src = base + 'bf26-rays.js'; s.async = true; doc.head.appendChild(s);
-      }, { timeout: 2000 });
-    };
-    if (doc.readyState === 'complete') go(); else addEventListener('load', go, { once: true });
+    var s = doc.createElement('script'); s.src = base + 'bf26-bloom.js'; s.async = true; doc.head.appendChild(s);
   }
+
 
   // hero: «Black Friday в All Right» — стрічки скотчу BLACK / FRIDAY, за BLACK «в» + логотип, за FRIDAY зірка −60%.
   // Зірка переїжджає з h1, тож двокрапка в кінці заголовка більше не потрібна
