@@ -827,6 +827,13 @@
     if (doc.readyState === 'complete') go(); else addEventListener('load', go, { once: true });
   }
 
+  // святкові кульки при відкритті сторінки: окремий файл, без «зменшення руху»; вимкнути — window.BF26_BALLOONS = false
+  function initBalloons() {
+    if (reduceMotion || window.BF26_BALLOONS === false) return;
+    var me = $('script[src*="bf26.js"]'), base = me ? me.src.replace(/bf26\.js.*$/, '') : 'https://cdn.jsdelivr.net/gh/design-spec/bf26-assets@v1.0.0/';
+    var s = doc.createElement('script'); s.src = base + 'bf26-balloons.js'; s.async = true; doc.head.appendChild(s);
+  }
+
   // hero «як CAH»: карти час від часу перероздаються (одна за раз, нова лягає зверху); стоїть поза екраном і у фоновій вкладці
   function initTable() {
     var table = $('[data-bf-table]');
@@ -914,6 +921,7 @@
     initMarquee();
     initTable();
     initRays();
+    initBalloons();
     initFeat();
     initScroll();
     track('bf_page_view', {});
