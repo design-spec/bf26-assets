@@ -1009,6 +1009,52 @@
     update();
   }
 
+  // «Emoji Burst» (Originkit, код надав користувач): натиск на помаранчеву кнопку — 16 емодзі вилітають угору й падають
+  // під гравітацією, кнопка коротко хитається. Шар фіксований над сторінкою, тож видно й під час прокрутки до квізу
+  function initBurst() {
+    if (reduceMotion) return;
+    var EMOJIS = ['🎉', '✨', '😄', '🔥', '💥', '⭐', '💖', '🤩', '👍', '🥳', '🎊', '😎'];
+    var COUNT = 16, POWER = 12, SPREAD = 55, GRAVITY = 4 * 0.15, SIZE = 20, MAX = 140;
+    var layer = null, parts = [], raf = 0, last = 0;
+    function step(ts) {
+      var dt = last ? (ts - last) / 16.6667 : 1; last = ts; if (dt > 3) dt = 3;
+      var W = innerWidth, H = innerHeight;
+      for (var i = parts.length - 1; i >= 0; i--) {
+        var p = parts[i];
+        p.vy += GRAVITY * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vrot * dt; p.life -= dt;
+        if (p.life <= 0 || p.y > H + p.size * 2.5 || p.x < -p.size * 3 || p.x > W + p.size * 3) { p.el.remove(); parts.splice(i, 1); continue; }
+        p.el.style.opacity = String(p.life < 22 ? Math.max(0, p.life / 22) : 1);
+        p.el.style.transform = 'translate(' + p.x + 'px,' + p.y + 'px) rotate(' + p.rot + 'deg)';
+      }
+      if (parts.length) raf = requestAnimationFrame(step); else { raf = 0; last = 0; }
+    }
+    function burst(btn) {
+      if (!layer) {
+        layer = doc.createElement('div'); layer.setAttribute('aria-hidden', 'true');
+        layer.style.cssText = 'position:fixed;inset:0;z-index:1000;pointer-events:none;overflow:hidden';
+        doc.body.appendChild(layer);
+      }
+      var r = btn.getBoundingClientRect(), ox = r.left + r.width / 2, oy = r.top + r.height / 2;
+      if (btn.animate) btn.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(-2.5deg)' }, { transform: 'rotate(2.5deg)' }, { transform: 'rotate(-1deg)' }, { transform: 'rotate(0deg)' }],
+        { duration: 260, easing: 'cubic-bezier(.36,.07,.19,.97)' });
+      for (var k = 0; k < COUNT && parts.length < MAX; k++) {
+        var el = doc.createElement('span');
+        el.textContent = EMOJIS[(Math.random() * EMOJIS.length) | 0];
+        el.style.cssText = 'position:absolute;left:0;top:0;font-size:' + SIZE + 'px;line-height:1;will-change:transform,opacity;user-select:none';
+        layer.appendChild(el);
+        var ang = ((-90 + (Math.random() * 2 - 1) * SPREAD) * Math.PI) / 180, sp = POWER * (0.65 + Math.random() * 0.8);
+        parts.push({ el: el, x: ox - SIZE / 2, y: oy - SIZE / 2, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp,
+          rot: Math.random() * 360, vrot: (Math.random() * 2 - 1) * 14, size: SIZE, life: 260 });
+      }
+      if (!raf) { last = 0; raf = requestAnimationFrame(step); }
+    }
+    doc.addEventListener('pointerdown', function (e) {
+      var b = e.target.closest && e.target.closest('.bf_btn:not(.bf_btn-bar), .bf_qnext, .bf_nav-cta');
+      if (!b || b.classList.contains('is-disabled') || b.disabled) return;
+      burst(b);
+    }, { passive: true });
+  }
+
   // святкові кульки при відкритті сторінки: окремий файл, без «зменшення руху»; вимкнути — window.BF26_BALLOONS = false
   function initBalloons() {
     if (reduceMotion || window.BF26_BALLOONS === false) return;
@@ -1134,6 +1180,7 @@
     initRays();
     initRing();
     initReveal();
+    initBurst();
     initBalloons();
     initFeat();
     initStack();
