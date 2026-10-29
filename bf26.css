@@ -332,3 +332,7 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf_bar-inner.has-nav .bf_bar-text + .bf_cd{margin-left:0}
 @media (max-width:1599px){.bf_bar-inner.has-nav .bf_bar-text{margin-left:auto}.bf_nav-logo{margin-right:0}}
 @media (max-width:991px){.bf_bar-inner.has-nav .bf_bar-text{display:none}.bf_nav-logo{margin-right:auto}}
+/* шапка-«таблетка» плаває поверх hero: фон першого екрана тягнеться під неї, контент hero зсунутий на висоту шапки */
+.bf_bar{margin-bottom:-68px}
+.bf_hero{padding-top:132px}
+@media (max-width:767px){.bf_bar{margin-bottom:-64px}.bf_hero{padding-top:88px}}
