@@ -878,18 +878,25 @@
     return false;
   }
 
-  function initTerms() {
-    var box = $('[data-bf-terms]');
+  // підсвітка фраз + проява з розмиття, коли блок у полі зору: умови у футері і підзаголовок hero
+  function highlight(box, paras, phrases) {
     if (!box) return;
     var n = 0;
-    $$('.w-richtext p', box).forEach(function (p) {
-      (T.termsHighlight || []).forEach(function (ph) { if (markPhrase(p, ph, n)) n++; });
+    paras.forEach(function (p) {
+      (phrases || []).forEach(function (ph) { if (markPhrase(p, ph, n)) n++; });
     });
     if (!window.IntersectionObserver || reduceMotion) { box.classList.add('is-in'); return; }
     var io = new IntersectionObserver(function (en) {
       if (en[0].isIntersecting) { box.classList.add('is-in'); io.disconnect(); }
     }, { rootMargin: '0px 0px -20% 0px', threshold: 0.3 });
     io.observe(box);
+  }
+
+  function initTerms() {
+    var box = $('[data-bf-terms]'), lead = $('.bf_lead[data-bf-tpl]');
+    if (box) highlight(box, $$('.w-richtext p', box), T.termsHighlight);
+    // підзаголовок hero: розмитий з першого кадру (CSS), фрази — після підстановки {date} (fillStatic вже відпрацював)
+    if (lead) highlight(lead, [lead], T.leadHighlight);
   }
 
   function initScroll() {

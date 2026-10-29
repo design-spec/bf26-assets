@@ -153,12 +153,15 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf_terms .w-richtext p{margin-bottom:0;color:#fefefe;font-size:20px;line-height:1.55;font-weight:500}
 .bf_terms .w-richtext p+p{margin-top:12px}
 .bf_hl{padding:.04em .22em;margin:0 -.04em;border-radius:.3em;background:linear-gradient(#9762fd,#9762fd) no-repeat 0 0/0% 100%;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size 1s cubic-bezier(.65,0,.35,1) calc(.4s + var(--bf-i,0) * .15s)}
-[data-bf-terms].is-in .bf_hl,html:not(.bf-js) .bf_hl{background-size:100% 100%}
+[data-bf-terms].is-in .bf_hl,.bf_lead[data-bf-tpl].is-in .bf_hl,html:not(.bf-js) .bf_hl{background-size:100% 100%}
+.bf_lead .bf_hl{color:#fefefe}
+.bf_lead[data-bf-tpl]{transition:filter .8s ease,opacity .8s ease}
+.bf-js .bf_lead[data-bf-tpl]:not(.is-in){filter:blur(8px);opacity:.3}
 .bf_terms .w-richtext{transition:filter .8s ease,opacity .8s ease}
 .bf-js [data-bf-terms]:not(.is-in) .w-richtext{filter:blur(8px);opacity:.3}
 .bf_omnibus{margin-top:16px;margin-bottom:0;color:#b5b4be}
 @media (max-width:767px){.bf_terms .w-richtext p{font-size:17px}}
-@media (prefers-reduced-motion:reduce){.bf_hl,.bf_terms .w-richtext{transition:none}}
+@media (prefers-reduced-motion:reduce){.bf_hl,.bf_terms .w-richtext,.bf_lead[data-bf-tpl]{transition:none}}
 
 /* прогрес-бар квізу (вставляє bf26.js під .bf_quiz-head), як на 10thbirthday */
 .bf_qprogress{height:8px;margin:0 0 24px;border-radius:8px;background:rgba(255,255,255,.1);overflow:hidden}
