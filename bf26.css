@@ -226,13 +226,14 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 }
 @media (prefers-reduced-motion:reduce){.bf_nav,.bf_nav-toggle span,.bf_nav-link{transition:none}}
 
-/* таймер: секунди (дописує initCountdown) і темні плашки під цифрами */
-.bf_cd{gap:4px}
-.bf_cd-item{display:flex;align-items:baseline;gap:2px;padding:4px 7px;border-radius:8px;background:#14001a;color:#fefefe}
-.bf_cd-item .bf_cd-num{font-variant-numeric:tabular-nums}
-.bf_cd-item .bf_cd-unit{color:rgba(254,254,254,.7)}
-.bf_cd-lg{gap:8px}.bf_cd-lg .bf_cd-item{gap:4px;padding:10px 14px;border-radius:14px}
-@media (max-width:479px){.bf_cd{gap:3px}.bf_cd-item{padding:3px 5px;border-radius:6px}.bf_cd-lg{gap:6px}.bf_cd-lg .bf_cd-item{padding:8px 10px;border-radius:10px}}
+/* таймер: секунди (дописує initCountdown), спільна біла плашка з фіолетовими цифрами */
+.bf_cd{gap:8px;padding:5px 12px;border-radius:10px;background:#fefefe;color:#9762fd}
+.bf_cd-item{display:flex;align-items:baseline;gap:2px;padding:0;background:none}
+.bf_cd .bf_cd-num{color:#9762fd;font-variant-numeric:tabular-nums}
+.bf_cd .bf_cd-unit{color:#9762fd;opacity:.75}
+.bf_cd-lg{gap:16px;padding:12px 20px;border-radius:16px;width:max-content;max-width:100%}
+.bf_cd-lg .bf_cd-item{gap:4px}
+@media (max-width:479px){.bf_cd{gap:6px;padding:4px 8px;border-radius:8px}.bf_cd-lg{gap:10px;padding:10px 14px;border-radius:12px}}
 /* квіз: підказка «можна обрати кілька» */
 .bf_qmulti{margin:-8px 0 16px;padding:0;background:none;color:#b5b4be;font-size:15px;line-height:1.4}
 @media (max-width:479px){
