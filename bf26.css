@@ -307,3 +307,5 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
   -webkit-mask:url('https://cdn.prod.website-files.com/64997bee22af293e5156648a/6ae318dacd60ec7b0e02553f_Star%20134.svg') center/contain no-repeat;
   mask:url('https://cdn.prod.website-files.com/64997bee22af293e5156648a/6ae318dacd60ec7b0e02553f_Star%20134.svg') center/contain no-repeat}
 .bf_eyebrow.is-tapes .bf_tape{color:#fefefe}
+/* мобільний: BLACK FRIDAY по центру і на всю ширину колонки */
+@media (max-width:767px){.bf_eyebrow.is-tapes{margin-left:auto;margin-right:auto;font-size:min(7.3vw,40px)}}
