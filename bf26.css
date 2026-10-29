@@ -169,7 +169,7 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 [data-bf-card].is-done .bf_qprogress{display:none}
 @media (prefers-reduced-motion:reduce){.bf_qprogress-fill{transition:none}}
 
-/* hero: стрічки скотчу BLACK / FRIDAY + «в [логотип All Right]» + зірка −60% на нитці (initTapes у bf26.js). До роботи JS — не блимаємо старим виглядом */
+/* hero: стрічки скотчу BLACK / FRIDAY + «в [логотип All Right]» + зірка −60% (initTapes у bf26.js). До роботи JS — не блимаємо старим виглядом */
 .bf-js .bf_hero .bf_eyebrow:not(.is-tapes),.bf-js .bf_hero .bf_h1 > .bf_sticker.is-hero{visibility:hidden}
 .bf_eyebrow.is-tapes{display:grid;grid-template-columns:auto auto;grid-template-rows:auto 1fr;column-gap:.55em;justify-content:start;width:max-content;max-width:100%;margin-bottom:36px;padding:0;border-radius:0;background:none;color:#14001a;font-size:44px;font-weight:900;line-height:1;letter-spacing:-.01em;text-transform:uppercase}
 .bf_tapes{grid-row:1/3;display:flex;flex-direction:column;align-items:flex-start}
@@ -184,13 +184,10 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf_brand-pre:empty{display:none}
 .bf_brand-logo{display:block;height:1.3em;width:auto;color:#9762fd}
 .bf_brand-text{color:#9762fd}
-/* зірка: нитка від правого краю BLACK, гойдається навколо точки кріплення */
-.bf_tag{position:relative;align-self:start;justify-self:start;margin:.35em 0 0 .1em;font-size:1em;transform-origin:-2.9em -.95em;animation:bf-tag-in .6s .8s cubic-bezier(.2,1.4,.4,1) both,bf-swing 3.2s 1.4s ease-in-out infinite}
-.bf_tag-string{position:absolute;left:-2.9em;top:-.95em;width:3.6em;height:1.2em;overflow:visible}
+.bf_tag{position:relative;align-self:start;justify-self:start;margin:.35em 0 0 .1em;font-size:1em;animation:bf-tag-in .6s .8s cubic-bezier(.2,1.4,.4,1) both}
 .bf_tag .bf_sticker.is-hero{display:flex;width:2.5em;height:2.5em;margin:0;font-size:1em;vertical-align:top}
 .bf_tag .bf_sticker-text.is-hero{font-size:.6em}
 @keyframes bf-tag-in{from{opacity:0;transform:translateY(-.5em) rotate(-20deg)}to{opacity:1;transform:none}}
-@keyframes bf-swing{0%,100%{rotate:0deg}50%{rotate:4deg}}
 @media (max-width:991px){.bf_eyebrow.is-tapes{font-size:34px;margin-bottom:30px}}
 @media (max-width:479px){.bf_eyebrow.is-tapes{font-size:21px;margin-bottom:24px}}
 @media (prefers-reduced-motion:reduce){.bf_tape,.bf_brand,.bf_tag{animation:none}}

@@ -827,7 +827,7 @@
     if (doc.readyState === 'complete') go(); else addEventListener('load', go, { once: true });
   }
 
-  // hero: «Black Friday в All Right» — стрічки скотчу BLACK / FRIDAY, праворуч «в» + логотип, під ним зірка −60% на нитці від BLACK.
+  // hero: «Black Friday в All Right» — стрічки скотчу BLACK / FRIDAY, праворуч «в» + логотип, під ним зірка −60%.
   // Зірка переїжджає з h1, тож двокрапка в кінці заголовка більше не потрібна
   // логотип для hero — файл із Webflow Assets (кольори вже в SVG)
   var LOGO = '<img class="bf_brand-logo" src="https://cdn.prod.website-files.com/64997bee22af293e5156648a/69a6f4aacf26fb8379def5e1_Al%20Right.svg" width="176" height="32" alt="All Right">';
@@ -847,7 +847,6 @@
     if (st) {
       var h1 = st.closest('h1'), tag = doc.createElement('span');
       tag.className = 'bf_tag';
-      tag.innerHTML = '<svg class="bf_tag-string" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4C30 -6 62 6 74 34S90 80 94 100" fill="none" stroke="#fefefe" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>';
       tag.appendChild(st);
       eb.appendChild(tag);
       if (h1) {
