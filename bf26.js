@@ -174,11 +174,45 @@
       els.forEach(function (el) {
         ['d', 'h', 'm', 's'].forEach(function (u) {
           var t = $('[data-cd="' + u + '"]', el);
-          if (t) t.textContent = u === 'd' ? v[u] : String(v[u]).padStart(2, '0');
+          if (t) flipTo(t, String(v[u]).padStart(2, '0'));
         });
       });
     }
     tick();
+  }
+
+  // таймер як flip-годинник: кожна цифра — картка з двох половин; при зміні верхня половина
+  // старої цифри перекидається вниз, відкриваючи нову (як Flip.js від pqina, але на нашій розмітці)
+  function flipCard(d) {
+    var c = doc.createElement('span');
+    c.className = 'bf_flip'; c.setAttribute('aria-hidden', 'true');
+    ['top', 'bottom', 'front', 'back'].forEach(function (k) {
+      var h = doc.createElement('span'), i = doc.createElement('span');
+      h.className = 'bf_flip-' + k; i.textContent = d; h.appendChild(i); c.appendChild(h);
+    });
+    c.setAttribute('data-v', d);
+    return c;
+  }
+  function flipTo(el, str) {
+    if (el.getAttribute('aria-label') === str) return;
+    el.setAttribute('aria-label', str);
+    var cards = $$('.bf_flip', el);
+    if (cards.length !== str.length) {
+      el.textContent = '';
+      str.split('').forEach(function (d) { el.appendChild(flipCard(d)); });
+      return;
+    }
+    cards.forEach(function (c, i) {
+      var nv = str[i], ov = c.getAttribute('data-v');
+      if (nv === ov) return;
+      var part = function (k) { return c.querySelector('.bf_flip-' + k + ' > span'); };
+      part('top').textContent = nv; part('back').textContent = nv;
+      part('bottom').textContent = ov; part('front').textContent = ov;
+      c.setAttribute('data-v', nv);
+      c.classList.remove('is-flipping'); void c.offsetWidth; c.classList.add('is-flipping');
+      clearTimeout(c._t);
+      c._t = setTimeout(function () { part('bottom').textContent = nv; c.classList.remove('is-flipping'); }, 620);
+    });
   }
 
   /* ---------------------------------------------------------------- quiz state */

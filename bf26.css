@@ -226,14 +226,31 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 }
 @media (prefers-reduced-motion:reduce){.bf_nav,.bf_nav-toggle span,.bf_nav-link{transition:none}}
 
-/* таймер: секунди (дописує initCountdown), спільна біла плашка з фіолетовими цифрами */
-.bf_cd{gap:8px;padding:5px 12px;border-radius:10px;background:#fefefe;color:#9762fd}
-.bf_cd-item{display:flex;align-items:baseline;gap:2px;padding:0;background:none}
-.bf_cd .bf_cd-num{color:#9762fd;font-variant-numeric:tabular-nums}
-.bf_cd .bf_cd-unit{color:#9762fd;opacity:.75}
-.bf_cd-lg{gap:16px;padding:12px 20px;border-radius:16px;width:max-content;max-width:100%}
-.bf_cd-lg .bf_cd-item{gap:4px}
-@media (max-width:479px){.bf_cd{gap:6px;padding:4px 8px;border-radius:8px}.bf_cd-lg{gap:10px;padding:10px 14px;border-radius:12px}}
+/* таймер: секунди (дописує initCountdown) + flip-картки на кожну цифру (flipTo у bf26.js) */
+.bf_cd{gap:8px;padding:0;background:none}
+.bf_cd-item{display:flex;align-items:center;gap:4px;padding:0;background:none}
+.bf_cd .bf_cd-num{display:flex;gap:2px;min-width:0;color:#fefefe;line-height:1}
+.bf_cd .bf_cd-unit{color:inherit;opacity:.8}
+.bf_flip{position:relative;display:block;width:.9em;height:1.3em;perspective:4em;font-variant-numeric:tabular-nums;text-align:center}
+.bf_flip>span{position:absolute;left:0;right:0;height:50%;overflow:hidden;background:#1e1a26;color:#fefefe;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.bf_flip>span>span{display:block;height:200%;line-height:1.3em;font-size:.92em}
+.bf_flip-top,.bf_flip-front{top:0;border-radius:.14em .14em 0 0}
+.bf_flip-bottom,.bf_flip-back{bottom:0;border-radius:0 0 .14em .14em;background:#2a2533 !important}
+.bf_flip-bottom>span,.bf_flip-back>span{transform:translateY(-50%)}
+.bf_flip-front{z-index:2;transform-origin:50% 100%}
+.bf_flip-back{z-index:2;transform-origin:50% 0;transform:rotateX(90deg)}
+.bf_flip::after{content:"";position:absolute;z-index:3;left:0;right:0;top:50%;height:1px;margin-top:-.5px;background:rgba(0,0,0,.55)}
+.bf_flip.is-flipping .bf_flip-front{animation:bf-flip-a .3s ease-in forwards}
+.bf_flip.is-flipping .bf_flip-back{animation:bf-flip-b .3s .3s ease-out forwards}
+.bf_flip:not(.is-flipping) .bf_flip-front,.bf_flip:not(.is-flipping) .bf_flip-back{visibility:hidden}
+@keyframes bf-flip-a{from{transform:rotateX(0)}to{transform:rotateX(-90deg)}}
+@keyframes bf-flip-b{from{transform:rotateX(90deg)}to{transform:rotateX(0)}}
+/* великий таймер у блоці «Зарезервуйте»: підписи під картками, як у Flip.js */
+.bf_cd-lg{gap:14px}
+.bf_cd-lg .bf_cd-item{flex-direction:column;gap:6px}
+.bf_cd-lg .bf_cd-unit{color:#fefefe;font-size:14px}
+@media (max-width:479px){.bf_cd{gap:5px}.bf_cd-item{gap:3px}.bf_cd-lg{gap:10px}}
+@media (prefers-reduced-motion:reduce){.bf_flip.is-flipping .bf_flip-front,.bf_flip.is-flipping .bf_flip-back{animation:none;visibility:hidden}}
 /* квіз: підказка «можна обрати кілька» */
 .bf_qmulti{margin:-8px 0 16px;padding:0;background:none;color:#b5b4be;font-size:15px;line-height:1.4}
 @media (max-width:479px){
