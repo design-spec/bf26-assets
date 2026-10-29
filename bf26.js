@@ -946,6 +946,11 @@
       c2.addEventListener('click', close);
       nav.appendChild(c2);
     }
+    // логотип по центру «таблетки» (той самий файл, що й у hero)
+    var logo = doc.createElement('a');
+    logo.className = 'bf_nav-logo'; logo.href = '#bf-quiz'; logo.setAttribute('aria-label', 'All Right');
+    logo.innerHTML = LOGO;
+    bar.insertBefore(logo, bar.firstChild);
     bar.insertBefore(nav, bar.firstChild);
     bar.appendChild(btn);
     bar.classList.add('has-nav');

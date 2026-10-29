@@ -207,30 +207,48 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 /* картинка з персонажем у hero — тимчасово прибрана (рішення 29.10); повернути: видалити рядок */
 .bf_hero .bf_hero-img{display:none}
 
-/* швидке меню у верхній смузі (initNav у bf26.js): на всіх екранах — кнопка-«бургер» зі списком розділів */
-[id^="bf-"]{scroll-margin-top:72px}
-.bf_bar-inner.has-nav{position:relative;justify-content:flex-start}
-.bf_bar-inner.has-nav .bf_bar-text{display:block}
-.bf_bar-inner.has-nav > .bf_btn-bar{margin-left:auto;white-space:nowrap}
+/* шапка як reactbits «Navigation 11»: плаваюча темна «таблетка» — розділи ліворуч, лого по центру, таймер + CTA праворуч;
+   < 1280 — таймер + бургер, меню біле (initNav у bf26.js додає nav, лого і бургер) */
+[id^="bf-"]{scroll-margin-top:88px}
+.bf_bar{height:auto;padding:12px 16px 0;background:transparent;pointer-events:none}
+.bf_bar-inner.has-nav{position:relative;justify-content:flex-start;gap:16px;max-width:1280px;height:56px;margin:0 auto;padding:0 8px 0 20px;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:rgba(20,18,26,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 10px 30px -10px rgba(0,0,0,.6);pointer-events:auto}
+.bf_bar-inner.has-nav .bf_bar-text{display:none}
+.bf_bar-inner.has-nav .bf_cd{margin-left:auto}
+.bf_bar-inner.has-nav > .bf_btn-bar{background:#fe8b21;color:#fefefe;border-radius:999px;white-space:nowrap}
+.bf_bar .bf_cd .bf_cd-num,.bf_bar .bf_cd .bf_cd-unit{color:#fefefe}
+.bf_bar .bf_flip>span{background:#2b2635}
+.bf_bar .bf_flip-bottom,.bf_bar .bf_flip-back{background:#352f41 !important}
+.bf_nav-logo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;line-height:0}
+.bf_nav-logo img{height:24px;width:auto}
 .bf_nav-cta{display:none}
-.bf_nav-toggle{display:flex;flex-direction:column;justify-content:center;gap:4px;flex:none;width:40px;height:40px;padding:0 10px;border:0;border-radius:10px;background:none;cursor:pointer}
-.bf_nav-toggle span{display:block;height:2px;border-radius:2px;background:#14001a;transition:transform .25s,opacity .25s}
+.bf_nav-link{padding:8px 12px;border-radius:999px;color:rgba(254,254,254,.85);font-size:15px;font-weight:500;line-height:1.2;white-space:nowrap;text-decoration:none;transition:background-color .2s,color .2s}
+.bf_nav-link:hover{color:#fefefe;background:rgba(255,255,255,.08)}
+.bf_nav-link.is-active{color:#fefefe;background:rgba(255,255,255,.12)}
+.bf_nav-link:focus-visible,.bf_nav-toggle:focus-visible{outline:2px solid #fe8b21;outline-offset:2px}
+.bf_nav-toggle{display:none;flex-direction:column;justify-content:center;gap:4px;flex:none;width:40px;height:40px;padding:0 10px;border:0;border-radius:999px;background:none;cursor:pointer}
+.bf_nav-toggle span{display:block;height:2px;border-radius:2px;background:#fefefe;transition:transform .25s,opacity .25s}
 .is-nav-open .bf_nav-toggle span:nth-child(1){transform:translateY(6px) rotate(45deg)}
 .is-nav-open .bf_nav-toggle span:nth-child(2){opacity:0}
 .is-nav-open .bf_nav-toggle span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
-.bf_nav{position:absolute;top:100%;right:80px;width:300px;display:flex;flex-direction:column;align-items:stretch;gap:4px;padding:12px;border-radius:0 0 16px 16px;background:#14001a;box-shadow:0 20px 40px -12px rgba(0,0,0,.6);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .2s,transform .2s,visibility 0s .2s}
-.is-nav-open .bf_nav{opacity:1;visibility:visible;transform:none;transition:opacity .2s,transform .2s}
-.bf_nav-link{padding:12px 14px;border-radius:12px;color:#fefefe;font-size:17px;font-weight:600;line-height:1.2;text-decoration:none;transition:background-color .2s}
-.bf_nav-link:hover{background:rgba(255,255,255,.08)}
-.bf_nav-link.is-active{background:#9762fd}
-.bf_nav-link:focus-visible{outline:2px solid #fefefe;outline-offset:2px}
-.bf_nav-toggle:focus-visible{outline:2px solid #14001a;outline-offset:2px}
-@media (max-width:991px){.bf_nav{right:32px}.bf_bar-inner.has-nav .bf_bar-text{display:none}}
-@media (max-width:767px){.bf_nav{left:0;right:0;width:auto;border-radius:0;padding:12px 16px 16px}}
+@media (min-width:1280px){
+  .bf_nav{display:flex;align-items:center;gap:2px;margin-left:-8px}
+}
+@media (max-width:1279px){
+  .bf_nav-toggle{display:flex}
+  .bf_bar-inner.has-nav > .bf_btn-bar{margin-left:0}
+  .bf_nav-logo{position:static;transform:none;margin-right:auto}
+  .bf_bar-inner.has-nav .bf_cd{margin-left:0}
+  .bf_nav{position:absolute;top:calc(100% + 10px);right:0;width:320px;display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:10px;border-radius:20px;background:#fefefe;box-shadow:0 24px 48px -12px rgba(0,0,0,.55);opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);transform-origin:top right;transition:opacity .2s,transform .2s,visibility 0s .2s}
+  .is-nav-open .bf_nav{opacity:1;visibility:visible;transform:none;transition:opacity .2s,transform .2s}
+  .bf_nav-link{padding:12px 14px;border-radius:12px;color:#14001a;font-size:17px;font-weight:600}
+  .bf_nav-link:hover{color:#14001a;background:#f1edf8}
+  .bf_nav-link.is-active{color:#fefefe;background:#9762fd}
+}
+@media (max-width:767px){.bf_bar{padding:8px 8px 0}.bf_bar-inner.has-nav{padding:0 6px 0 14px;gap:10px}.bf_nav{left:0;width:auto}}
 @media (max-width:479px){
-  .bf_bar-inner.has-nav > .bf_btn-bar{display:none}
+  .bf_nav-logo,.bf_bar-inner.has-nav > .bf_btn-bar{display:none}
   .bf_bar-inner.has-nav .bf_cd{margin-right:auto}
-  .bf_nav .bf_nav-cta{display:flex;justify-content:center;margin:8px 0 0;min-height:48px;background:#fe8b21;color:#fefefe;font-size:16px}
+  .bf_nav .bf_nav-cta{display:flex;justify-content:center;margin:8px 0 0;min-height:48px;border-radius:12px;background:#fe8b21;color:#fefefe;font-size:16px}
 }
 @media (prefers-reduced-motion:reduce){.bf_nav,.bf_nav-toggle span,.bf_nav-link{transition:none}}
 /* таймер: секунди (дописує initCountdown) + flip-картки на кожну цифру (flipTo у bf26.js) */
