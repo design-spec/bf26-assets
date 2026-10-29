@@ -1139,6 +1139,23 @@
     });
   }
 
+  // заголовок блоку «Зарезервуйте»: «Зарезервуйте» + біла плашка з датою + біла зірка «−60%» (макет 29.10).
+  // Текст береться з заголовка після підстановки {date}, тож у Designer він редагується як звичайно
+  function initCtaHead() {
+    $$('#bf-repeat .bf_h2[data-bf-show="before"]').forEach(function (h) {
+      if (h.classList.contains('is-split')) return;
+      var t = h.textContent.trim(), m = t.match(/^(.*?)\s*([−-]\s?60\s?%)\s*(.*)$/);
+      if (!m) return;
+      h.textContent = '';
+      [['bf_ctah-main', m[1]], ['bf_ctah-star', m[2]], ['bf_ctah-date', m[3]]].forEach(function (p) {
+        if (!p[1]) return;
+        var sp = doc.createElement('span'); sp.className = p[0]; sp.textContent = p[1];
+        h.appendChild(sp); h.appendChild(doc.createTextNode(' '));
+      });
+      h.classList.add('is-split');
+    });
+  }
+
   function initTerms() {
     var box = $('[data-bf-terms]'), lead = $('.bf_lead[data-bf-tpl]');
     if (box) highlight(box, $$('.w-richtext p', box), T.termsHighlight);
@@ -1175,6 +1192,7 @@
     initDeck();
     initTerms();
     initPill();
+    initCtaHead();
     initMarquee();
     initTable();
     initRays();
