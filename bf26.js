@@ -994,7 +994,7 @@
     list.forEach(function (l) {
       var li = doc.createElement('li'), a = doc.createElement('a'), on = live.indexOf(l[0]) > -1;
       a.className = 'bf_lang-item' + (l[0] === LOCALE ? ' is-current' : '');
-      a.setAttribute('lang', l[0]); a.innerHTML = '<b>' + l[1] + '</b> ' + l[2];
+      a.setAttribute('lang', l[0]); a.textContent = l[2];
       if (l[0] === LOCALE) a.setAttribute('aria-current', 'true');
       if (on) a.href = location.pathname.replace(/^\/[a-z]{2}(?=\/)/, '/' + l[0]) + location.search;
       else { a.setAttribute('aria-disabled', 'true'); a.title = T.langSoon || 'Незабаром'; a.className += ' is-soon'; }
