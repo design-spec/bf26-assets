@@ -967,15 +967,20 @@
     var s = doc.createElement('script'); s.src = base + 'bf26-ring.js'; s.async = true; doc.head.appendChild(s);
   }
 
-  // «Animated Content» (reactbits): контент блоку «Зарезервуйте» по черзі виїжджає знизу, коли блок у кадрі
+  // «Animated Content» (reactbits): контент секцій по черзі виїжджає знизу, коли потрапляє в кадр.
+  // Блок «Зарезервуйте» — по елементах тексту + квіз; решта секцій — прямі діти контейнера
   function initReveal() {
-    var items = $$('#bf-repeat .bf_hero-text > *, #bf-repeat .bf_quiz-slot');
-    if (!items.length || reduceMotion || !window.IntersectionObserver) return;
-    items.forEach(function (el, i) { el.classList.add('bf_reveal'); el.style.setProperty('--bf-rd', (i * 0.1) + 's'); });
+    if (reduceMotion || !window.IntersectionObserver) return;
+    var groups = [$$('#bf-repeat .bf_hero-text > *, #bf-repeat .bf_quiz-slot')];
+    $$('.bf_section:not(.bf_repeat) > .bf_container').forEach(function (c) { groups.push($$(':scope > *', c)); });
     var io = new IntersectionObserver(function (en) {
       en.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
     }, { threshold: 0.1 });
-    items.forEach(function (el) { io.observe(el); });
+    groups.forEach(function (items) {
+      items.forEach(function (el, i) {
+        el.classList.add('bf_reveal'); el.style.setProperty('--bf-rd', (Math.min(i, 5) * 0.1) + 's'); io.observe(el);
+      });
+    });
   }
 
   // «Scroll Stack» (reactbits): картка зменшується, поки наступна наїжджає на неї; глибші картки — менші (як baseScale + i·itemScale)
@@ -1069,19 +1074,22 @@
     io.observe(box);
   }
 
-  // «−60%» у заголовку блоку «Що входить» — окрема плашка (span навколо фрази, текст заголовка не міняється)
+  // «−60%» — окрема плашка (span навколо фрази, текст у Designer не міняється): заголовок «Що входить» — помаранчева, смуга вгорі — фіолетова
   function initPill() {
-    $$('#bf-offer .bf_h2').forEach(function (h) {
-      var w = doc.createTreeWalker(h, NodeFilter.SHOW_TEXT), n;
-      while ((n = w.nextNode())) {
-        var at = n.nodeValue.search(/[−-]\s?60\s?%/);
-        if (at < 0) continue;
-        var m = n.nodeValue.slice(at).match(/^[−-]\s?60\s?%/)[0], hit = n.splitText(at);
-        hit.splitText(m.length);
-        var sp = doc.createElement('span'); sp.className = 'bf_pill60';
-        hit.parentNode.replaceChild(sp, hit); sp.appendChild(hit);
-        return;
-      }
+    [['#bf-offer .bf_h2', ''], ['.bf_bar-text', ' is-violet']].forEach(function (cfg) {
+      $$(cfg[0]).forEach(function (h) {
+        if ($('.bf_pill60', h)) return;
+        var w = doc.createTreeWalker(h, NodeFilter.SHOW_TEXT), n;
+        while ((n = w.nextNode())) {
+          var at = n.nodeValue.search(/[−-]\s?60\s?%/);
+          if (at < 0) continue;
+          var m = n.nodeValue.slice(at).match(/^[−-]\s?60\s?%/)[0], hit = n.splitText(at);
+          hit.splitText(m.length);
+          var sp = doc.createElement('span'); sp.className = 'bf_pill60' + cfg[1];
+          hit.parentNode.replaceChild(sp, hit); sp.appendChild(hit);
+          return;
+        }
+      });
     });
   }
 

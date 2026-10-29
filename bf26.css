@@ -289,3 +289,4 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 @media (prefers-reduced-motion:reduce){.bf-js .bf_reveal{opacity:1;transform:none;transition:none}}
 /* «−60%» у заголовку «Що входить» — помаранчева плашка (макет 29.10: radius 16, padding 10, rotate −4.5°) */
 .bf_pill60{display:inline-flex;align-items:center;justify-content:center;padding:.1em .28em;border-radius:16px;background:#ff8400;color:#fefefe;line-height:1.1;transform:rotate(-4.5deg);white-space:nowrap}
+.bf_pill60.is-violet{background:#9762fd;border-radius:10px;padding:.08em .32em;transform:rotate(-3deg);margin-right:.15em}
