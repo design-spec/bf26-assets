@@ -91,22 +91,25 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 [data-icon="refund"]{--bf-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z'/%3E%3Cpath d='M8.5 12l2.5 2.5 4.5-5'/%3E%3C/svg%3E")}
 [data-bf-feat-media]{opacity:0;transform:scale(1.04);transition:opacity .6s ease,transform 1s cubic-bezier(.2,.8,.2,1)}
 [data-bf-feat-media].is-active,html:not(.bf-js) [data-bf-feat-media]:first-child{opacity:1;transform:none}
-/* без іконок (рішення 29.10); десктоп — як мобільний (картинка в картці), але 4 картки в ряд, без липкого зображення ліворуч */
+/* без іконок (рішення 29.10). «Scroll Stack» (як reactbits): картки липнуть одна на одну, попередні зменшуються (initStack у bf26.js) */
 .bf_feat-icon{display:none}
+.bf_feat-slot [data-bf-feat-media]{opacity:1;transform:none}
+.bf_feat-card{transform-origin:50% 0;will-change:transform;box-shadow:0 -12px 40px rgba(0,0,0,.4)}
 @media (min-width:992px){
   .bf_feat{display:block}
   .bf_feat-media{display:none}
-  .bf_feat-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-  .bf_feat-card{justify-content:flex-start;padding:0;overflow:hidden;cursor:default;background-color:var(--_bf26-dark---bf-surface-raised,#251c33)}
-  .bf_feat-slot{display:block;position:relative;aspect-ratio:16/10;overflow:hidden}
-  .bf_feat-slot [data-bf-feat-media]{opacity:1;transform:none}
-  .bf_feat-body{margin:16px 20px 22px}
-  .bf_feat-title{font-size:20px}
+  .bf_feat-list{display:flex;flex-direction:column;gap:14vh;padding-bottom:4vh}
+  .bf_feat-card{position:sticky;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:center;min-height:360px;padding:0;overflow:hidden;cursor:default;border-radius:32px;background-color:var(--_bf26-dark---bf-surface-raised,#251c33)}
+  .bf_feat-slot{display:block;position:relative;height:100%;min-height:360px;overflow:hidden}
+  .bf_feat-slot .bf_feat-img{object-fit:cover}
+  .bf_feat-body{margin:40px 48px}
+  .bf_feat-title{font-size:34px}
+  .bf_feat-text{font-size:19px}
+  [data-bf-feat]:nth-child(1){top:16vh}[data-bf-feat]:nth-child(2){top:calc(16vh + 24px)}[data-bf-feat]:nth-child(3){top:calc(16vh + 48px)}[data-bf-feat]:nth-child(4){top:calc(16vh + 72px)}
 }
 @media (max-width:991px){
-  .bf_feat-slot [data-bf-feat-media]{opacity:1;transform:none}
-  [data-bf-feat]:nth-child(2){top:78px}[data-bf-feat]:nth-child(3){top:88px}[data-bf-feat]:nth-child(4){top:98px}
-  .bf_feat-card{box-shadow:0 -10px 30px rgba(0,0,0,.35)}
+  .bf_feat-list{gap:24px}
+  [data-bf-feat]:nth-child(2){top:80px}[data-bf-feat]:nth-child(3){top:92px}[data-bf-feat]:nth-child(4){top:104px}
 }
 @media (prefers-reduced-motion:reduce){[data-bf-feat-media],.bf_feat-card{transition:none !important}}
 

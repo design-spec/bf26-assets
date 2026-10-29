@@ -978,6 +978,32 @@
     items.forEach(function (el) { io.observe(el); });
   }
 
+  // «Scroll Stack» (reactbits): картка зменшується, поки наступна наїжджає на неї; глибші картки — менші (як baseScale + i·itemScale)
+  function initStack() {
+    var cards = $$('[data-bf-feat-wrap] [data-bf-feat]');
+    if (cards.length < 2 || reduceMotion) return;
+    var BASE = 0.85, STEP = 0.03, busy = false;
+    function update() {
+      busy = false;
+      cards.forEach(function (c, i) {
+        var next = cards[i + 1];
+        if (!next) { c.style.transform = ''; return; }
+        var stick = parseFloat(getComputedStyle(next).top) || 0, h = c.offsetHeight || 1;
+        var p = Math.min(1, Math.max(0, 1 - (next.getBoundingClientRect().top - stick) / h));
+        var target = BASE + i * STEP;
+        // далі наступні картки докидають ще трохи — стопка «осідає» глибше
+        for (var j = i + 2; j < cards.length; j++) {
+          var n = cards[j], st = parseFloat(getComputedStyle(n).top) || 0;
+          p += Math.min(1, Math.max(0, 1 - (n.getBoundingClientRect().top - st) / (n.offsetHeight || 1))) * 0.35;
+        }
+        c.style.transform = 'scale(' + Math.max(target - 0.05, 1 - Math.min(p, 1.35) * (1 - target)).toFixed(4) + ')';
+      });
+    }
+    addEventListener('scroll', function () { if (!busy) { busy = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', update, { passive: true });
+    update();
+  }
+
   // святкові кульки при відкритті сторінки: окремий файл, без «зменшення руху»; вимкнути — window.BF26_BALLOONS = false
   function initBalloons() {
     if (reduceMotion || window.BF26_BALLOONS === false) return;
@@ -1085,6 +1111,7 @@
     initReveal();
     initBalloons();
     initFeat();
+    initStack();
     initScroll();
     track('bf_page_view', {});
     window.BF26 = {
