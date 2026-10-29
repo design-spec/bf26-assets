@@ -171,23 +171,25 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 
 /* hero: стрічки скотчу BLACK / FRIDAY + «в [логотип All Right]» + зірка −60% (initTapes у bf26.js). До роботи JS — не блимаємо старим виглядом */
 .bf-js .bf_hero .bf_eyebrow:not(.is-tapes),.bf-js .bf_hero .bf_h1 > .bf_sticker.is-hero{visibility:hidden}
-.bf_eyebrow.is-tapes{display:grid;grid-template-columns:auto auto;grid-template-rows:auto 1fr;column-gap:.55em;justify-content:start;width:max-content;max-width:100%;margin-bottom:36px;padding:0;border-radius:0;background:none;color:#14001a;font-size:44px;font-weight:900;line-height:1;letter-spacing:-.01em;text-transform:uppercase}
+.bf_eyebrow.is-tapes{display:grid;grid-template-columns:auto auto;grid-template-rows:auto 1fr;column-gap:.3em;justify-content:start;width:max-content;max-width:100%;margin-bottom:36px;padding:0;border-radius:0;background:none;color:#14001a;font-size:44px;font-weight:900;line-height:1;letter-spacing:-.01em;text-transform:uppercase}
 .bf_tapes{grid-row:1/3;display:flex;flex-direction:column;align-items:flex-start}
 .bf_tape{display:block;padding:.16em .42em .12em;background:#fe8b21;white-space:nowrap;
   clip-path:polygon(2% 0,98% 0,96.5% 18%,100% 34%,97.5% 52%,99.5% 70%,96.5% 86%,98.5% 100%,1.5% 100%,3.5% 84%,0 66%,2.5% 50%,.5% 32%,3% 16%);
   animation:bf-tape .5s cubic-bezier(.2,1.4,.4,1) both}
-.bf_tape.is-1{transform:rotate(-3deg);margin-left:.45em;animation-delay:.15s}
+.bf_tape.is-1{transform:rotate(-3deg);margin-left:.1em;animation-delay:.15s}
 .bf_tape.is-2{margin-top:-.06em;background:#9762fd;font-size:1.6em;transform:rotate(2deg);animation-delay:.35s}
 @keyframes bf-tape{from{opacity:0;scale:1.25}to{opacity:1;scale:1}}
-.bf_brand{display:flex;align-items:center;gap:.3em;padding-top:.12em;color:#fefefe;text-transform:none;white-space:nowrap;animation:bf-tape .5s .55s cubic-bezier(.2,1.4,.4,1) both}
+.bf_brand{display:flex;align-items:center;gap:.25em;padding-top:.1em;color:#fefefe;text-transform:none;white-space:nowrap;animation:bf-tape .5s .55s cubic-bezier(.2,1.4,.4,1) both}
 .bf_brand-pre{font-size:.85em;font-weight:800}
 .bf_brand-pre:empty{display:none}
 .bf_brand-logo{display:block;height:1.3em;width:auto;color:#9762fd}
 .bf_brand-text{color:#9762fd}
-.bf_tag{position:relative;align-self:start;justify-self:start;margin:.35em 0 0 .1em;font-size:1em;animation:bf-tag-in .6s .8s cubic-bezier(.2,1.4,.4,1) both}
-.bf_tag .bf_sticker.is-hero{display:flex;width:2.5em;height:2.5em;margin:0;font-size:1em;vertical-align:top}
-.bf_tag .bf_sticker-text.is-hero{font-size:.6em}
+.bf_tag{position:relative;align-self:center;justify-self:start;margin:0 0 0 -.15em;font-size:1em;animation:bf-tag-in .6s .8s cubic-bezier(.2,1.4,.4,1) both}
+.bf_tag .bf_sticker.is-hero{display:flex;width:2.5em;height:2.5em;margin:0;font-size:1em;vertical-align:top;background:#fe8b21;color:#fefefe;clip-path:polygon(100.0% 50.0%,99.0% 51.9%,96.7% 53.7%,94.2% 55.2%,93.1% 56.8%,93.7% 58.7%,95.5% 60.9%,97.2% 63.3%,97.6% 65.5%,96.0% 67.0%,93.2% 67.9%,90.4% 68.6%,88.8% 69.8%,88.9% 71.8%,89.9% 74.5%,90.8% 77.3%,90.5% 79.4%,88.5% 80.4%,85.6% 80.4%,82.7% 80.2%,80.8% 80.8%,80.2% 82.7%,80.4% 85.6%,80.4% 88.5%,79.4% 90.5%,77.3% 90.8%,74.5% 89.9%,71.8% 88.9%,69.8% 88.8%,68.6% 90.4%,67.9% 93.2%,67.0% 96.0%,65.5% 97.6%,63.3% 97.2%,60.9% 95.5%,58.7% 93.7%,56.8% 93.1%,55.2% 94.2%,53.7% 96.7%,51.9% 99.0%,50.0% 100.0%,48.1% 99.0%,46.3% 96.7%,44.8% 94.2%,43.2% 93.1%,41.3% 93.7%,39.1% 95.5%,36.7% 97.2%,34.5% 97.6%,33.0% 96.0%,32.1% 93.2%,31.4% 90.4%,30.2% 88.8%,28.2% 88.9%,25.5% 89.9%,22.7% 90.8%,20.6% 90.5%,19.6% 88.5%,19.6% 85.6%,19.8% 82.7%,19.2% 80.8%,17.3% 80.2%,14.4% 80.4%,11.5% 80.4%,9.5% 79.4%,9.2% 77.3%,10.1% 74.5%,11.1% 71.8%,11.2% 69.8%,9.6% 68.6%,6.8% 67.9%,4.0% 67.0%,2.4% 65.5%,2.8% 63.3%,4.5% 60.9%,6.3% 58.7%,6.9% 56.8%,5.8% 55.2%,3.3% 53.7%,1.0% 51.9%,0.0% 50.0%,1.0% 48.1%,3.3% 46.3%,5.8% 44.8%,6.9% 43.2%,6.3% 41.3%,4.5% 39.1%,2.8% 36.7%,2.4% 34.5%,4.0% 33.0%,6.8% 32.1%,9.6% 31.4%,11.2% 30.2%,11.1% 28.2%,10.1% 25.5%,9.2% 22.7%,9.5% 20.6%,11.5% 19.6%,14.4% 19.6%,17.3% 19.8%,19.2% 19.2%,19.8% 17.3%,19.6% 14.4%,19.6% 11.5%,20.6% 9.5%,22.7% 9.2%,25.5% 10.1%,28.2% 11.1%,30.2% 11.2%,31.4% 9.6%,32.1% 6.8%,33.0% 4.0%,34.5% 2.4%,36.7% 2.8%,39.1% 4.5%,41.3% 6.3%,43.2% 6.9%,44.8% 5.8%,46.3% 3.3%,48.1% 1.0%,50.0% 0.0%,51.9% 1.0%,53.7% 3.3%,55.2% 5.8%,56.8% 6.9%,58.7% 6.3%,60.9% 4.5%,63.3% 2.8%,65.5% 2.4%,67.0% 4.0%,67.9% 6.8%,68.6% 9.6%,69.8% 11.2%,71.8% 11.1%,74.5% 10.1%,77.3% 9.2%,79.4% 9.5%,80.4% 11.5%,80.4% 14.4%,80.2% 17.3%,80.8% 19.2%,82.7% 19.8%,85.6% 19.6%,88.5% 19.6%,90.5% 20.6%,90.8% 22.7%,89.9% 25.5%,88.9% 28.2%,88.8% 30.2%,90.4% 31.4%,93.2% 32.1%,96.0% 33.0%,97.6% 34.5%,97.2% 36.7%,95.5% 39.1%,93.7% 41.3%,93.1% 43.2%,94.2% 44.8%,96.7% 46.3%,99.0% 48.1%)}
+.bf_tag .bf_sticker-text.is-hero{font-size:.72em;letter-spacing:-.02em;transform:rotate(-4deg)}
 @keyframes bf-tag-in{from{opacity:0;transform:translateY(-.5em) rotate(-20deg)}to{opacity:1;transform:none}}
 @media (max-width:991px){.bf_eyebrow.is-tapes{font-size:34px;margin-bottom:30px}}
 @media (max-width:479px){.bf_eyebrow.is-tapes{font-size:21px;margin-bottom:24px}}
 @media (prefers-reduced-motion:reduce){.bf_tape,.bf_brand,.bf_tag{animation:none}}
+/* картинка з персонажем у hero — тимчасово прибрана (рішення 29.10); повернути: видалити рядок */
+.bf_hero .bf_hero-img{display:none}
