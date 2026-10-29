@@ -827,6 +827,38 @@
     if (doc.readyState === 'complete') go(); else addEventListener('load', go, { once: true });
   }
 
+  // hero: «Black Friday в All Right» — три стрічки скотчу (1-ше слово, 2-ге, решта), −60% — цінник на нитці праворуч від стрічок.
+  // Цінник переїжджає з h1, тож двокрапка в кінці заголовка більше не потрібна
+  function initTapes() {
+    var eb = $('.bf_hero .bf_eyebrow');
+    if (!eb || eb.querySelector('.bf_tape')) return;
+    var words = eb.textContent.trim().split(/\s+/);
+    if (words.length < 2) return;
+    var parts = [words[0], words[1], words.slice(2).join(' ')].filter(Boolean);
+    eb.textContent = '';
+    parts.forEach(function (w, i) {
+      var s = doc.createElement('span');
+      s.className = 'bf_tape is-' + (i + 1); s.textContent = w;
+      eb.appendChild(s);
+      if (i < parts.length - 1) eb.appendChild(doc.createTextNode(' '));
+    });
+    var st = $('.bf_hero .bf_sticker.is-hero');
+    if (st) {
+      var h1 = st.closest('h1'), tag = doc.createElement('span');
+      tag.className = 'bf_tag';
+      tag.innerHTML = '<svg class="bf_tag-string" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M2 4C40 -6 70 30 58 58S86 92 96 98" fill="none" stroke="#fefefe" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="bf_tag-body"></span>';
+      tag.lastChild.textContent = st.textContent.trim();
+      st.parentNode.removeChild(st);
+      eb.appendChild(tag);
+      if (h1) {
+        var t = h1.lastChild;
+        while (t && t.nodeType === 3 && !t.nodeValue.trim()) t = t.previousSibling;
+        if (t && t.nodeType === 3) t.nodeValue = t.nodeValue.replace(/\s*[:：]\s*$/, '');
+      }
+    }
+    eb.classList.add('is-tapes');
+  }
+
   // святкові кульки при відкритті сторінки: окремий файл, без «зменшення руху»; вимкнути — window.BF26_BALLOONS = false
   function initBalloons() {
     if (reduceMotion || window.BF26_BALLOONS === false) return;
@@ -917,6 +949,7 @@
   function start() {
     syncDeadline();
     fillStatic();
+    initTapes();
     initQuiz();
     initCountdown();
     initCtas();
