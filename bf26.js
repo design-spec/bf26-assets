@@ -1069,6 +1069,22 @@
     io.observe(box);
   }
 
+  // «−60%» у заголовку блоку «Що входить» — окрема плашка (span навколо фрази, текст заголовка не міняється)
+  function initPill() {
+    $$('#bf-offer .bf_h2').forEach(function (h) {
+      var w = doc.createTreeWalker(h, NodeFilter.SHOW_TEXT), n;
+      while ((n = w.nextNode())) {
+        var at = n.nodeValue.search(/[−-]\s?60\s?%/);
+        if (at < 0) continue;
+        var m = n.nodeValue.slice(at).match(/^[−-]\s?60\s?%/)[0], hit = n.splitText(at);
+        hit.splitText(m.length);
+        var sp = doc.createElement('span'); sp.className = 'bf_pill60';
+        hit.parentNode.replaceChild(sp, hit); sp.appendChild(hit);
+        return;
+      }
+    });
+  }
+
   function initTerms() {
     var box = $('[data-bf-terms]'), lead = $('.bf_lead[data-bf-tpl]');
     if (box) highlight(box, $$('.w-richtext p', box), T.termsHighlight);
@@ -1104,6 +1120,7 @@
     initEmptyBlocks();
     initDeck();
     initTerms();
+    initPill();
     initMarquee();
     initTable();
     initRays();

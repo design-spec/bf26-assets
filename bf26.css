@@ -98,7 +98,7 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 @media (min-width:992px){
   .bf_feat{display:block}
   .bf_feat-media{display:none}
-  .bf_feat-list{display:flex;flex-direction:column;gap:14vh;padding-bottom:4vh}
+  .bf_feat-list{display:flex;flex-direction:column;gap:14vh;width:80%;margin:0 auto;padding-bottom:4vh}
   .bf_feat-card{position:sticky;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:center;min-height:360px;padding:0;overflow:hidden;cursor:default;border-radius:32px;background-color:var(--_bf26-dark---bf-surface-raised,#251c33)}
   .bf_feat-slot{display:block;position:relative;height:100%;min-height:360px;overflow:hidden}
   .bf_feat-slot .bf_feat-img{object-fit:cover}
@@ -287,3 +287,5 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf-js .bf_reveal{opacity:0;transform:translateY(100px);transition:opacity .8s cubic-bezier(.215,.61,.355,1) var(--bf-rd,0s),transform .8s cubic-bezier(.215,.61,.355,1) var(--bf-rd,0s)}
 .bf-js .bf_reveal.is-in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.bf-js .bf_reveal{opacity:1;transform:none;transition:none}}
+/* «−60%» у заголовку «Що входить» — помаранчева плашка (макет 29.10: radius 16, padding 10, rotate −4.5°) */
+.bf_pill60{display:inline-flex;align-items:center;justify-content:center;padding:.1em .28em;border-radius:16px;background:#ff8400;color:#fefefe;line-height:1.1;transform:rotate(-4.5deg);white-space:nowrap}
