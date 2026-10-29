@@ -346,8 +346,8 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 
 /* вибір мови в шапці (зліва від CTA) */
 .bf_lang{position:relative;flex:none}
-.bf_lang-btn{display:flex;align-items:center;gap:6px;height:40px;padding:0 12px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.04);color:#fefefe;font:600 14px/1 inherit;letter-spacing:.02em;cursor:pointer;transition:background-color .2s,border-color .2s}
-.bf_lang-btn:hover,.bf_lang.is-open .bf_lang-btn{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28)}
+.bf_lang-btn{display:flex;align-items:center;gap:6px;height:40px;padding:0 8px;border:0;border-radius:999px;background:none;color:#fefefe;font:600 14px/1 inherit;letter-spacing:.02em;cursor:pointer;opacity:.9;transition:opacity .2s}
+.bf_lang-btn:hover,.bf_lang.is-open .bf_lang-btn{opacity:1}
 .bf_lang-btn:focus-visible{outline:2px solid #fe8b21;outline-offset:2px}
 .bf_lang-ico{width:16px;height:16px;background:currentColor;opacity:.85;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20'/%3E%3C/svg%3E") center/contain no-repeat}
 .bf_lang-chev{width:8px;height:8px;margin-left:2px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);opacity:.7;transition:transform .2s}
@@ -358,5 +358,5 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf_lang-item:not(.is-soon):hover{background:#f3eefe}
 .bf_lang-item.is-current{background:#f3eefe;font-weight:700}
 .bf_lang-item.is-soon{opacity:.4;cursor:default}
-@media (max-width:767px){.bf_lang-btn{height:36px;padding:0 10px;font-size:13px}.bf_lang-ico{display:none}}
+@media (max-width:767px){.bf_lang-btn{height:36px;padding:0 6px;font-size:13px}.bf_lang-ico{display:none}}
 @media (prefers-reduced-motion:reduce){.bf_lang-menu,.bf_lang-chev{transition:none}}
