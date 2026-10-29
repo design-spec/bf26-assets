@@ -959,6 +959,7 @@
       c2.addEventListener('click', close);
       nav.appendChild(c2);
     }
+    initLang(bar, cta);
     // логотип по центру «таблетки» (той самий файл, що й у hero)
     var logo = doc.createElement('a');
     logo.className = 'bf_nav-logo'; logo.href = '#bf-quiz'; logo.setAttribute('aria-label', 'All Right');
@@ -976,6 +977,39 @@
       });
     }, { rootMargin: '-45% 0px -50% 0px' });
     items.forEach(function (n) { io.observe(doc.getElementById(n[0])); });
+  }
+
+  // компактний вибір мови в шапці зліва від CTA. Список — CFG.langs [код, підпис, назва];
+  // мова без готової сторінки (немає в CFG.langsLive) показується неактивною з підказкою «Незабаром»
+  function initLang(bar, cta) {
+    var list = CFG.langs || [], live = CFG.langsLive || [LOCALE];
+    if (list.length < 2 || $('.bf_lang', bar)) return;
+    var cur = list.filter(function (l) { return l[0] === LOCALE; })[0] || list[0];
+    var wrap = doc.createElement('div'), btn = doc.createElement('button'), menu = doc.createElement('ul');
+    wrap.className = 'bf_lang';
+    btn.type = 'button'; btn.className = 'bf_lang-btn';
+    btn.setAttribute('aria-haspopup', 'true'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', (T.langLabel || 'Мова') + ': ' + cur[2]);
+    btn.innerHTML = '<span class="bf_lang-ico" aria-hidden="true"></span><span>' + cur[1] + '</span><span class="bf_lang-chev" aria-hidden="true"></span>';
+    menu.className = 'bf_lang-menu';
+    list.forEach(function (l) {
+      var li = doc.createElement('li'), a = doc.createElement('a'), on = live.indexOf(l[0]) > -1;
+      a.className = 'bf_lang-item' + (l[0] === LOCALE ? ' is-current' : '');
+      a.setAttribute('lang', l[0]); a.innerHTML = '<b>' + l[1] + '</b> ' + l[2];
+      if (l[0] === LOCALE) a.setAttribute('aria-current', 'true');
+      if (on) a.href = location.pathname.replace(/^\/[a-z]{2}(?=\/)/, '/' + l[0]) + location.search;
+      else { a.setAttribute('aria-disabled', 'true'); a.title = T.langSoon || 'Незабаром'; a.className += ' is-soon'; }
+      a.addEventListener('click', function (e) { if (!on) return e.preventDefault(); track('bf_lang_click', { to: l[0] }); });
+      li.appendChild(a); menu.appendChild(li);
+    });
+    function close() { wrap.classList.remove('is-open'); btn.setAttribute('aria-expanded', 'false'); }
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation(); bar.classList.remove('is-nav-open');
+      btn.setAttribute('aria-expanded', String(wrap.classList.toggle('is-open')));
+    });
+    doc.addEventListener('click', function (e) { if (!wrap.contains(e.target)) close(); });
+    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    wrap.appendChild(btn); wrap.appendChild(menu);
+    bar.insertBefore(wrap, cta || null);
   }
 
   // фон hero «поле з кільцем» (Canvas 2D): окремий файл; вимкнути — window.BF26_RING = false
