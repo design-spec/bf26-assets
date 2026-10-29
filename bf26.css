@@ -208,10 +208,10 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf_hero .bf_hero-img{display:none}
 
 /* шапка як reactbits «Navigation 11»: плаваюча темна «таблетка» — розділи ліворуч, лого по центру, таймер + CTA праворуч;
-   < 1280 — таймер + бургер, меню біле (initNav у bf26.js додає nav, лого і бургер) */
+   < 1600 — лого, напис, таймер + бургер, меню біле (initNav у bf26.js додає nav, лого і бургер) */
 [id^="bf-"]{scroll-margin-top:88px}
 .bf_bar{height:auto;padding:12px 16px 0;background:transparent;pointer-events:none}
-.bf_bar-inner.has-nav{position:relative;justify-content:flex-start;gap:16px;max-width:1280px;height:56px;margin:0 auto;padding:0 8px 0 20px;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:rgba(20,18,26,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 10px 30px -10px rgba(0,0,0,.6);pointer-events:auto}
+.bf_bar-inner.has-nav{position:relative;justify-content:flex-start;gap:16px;max-width:1560px;height:56px;margin:0 auto;padding:0 8px 0 20px;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:rgba(20,18,26,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 10px 30px -10px rgba(0,0,0,.6);pointer-events:auto}
 .bf_bar-inner.has-nav .bf_bar-text{display:none}
 .bf_bar-inner.has-nav .bf_cd{margin-left:auto}
 .bf_bar-inner.has-nav > .bf_btn-bar{background:#fe8b21;color:#fefefe;border-radius:999px;white-space:nowrap}
@@ -230,10 +230,10 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .is-nav-open .bf_nav-toggle span:nth-child(1){transform:translateY(6px) rotate(45deg)}
 .is-nav-open .bf_nav-toggle span:nth-child(2){opacity:0}
 .is-nav-open .bf_nav-toggle span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
-@media (min-width:1280px){
+@media (min-width:1600px){
   .bf_nav{display:flex;align-items:center;gap:2px}
 }
-@media (max-width:1279px){
+@media (max-width:1599px){
   .bf_nav-toggle{display:flex}
   .bf_bar-inner.has-nav > .bf_btn-bar{margin-left:0}
   .bf_nav-logo{margin-right:auto}
@@ -327,3 +327,8 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf_eyebrow.is-tapes .bf_tape{color:#fefefe}
 /* мобільний: BLACK FRIDAY по центру і на всю ширину колонки */
 @media (max-width:767px){.bf_eyebrow.is-tapes{margin-left:auto;margin-right:auto;font-size:min(7.3vw,40px)}}
+/* напис «-60% до Чорної пʼятниці» біля таймера (у «таблетці»), коли вистачає місця */
+.bf_bar-inner.has-nav .bf_bar-text{display:block;margin-left:auto;color:#fefefe;font-size:16px}
+.bf_bar-inner.has-nav .bf_bar-text + .bf_cd{margin-left:0}
+@media (max-width:1599px){.bf_bar-inner.has-nav .bf_bar-text{margin-left:auto}.bf_nav-logo{margin-right:0}}
+@media (max-width:991px){.bf_bar-inner.has-nav .bf_bar-text{display:none}.bf_nav-logo{margin-right:auto}}
