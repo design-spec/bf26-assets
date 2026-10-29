@@ -199,14 +199,18 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 /* швидке меню у верхній смузі (initNav у bf26.js) */
 [id^="bf-"]{scroll-margin-top:72px}
 .bf_bar-inner.has-nav{position:relative;justify-content:flex-start}
-.bf_bar-inner.has-nav .bf_bar-text{margin-left:auto}
+.bf_bar-inner.has-nav .bf_bar-text{display:none}
+.bf_bar-inner.has-nav .bf_cd{margin-left:auto}
+.bf_btn-bar{white-space:nowrap}
+.bf_nav-cta{display:none}
+@media (min-width:1600px){.bf_bar-inner.has-nav .bf_bar-text{display:block;margin-left:auto}.bf_bar-inner.has-nav .bf_cd{margin-left:0}}
 .bf_nav{display:flex;align-items:center;gap:2px;min-width:0}
 .bf_nav-link{padding:8px 12px;border-radius:999px;color:#14001a;font-size:15px;font-weight:600;line-height:1.2;white-space:nowrap;text-decoration:none;transition:background-color .2s,color .2s}
 .bf_nav-link:hover{background:rgba(20,0,26,.12)}
 .bf_nav-link.is-active{background:#14001a;color:#fefefe}
 .bf_nav-link:focus-visible,.bf_nav-toggle:focus-visible{outline:2px solid #14001a;outline-offset:2px}
 .bf_nav-toggle{display:none}
-@media (max-width:1279px){.bf_bar-inner.has-nav .bf_bar-text{display:none}.bf_bar-inner.has-nav .bf_cd{margin-left:auto}.bf_nav-link{padding:8px 9px;font-size:14px}.bf_bar-inner.has-nav{gap:14px}.bf_btn-bar{white-space:nowrap}}
+@media (max-width:1279px){.bf_nav-link{padding:8px 9px;font-size:14px}.bf_bar-inner.has-nav{gap:14px}.bf_btn-bar{white-space:nowrap}}
 @media (max-width:1149px){
   .bf_nav-toggle{display:flex;flex-direction:column;justify-content:center;gap:4px;flex:none;width:40px;height:40px;padding:0 10px;border:0;border-radius:10px;background:#14001a;cursor:pointer}
   .bf_nav-toggle span{display:block;height:2px;border-radius:2px;background:#fefefe;transition:transform .25s,opacity .25s}
@@ -221,3 +225,17 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
   .bf_bar-inner.has-nav .bf_cd{margin-left:0;margin-right:auto}
 }
 @media (prefers-reduced-motion:reduce){.bf_nav,.bf_nav-toggle span,.bf_nav-link{transition:none}}
+
+/* таймер: секунди (дописує initCountdown) і темні плашки під цифрами */
+.bf_cd{gap:4px}
+.bf_cd-item{display:flex;align-items:baseline;gap:2px;padding:4px 7px;border-radius:8px;background:#14001a;color:#fefefe}
+.bf_cd-item .bf_cd-num{font-variant-numeric:tabular-nums}
+.bf_cd-item .bf_cd-unit{color:rgba(254,254,254,.7)}
+.bf_cd-lg{gap:8px}.bf_cd-lg .bf_cd-item{gap:4px;padding:10px 14px;border-radius:14px}
+@media (max-width:479px){.bf_cd{gap:3px}.bf_cd-item{padding:3px 5px;border-radius:6px}.bf_cd-lg{gap:6px}.bf_cd-lg .bf_cd-item{padding:8px 10px;border-radius:10px}}
+/* квіз: підказка «можна обрати кілька» */
+.bf_qmulti{margin:-8px 0 16px;padding:0;background:none;color:#b5b4be;font-size:15px;line-height:1.4}
+@media (max-width:479px){
+  .bf_bar-inner.has-nav > .bf_btn-bar{display:none}
+  .bf_nav .bf_nav-cta{display:flex;justify-content:center;margin-top:8px;min-height:48px;background:#fe8b21;color:#fefefe;font-size:16px}
+}

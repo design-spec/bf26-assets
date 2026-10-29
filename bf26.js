@@ -156,13 +156,23 @@
   function initCountdown() {
     var els = $$('[data-bf-countdown]');
     if (!els.length) return;
-    var timer = setInterval(tick, 30000);
+    // секунди: дописуємо клітинку за зразком хвилин (у Designer їх немає)
+    els.forEach(function (el) {
+      var m = $('[data-cd="m"]', el), item = m && m.closest('.bf_cd-item');
+      if (!item || $('[data-cd="s"]', el)) return;
+      var sec = item.cloneNode(true);
+      sec.classList.remove('bf_cd-min'); sec.classList.add('bf_cd-sec');
+      $('[data-cd]', sec).setAttribute('data-cd', 's');
+      var u = $('.bf_cd-unit', sec); if (u) u.textContent = T.cdSec || 'сек';
+      item.parentNode.insertBefore(sec, item.nextSibling);
+    });
+    var timer = setInterval(tick, 1000);
     function tick() {
       var ms = DEADLINE_MS - Date.now();
       if (ms <= 0) { clearInterval(timer); syncDeadline(); renderAll(); return; }
-      var v = { d: Math.floor(ms / 864e5), h: Math.floor(ms / 36e5) % 24, m: Math.floor(ms / 6e4) % 60 };
+      var v = { d: Math.floor(ms / 864e5), h: Math.floor(ms / 36e5) % 24, m: Math.floor(ms / 6e4) % 60, s: Math.floor(ms / 1e3) % 60 };
       els.forEach(function (el) {
-        ['d', 'h', 'm'].forEach(function (u) {
+        ['d', 'h', 'm', 's'].forEach(function (u) {
           var t = $('[data-cd="' + u + '"]', el);
           if (t) t.textContent = u === 'd' ? v[u] : String(v[u]).padStart(2, '0');
         });
@@ -293,6 +303,22 @@
     if (tel) { tel.setAttribute('inputmode', 'tel'); tel.setAttribute('autocomplete', 'tel-national'); if (setupIti(tel)) tel.removeAttribute('placeholder'); }
     var em = field(form, 'email'); if (em) { em.setAttribute('inputmode', 'email'); em.setAttribute('autocomplete', 'email'); }
 
+    // кроки з кількома відповідями: підказка під питанням
+    $$('[data-step]', form).forEach(function (fs) {
+      var st = STEPS[+fs.getAttribute('data-step')], lg = $('legend', fs);
+      if (!st || st.t !== 'multi' || !lg || $('.bf_qmulti', fs)) return;
+      var h = doc.createElement('p'); h.className = 'bf_qmulti'; h.textContent = T.multiHint || 'Можна обрати кілька варіантів';
+      lg.parentNode.insertBefore(h, lg.nextSibling);
+    });
+
+    // клік по вже обраній відповіді (після «Назад») не дає change — переходимо далі самі.
+    // click спрацьовує раніше за change, тож S ще містить попереднє значення
+    form.addEventListener('click', function (e) {
+      var t = e.target, st = STEPS[S.step];
+      if (t.type !== 'radio' || !st || st.f !== t.name || S[t.name] !== t.value) return;
+      if (t.name === 'who_user_is' && t.value === 'child') return;
+      go(S.step + 1, card);
+    });
     form.addEventListener('change', onChange);
     form.addEventListener('input', onInput);
     form.addEventListener('submit', onSubmit, true);   // capture: раніше за webflow.js та index.js
@@ -883,6 +909,13 @@
     });
     doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
     doc.addEventListener('click', function (e) { if (!bar.contains(e.target)) close(); });
+    var cta = $('.bf_btn-bar', bar);
+    if (cta) {
+      var c2 = cta.cloneNode(true);
+      c2.classList.add('bf_nav-cta'); c2.setAttribute('data-bf-cta', 'nav');
+      c2.addEventListener('click', close);
+      nav.appendChild(c2);
+    }
     bar.insertBefore(nav, bar.firstChild);
     bar.appendChild(btn);
     bar.classList.add('has-nav');
