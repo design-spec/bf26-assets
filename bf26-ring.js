@@ -12,12 +12,14 @@
   var O = Object.assign({
     background: '#04050A',
     colors: ['#170332', '#290857'],   // далеке поле → ближче до кільця
-    hot: '#5226c4',                    // гаряча смуга кільця
-    spacing: 13,                       // крок сітки, px (менше — щільніше)
-    radius: 300,                       // радіус кільця, px (на вузьких екранах — до 45% ширини)
-    width: 85,                         // ширина смуги кільця, px
-    push: 12,                          // наскільки смуга розштовхує риски, px
-    dash: 9,                           // довжина риски, px
+    hot: '#4f22c0',                    // смуга кільця
+    spacing: 26,                       // крок сітки, px — «Density 300»: рідке поле
+    radius: .4,                        // радіус кільця, частка ширини — «Camera Distance 150»: кільце майже на весь екран
+    width: 150,                        // ширина смуги кільця, px
+    push: 14,                          // наскільки смуга розштовхує точки, px
+    dash: 5.5,                         // довжина точки-овалу, px — «Dot Size 85%»
+    thick: 3,                          // товщина точки, px
+    speed: .6,                         // загальна швидкість — «Speed 10»: повільно
     drift: 3                           // амбієнтне «дихання» поля, px
   }, window.BF26_RING || {});
 
@@ -44,7 +46,7 @@
     W = Math.max(1, r.width); H = Math.max(1, r.height);
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-    var step = W < 600 ? O.spacing + 3 : O.spacing;
+    var step = W < 600 ? O.spacing - 6 : O.spacing;
     pts = [];
     for (var y = step / 2; y < H; y += step) {
       for (var x = step / 2; x < W; x += step) {
@@ -53,11 +55,11 @@
         pts.push({ x: x + (j - .5) * step * .8, y: y + ((j * 7) % 1 - .5) * step * .8, p: j * 6.283, a: j * 3.1416 });
       }
     }
-    if (!ring.x) { ring.x = target.x = W * .62; ring.y = target.y = H * .45; }
+    if (!ring.x) { ring.x = target.x = W * .6; ring.y = target.y = H * .5; }
   }
 
   function frame(now) {
-    var t = (now - t0) / 1000;
+    var t = (now - t0) / 1000 * O.speed;
     if (!pointer) {   // блукання без курсора
       target.x = W * (.55 + .25 * Math.sin(t * .23)); target.y = H * (.5 + .28 * Math.sin(t * .31 + 1.3));
     }
@@ -66,22 +68,22 @@
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = O.background; ctx.fillRect(0, 0, W, H);
-    ctx.lineCap = 'round'; ctx.lineWidth = 1.6;
+    ctx.lineCap = 'round'; ctx.lineWidth = O.thick;
 
     var buckets = [];
     for (var b = 0; b < LEVELS; b++) buckets.push([]);
-    var R = Math.min(O.radius, W * .45) * (1 + .04 * Math.sin(t * 1.3)), w = O.width / 2;
+    var R = Math.max(W, H) * O.radius * (1 + .03 * Math.sin(t * 1.3)), w = O.width / 2;
     for (var i = 0; i < pts.length; i++) {
       var p = pts[i], dx = p.x - ring.x, dy = p.y - ring.y, d = Math.sqrt(dx * dx + dy * dy) || 1;
       var band = Math.exp(-((d - R) * (d - R)) / (w * w));          // 0…1, пік на колі
       var inner = d < R ? .25 * (1 - d / R) : 0;                     // легке підсвічування всередині
       var shimmer = .5 + .5 * Math.sin(t * 1.7 + p.p);
-      var lvl = Math.min(LEVELS - 1, Math.floor((band * .95 + inner + shimmer * .22) * LEVELS));
-      if (lvl < 1 && shimmer < .35) continue;                        // частину далеких рисок не малюємо — поле «мерехтить»
+      var lvl = Math.min(LEVELS - 1, Math.floor((band * .95 + inner * .6 + shimmer * .18) * LEVELS));
+      if (lvl < 1 && shimmer < .55) continue;                        // частину далеких точок не малюємо — поле «мерехтить»
       var off = band * O.push, ox = dx / d * off, oy = dy / d * off;
       var dr = O.drift * Math.sin(t * .8 + p.p);
       var x = p.x + ox + dr, y = p.y + oy + dr * .6;
-      var ang = p.a + t * .15 + band * 1.2, len = O.dash * (.55 + band * .7) / 2;
+      var ang = Math.atan2(dy, dx) + 1.5708 + (p.a - 1.57) * .35 + Math.sin(t * .5 + p.p) * .2, len = O.dash * (.7 + band * .5) / 2;
       buckets[lvl].push(x - Math.cos(ang) * len, y - Math.sin(ang) * len, x + Math.cos(ang) * len, y + Math.sin(ang) * len);
     }
     for (b = 0; b < LEVELS; b++) {
