@@ -264,3 +264,6 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
   mask:linear-gradient(to right,#000,transparent 22px,transparent calc(100% - 22px),#000) add,linear-gradient(to bottom,#000,transparent 22px,transparent calc(100% - 22px),#000)}
 @keyframes bf-beam{to{--bf-beam-a:360deg}}
 @media (prefers-reduced-motion:reduce){.bf_quiz::before,.bf_quiz::after{animation:none}}
+
+/* фон hero «поле з кільцем» (bf26-ring.js) — під променями та контентом */
+.bf_ring{position:absolute;inset:0;z-index:-2;display:block;width:100%;height:100%;pointer-events:none}

@@ -964,6 +964,13 @@
     items.forEach(function (n) { io.observe(doc.getElementById(n[0])); });
   }
 
+  // фон hero «поле з кільцем» (Canvas 2D): окремий файл; вимкнути — window.BF26_RING = false
+  function initRing() {
+    if (!$('.bf_hero') || window.BF26_RING === false) return;
+    var me = $('script[src*="bf26.js"]'), base = me ? me.src.replace(/bf26\.js.*$/, '') : 'https://cdn.jsdelivr.net/gh/design-spec/bf26-assets@v1.0.0/';
+    var s = doc.createElement('script'); s.src = base + 'bf26-ring.js'; s.async = true; doc.head.appendChild(s);
+  }
+
   // святкові кульки при відкритті сторінки: окремий файл, без «зменшення руху»; вимкнути — window.BF26_BALLOONS = false
   function initBalloons() {
     if (reduceMotion || window.BF26_BALLOONS === false) return;
@@ -1067,6 +1074,7 @@
     initMarquee();
     initTable();
     initRays();
+    initRing();
     initBalloons();
     initFeat();
     initScroll();
