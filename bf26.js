@@ -860,6 +860,43 @@
     eb.classList.add('is-tapes');
   }
 
+  // швидке меню у верхній смузі: пункти — T.nav [[id секції, підпис], …]; ≥ 1150 px — посилання в рядок, менше — кнопка-«бургер» зі списком.
+  // Пункт поточної секції підсвічується (IntersectionObserver)
+  function initNav() {
+    var bar = $('.bf_bar-inner'), items = (T.nav || []).filter(function (n) { return doc.getElementById(n[0]); });
+    if (!bar || !items.length || $('.bf_nav', bar)) return;
+    var nav = doc.createElement('nav'), btn = doc.createElement('button');
+    nav.className = 'bf_nav'; nav.id = 'bf-nav'; nav.setAttribute('aria-label', T.navLabel || 'Меню');
+    items.forEach(function (n) {
+      var a = doc.createElement('a');
+      a.href = '#' + n[0]; a.textContent = n[1]; a.className = 'bf_nav-link';
+      a.addEventListener('click', function () { track('bf_nav_click', { section: n[0] }); close(); });
+      nav.appendChild(a);
+    });
+    btn.type = 'button'; btn.className = 'bf_nav-toggle';
+    btn.setAttribute('aria-controls', 'bf-nav'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', T.navLabel || 'Меню');
+    btn.innerHTML = '<span></span><span></span><span></span>';
+    function close() { bar.classList.remove('is-nav-open'); btn.setAttribute('aria-expanded', 'false'); }
+    btn.addEventListener('click', function () {
+      var open = bar.classList.toggle('is-nav-open');
+      btn.setAttribute('aria-expanded', String(open));
+    });
+    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    doc.addEventListener('click', function (e) { if (!bar.contains(e.target)) close(); });
+    bar.insertBefore(nav, bar.firstChild);
+    bar.appendChild(btn);
+    bar.classList.add('has-nav');
+    if (!window.IntersectionObserver) return;
+    var links = $$('.bf_nav-link', nav);
+    var io = new IntersectionObserver(function (en) {
+      en.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (a) { a.classList.toggle('is-active', a.getAttribute('href') === '#' + e.target.id); });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    items.forEach(function (n) { io.observe(doc.getElementById(n[0])); });
+  }
+
   // святкові кульки при відкритті сторінки: окремий файл, без «зменшення руху»; вимкнути — window.BF26_BALLOONS = false
   function initBalloons() {
     if (reduceMotion || window.BF26_BALLOONS === false) return;
@@ -951,6 +988,7 @@
     syncDeadline();
     fillStatic();
     initTapes();
+    initNav();
     initQuiz();
     initCountdown();
     initCtas();

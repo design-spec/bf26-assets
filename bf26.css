@@ -171,7 +171,8 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 
 /* hero: стрічки скотчу BLACK / FRIDAY + «в [логотип All Right]» + зірка −60% (initTapes у bf26.js). До роботи JS — не блимаємо старим виглядом */
 .bf-js .bf_hero .bf_eyebrow:not(.is-tapes),.bf-js .bf_hero .bf_h1 > .bf_sticker.is-hero{visibility:hidden}
-.bf_eyebrow.is-tapes{display:flex;flex-direction:column;align-items:flex-start;width:max-content;max-width:100%;margin-bottom:36px;padding:0;border-radius:0;background:none;color:#14001a;font-size:44px;font-weight:900;line-height:1;letter-spacing:-.01em;text-transform:uppercase}
+.bf_eyebrow.is-tapes{display:flex;flex-direction:column;align-items:flex-start;width:max-content;max-width:100%;margin-bottom:36px;padding:0;border-radius:0;background:none;color:#14001a;font-size:clamp(28px,3.1vw,44px);font-weight:900;line-height:1;letter-spacing:-.01em;text-transform:uppercase}
+.bf_hero-text{min-width:0}
 .bf_tapes-row{display:flex;align-items:center;gap:.35em}
 .bf_tapes-row.is-2{margin-top:-.08em}
 .bf_tape{display:block;padding:.16em .42em .12em;background:#fe8b21;white-space:nowrap;
@@ -194,3 +195,29 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 @media (prefers-reduced-motion:reduce){.bf_tape,.bf_brand,.bf_tag{animation:none}}
 /* картинка з персонажем у hero — тимчасово прибрана (рішення 29.10); повернути: видалити рядок */
 .bf_hero .bf_hero-img{display:none}
+
+/* швидке меню у верхній смузі (initNav у bf26.js) */
+[id^="bf-"]{scroll-margin-top:72px}
+.bf_bar-inner.has-nav{position:relative;justify-content:flex-start}
+.bf_bar-inner.has-nav .bf_bar-text{margin-left:auto}
+.bf_nav{display:flex;align-items:center;gap:2px;min-width:0}
+.bf_nav-link{padding:8px 12px;border-radius:999px;color:#14001a;font-size:15px;font-weight:600;line-height:1.2;white-space:nowrap;text-decoration:none;transition:background-color .2s,color .2s}
+.bf_nav-link:hover{background:rgba(20,0,26,.12)}
+.bf_nav-link.is-active{background:#14001a;color:#fefefe}
+.bf_nav-link:focus-visible,.bf_nav-toggle:focus-visible{outline:2px solid #14001a;outline-offset:2px}
+.bf_nav-toggle{display:none}
+@media (max-width:1279px){.bf_bar-inner.has-nav .bf_bar-text{display:none}.bf_bar-inner.has-nav .bf_cd{margin-left:auto}.bf_nav-link{padding:8px 9px;font-size:14px}.bf_bar-inner.has-nav{gap:14px}.bf_btn-bar{white-space:nowrap}}
+@media (max-width:1149px){
+  .bf_nav-toggle{display:flex;flex-direction:column;justify-content:center;gap:4px;flex:none;width:40px;height:40px;padding:0 10px;border:0;border-radius:10px;background:#14001a;cursor:pointer}
+  .bf_nav-toggle span{display:block;height:2px;border-radius:2px;background:#fefefe;transition:transform .25s,opacity .25s}
+  .is-nav-open .bf_nav-toggle span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .is-nav-open .bf_nav-toggle span:nth-child(2){opacity:0}
+  .is-nav-open .bf_nav-toggle span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+  .bf_nav{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:4px;padding:12px 16px 16px;background:#14001a;box-shadow:0 20px 40px -12px rgba(0,0,0,.6);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .2s,transform .2s,visibility 0s .2s}
+  .is-nav-open .bf_nav{opacity:1;visibility:visible;transform:none;transition:opacity .2s,transform .2s}
+  .bf_nav-link{padding:12px 14px;border-radius:12px;color:#fefefe;font-size:17px}
+  .bf_nav-link:hover{background:rgba(255,255,255,.08)}
+  .bf_nav-link.is-active{background:#9762fd}
+  .bf_bar-inner.has-nav .bf_cd{margin-left:0;margin-right:auto}
+}
+@media (prefers-reduced-motion:reduce){.bf_nav,.bf_nav-toggle span,.bf_nav-link{transition:none}}
