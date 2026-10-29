@@ -123,7 +123,7 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 /* фінальний блок «Зарезервуйте»: статична фіолетова панель, градієнт тане до прозорого донизу (без анімацій, маски й blur). Мінімальна висота тримає розмір панелі на кроках 1–6 квізу,
    вміст притиснутий до верху — квіз не «плаває», коли змінюється його висота */
 .bf_repeat>.bf_container{max-width:min(1280px,calc(100% - 64px));min-height:600px;padding:72px 64px;align-items:start;border-radius:32px;
-  background:radial-gradient(ellipse 60% 70% at 15% 0%,rgba(255,255,255,.2),rgba(255,255,255,0) 60%),linear-gradient(180deg,#9762fd 0%,rgba(151,98,253,.8) 40%,rgba(151,98,253,0) 100%);
+  background:radial-gradient(ellipse 60% 70% at 15% 0%,rgba(255,255,255,.3),rgba(255,255,255,0) 60%),linear-gradient(180deg,#a67dff 0%,rgba(151,98,253,.92) 45%,rgba(151,98,253,0) 100%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
 .bf_repeat .bf_quiz{background-color:#140f24;border-color:rgba(255,255,255,.12);box-shadow:0 30px 60px -12px rgba(10,4,32,.7),0 12px 24px -8px rgba(10,4,32,.5)}
 @media (max-width:991px){.bf_repeat>.bf_container{max-width:none;min-height:0;margin-left:16px;margin-right:16px;padding:48px 24px 32px;border-radius:28px}}
@@ -280,3 +280,7 @@ html:not([data-bf-hero="cards"]) [data-bf-table]{display:none !important}
 .bf_hero [data-bf-rays]{display:none}
 /* перший екран на десктопі — 90vh, контент по вертикалі по центру */
 @media (min-width:992px){.bf_hero{min-height:90vh;display:flex;flex-direction:column;justify-content:center}.bf_hero>.bf_container{width:100%}}
+/* «Animated Content» (як reactbits): контент блоку «Зарезервуйте» виїжджає знизу на 100px з прозорості, коли потрапляє в кадр (initReveal) */
+.bf-js .bf_reveal{opacity:0;transform:translateY(100px);transition:opacity .8s cubic-bezier(.215,.61,.355,1) var(--bf-rd,0s),transform .8s cubic-bezier(.215,.61,.355,1) var(--bf-rd,0s)}
+.bf-js .bf_reveal.is-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.bf-js .bf_reveal{opacity:1;transform:none;transition:none}}

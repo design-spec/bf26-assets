@@ -967,6 +967,17 @@
     var s = doc.createElement('script'); s.src = base + 'bf26-ring.js'; s.async = true; doc.head.appendChild(s);
   }
 
+  // «Animated Content» (reactbits): контент блоку «Зарезервуйте» по черзі виїжджає знизу, коли блок у кадрі
+  function initReveal() {
+    var items = $$('#bf-repeat .bf_hero-text > *, #bf-repeat .bf_quiz-slot');
+    if (!items.length || reduceMotion || !window.IntersectionObserver) return;
+    items.forEach(function (el, i) { el.classList.add('bf_reveal'); el.style.setProperty('--bf-rd', (i * 0.1) + 's'); });
+    var io = new IntersectionObserver(function (en) {
+      en.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    items.forEach(function (el) { io.observe(el); });
+  }
+
   // святкові кульки при відкритті сторінки: окремий файл, без «зменшення руху»; вимкнути — window.BF26_BALLOONS = false
   function initBalloons() {
     if (reduceMotion || window.BF26_BALLOONS === false) return;
@@ -1071,6 +1082,7 @@
     initTable();
     initRays();
     initRing();
+    initReveal();
     initBalloons();
     initFeat();
     initScroll();
