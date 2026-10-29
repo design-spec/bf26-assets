@@ -920,7 +920,7 @@
     eb.classList.add('is-tapes');
   }
 
-  // швидке меню у верхній смузі: пункти — T.nav [[id секції, підпис], …]; ≥ 1150 px — посилання в рядок, менше — кнопка-«бургер» зі списком.
+  // швидке меню у верхній смузі: пункти — T.nav [[id секції, підпис], …]; на всіх екранах — кнопка-«бургер» зі списком.
   // Пункт поточної секції підсвічується (IntersectionObserver)
   function initNav() {
     var bar = $('.bf_bar-inner'), items = (T.nav || []).filter(function (n) { return doc.getElementById(n[0]); });
