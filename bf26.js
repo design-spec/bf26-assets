@@ -827,7 +827,7 @@
     if (doc.readyState === 'complete') go(); else addEventListener('load', go, { once: true });
   }
 
-  // hero: «Black Friday в All Right» — стрічки скотчу BLACK / FRIDAY, праворуч «в» + логотип, під ним зірка −60%.
+  // hero: «Black Friday в All Right» — стрічки скотчу BLACK / FRIDAY, за BLACK «в» + логотип, за FRIDAY зірка −60%.
   // Зірка переїжджає з h1, тож двокрапка в кінці заголовка більше не потрібна
   // логотип для hero — файл із Webflow Assets (кольори вже в SVG)
   var LOGO = '<img class="bf_brand-logo" src="https://cdn.prod.website-files.com/64997bee22af293e5156648a/69a6f4aacf26fb8379def5e1_Al%20Right.svg" width="176" height="32" alt="All Right">';
@@ -837,10 +837,12 @@
     var words = eb.textContent.trim().split(/\s+/);
     if (words.length < 2) return;
     var rest = words.slice(2).join(' '), m = rest.match(/^(.*?)\s*All\s*Right$/i);
-    eb.innerHTML = '<span class="bf_tapes"><span class="bf_tape is-1"></span> <span class="bf_tape is-2"></span></span> ' +
-      '<span class="bf_brand"><span class="bf_brand-pre"></span> ' + (m ? LOGO : '<span class="bf_brand-text"></span>') + '</span>';
-    $('.is-1', eb).textContent = words[0];
-    $('.is-2', eb).textContent = words[1];
+    // два рядки: [BLACK][в + логотип] / [FRIDAY][зірка] — логотип стоїть одразу за BLACK, а не за ширшою FRIDAY
+    eb.innerHTML = '<span class="bf_tapes-row"><span class="bf_tape is-1"></span> ' +
+      '<span class="bf_brand"><span class="bf_brand-pre"></span> ' + (m ? LOGO : '<span class="bf_brand-text"></span>') + '</span></span> ' +
+      '<span class="bf_tapes-row is-2"><span class="bf_tape is-2"></span></span>';
+    $('.bf_tape.is-1', eb).textContent = words[0];
+    $('.bf_tape.is-2', eb).textContent = words[1];
     $('.bf_brand-pre', eb).textContent = m ? m[1] : '';
     if (!m) $('.bf_brand-text', eb).textContent = rest;
     var st = $('.bf_hero .bf_sticker.is-hero');
@@ -848,7 +850,7 @@
       var h1 = st.closest('h1'), tag = doc.createElement('span');
       tag.className = 'bf_tag';
       tag.appendChild(st);
-      eb.appendChild(tag);
+      $('.bf_tapes-row.is-2', eb).appendChild(tag);
       if (h1) {
         var t = h1.lastChild;
         while (t && t.nodeType === 3 && !t.nodeValue.trim()) t = t.previousSibling;
