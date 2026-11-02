@@ -1179,9 +1179,9 @@
         if ($('.bf_pill60', h)) return;
         var w = doc.createTreeWalker(h, NodeFilter.SHOW_TEXT), n;
         while ((n = w.nextNode())) {
-          var at = n.nodeValue.search(/[−-]\s?60\s?%/);
+          var at = n.nodeValue.search(/[−-]\s?\d{1,2}\s?%/);
           if (at < 0) continue;
-          var m = n.nodeValue.slice(at).match(/^[−-]\s?60\s?%/)[0], hit = n.splitText(at);
+          var m = n.nodeValue.slice(at).match(/^[−-]\s?\d{1,2}\s?%/)[0], hit = n.splitText(at);
           hit.splitText(m.length);
           var sp = doc.createElement('span'); sp.className = 'bf_pill60' + cfg[1];
           hit.parentNode.replaceChild(sp, hit); sp.appendChild(hit);
@@ -1196,7 +1196,7 @@
   function initCtaHead() {
     $$('#bf-repeat .bf_h2[data-bf-show="before"]').forEach(function (h) {
       if (h.classList.contains('is-split')) return;
-      var t = h.textContent.trim(), m = t.match(/^(.*?)\s*([−-]\s?60\s?%)\s*(.*)$/);
+      var t = h.textContent.trim(), m = t.match(/^(.*?)\s*([−-]\s?\d{1,2}\s?%)\s*(.*)$/);
       if (!m) return;
       h.textContent = '';
       [['bf_ctah-main', m[1]], ['bf_ctah-star', m[2]], ['bf_ctah-date', m[3]]].forEach(function (p) {
