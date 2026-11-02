@@ -353,6 +353,8 @@
       if (t.name === 'who_user_is' && t.value === 'child') return;
       go(S.step + 1, card);
     });
+    // картка, з якою працює людина: під час перерендеру тримаємо її на тому ж місці екрана
+    ['pointerdown', 'focusin', 'keydown'].forEach(function (t) { card.addEventListener(t, function () { activeCard = card; }, true); });
     form.addEventListener('change', onChange);
     form.addEventListener('input', onInput);
     form.addEventListener('submit', onSubmit, true);   // capture: раніше за webflow.js та index.js
@@ -431,8 +433,14 @@
     $$('[data-fallback-link]', form).forEach(function (a) { a.href = CFG.fullFunnelUrl(LOCALE, S.child_age); });
   }
 
+  // Квізів на сторінці два (hero і «Зарезервуйте»), кроки синхронні. Коли змінюється висота однієї картки,
+  // все під нею зсувається; Safari на iOS не має scroll anchoring, тож нижня картка «стрибала».
+  // Після рендеру компенсуємо зсув активної картки (де вже спрацював anchoring — дельта 0, нічого не робимо).
+  var activeCard = null;
   function renderAll() {
+    var ac = activeCard && doc.contains(activeCard) ? activeCard : null, t0 = ac ? ac.getBoundingClientRect().top : 0;
     cards.forEach(renderCard);
+    if (ac) { var d = ac.getBoundingClientRect().top - t0; if (Math.abs(d) > 1) window.scrollBy(0, d); }
     $$('[data-bf-cta-label]').forEach(function (el) {
       if (!el.hasAttribute('data-label')) el.setAttribute('data-label', el.textContent);
       el.textContent = S.lead_id ? T.ctaDone : el.getAttribute('data-label');
@@ -442,8 +450,9 @@
   function focusStep(card) {
     var lg = S.lead_id ? $('[data-bf-done] .bf_qtitle:not([hidden])', card) : $('[data-step].is-active legend', card);
     if (lg) try { lg.focus({ preventScroll: true }); } catch (e) {}
-    var top = card.getBoundingClientRect().top;
-    if (top < 56) card.scrollIntoView({ block: 'start' });
+    // верх картки сховався під фіксовану смугу — прокручуємо рівно під неї, без smooth (щоб не «їздило»)
+    var bar = $('.bf_bar'), off = (bar ? Math.max(0, bar.getBoundingClientRect().bottom) : 0) + 12, top = card.getBoundingClientRect().top;
+    if (top < off) window.scrollBy(0, top - off);
   }
 
   function go(step, card) {
