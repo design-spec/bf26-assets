@@ -562,7 +562,59 @@
     return parts.join(' | ');
   }
 
-  var pending = null;   // { card, place, timer }
+  /* ---- копія заявки у Webflow Forms (нативний сабміт заблоковано, тому шлемо самі після успіху CRM) ---- */
+  // Знімок усіх полів форми в момент сабміту (телефон уже в E.164, hidden заповнені) — формат як у webflow.js
+  function wfSnapshot(form) {
+    var fields = {};
+    Array.prototype.forEach.call(form.elements, function (el) {
+      var t = (el.type || '').toLowerCase(), n = el.getAttribute('data-name') || el.name;
+      if (!n || el.disabled || /^(submit|button|file|reset)$/.test(t) || el.tagName === 'FIELDSET' || el.tagName === 'BUTTON') return;
+      if (t === 'checkbox') { if (el.checked) fields[n] = el.value && el.value !== 'on' ? el.value : 'true'; return; }
+      if (t === 'radio') { if (el.checked) fields[n] = el.value; else if (!(n in fields)) fields[n] = ''; return; }
+      fields[n] = String(el.value == null ? '' : el.value).trim();
+    });
+    return {
+      form: form,
+      name: form.getAttribute('data-name') || form.getAttribute('name') || 'bf26-quiz',
+      pageId: form.getAttribute('data-wf-page-id') || doc.documentElement.getAttribute('data-wf-page') || '',
+      elementId: form.getAttribute('data-wf-element-id') || '',
+      fields: fields
+    };
+  }
+
+  // Токен Cloudflare Turnstile (захист форм Webflow): без нього API відповідає 422. Беремо свіжий у момент відправки.
+  function wfToken(form) {
+    var i = form && form.querySelector('[name="cf-turnstile-response"]');
+    if (i && i.value) return i.value;
+    try { var d = window.jQuery && window.jQuery.data(form, '.w-form'); if (d && d.turnstileToken) return d.turnstileToken; } catch (e) {}
+    return '';
+  }
+
+  function wfCopy(snap, extra, tries) {
+    try {
+      var site = doc.documentElement.getAttribute('data-wf-site');
+      if (!snap || !site || CFG.webflowCopy === false || (params.has('_t2') && !params.has('bf_wfcopy'))) return;
+      var needToken = !!doc.querySelector('[data-turnstile-sitekey]'), token = wfToken(snap.form);
+      tries = tries || 0;
+      if (needToken && !token && tries < 16) return setTimeout(function () { wfCopy(snap, extra, tries + 1); }, 500);
+      if (needToken) snap.fields['cf-turnstile-response'] = token;
+      Object.keys(extra || {}).forEach(function (k) { snap.fields[k] = extra[k] == null ? '' : String(extra[k]); });
+      var body = new URLSearchParams();
+      body.append('name', snap.name);
+      body.append('pageId', snap.pageId);
+      body.append('elementId', snap.elementId);
+      body.append('domain', doc.documentElement.getAttribute('data-wf-domain') || location.hostname);
+      body.append('source', location.href);
+      body.append('test', 'false');
+      body.append('dolphin', 'false');
+      Object.keys(snap.fields).forEach(function (k) { body.append('fields[' + k + ']', snap.fields[k]); });
+      fetch('https://webflow.com/api/v1/form/' + site, { method: 'POST', body: body, keepalive: true, credentials: 'omit' })
+        .then(function (r) { if (!r.ok) console.warn('[bf26] webflow copy', r.status, token ? 'token' : 'no token'); })
+        .catch(function (err) { console.warn('[bf26] webflow copy', err); });
+    } catch (err) { console.warn('[bf26] webflow copy', err); }
+  }
+
+  var pending = null;   // { card, place, timer, wf }
 
   function onSubmit(e) {
     var form = e.currentTarget, card = cardOf(form), place = placeOf(card);
@@ -581,7 +633,8 @@
     // номер у форматі +380… ставимо ПІСЛЯ renderAll: renderCard повертає в поле введений вигляд, і index.js узяв би номер без коду
     var tel = field(form, 'phone'), shown = tel ? tel.value : '';
     if (tel) tel.value = phoneE164(digits);
-    pending = { card: card, place: place, timer: setTimeout(function () { onFail(); }, CFG.submitTimeoutMs || 15000) };
+    var wf = null; try { wf = wfSnapshot(form); } catch (err) {}
+    pending = { card: card, place: place, wf: wf, timer: setTimeout(function () { onFail(); }, CFG.submitTimeoutMs || 15000) };
     try {
       if (typeof handler !== 'function') throw new Error('index.js handler missing');
       handler.call(form, { preventDefault: function () {}, target: form, currentTarget: form, type: 'submit' });
@@ -620,10 +673,11 @@
   function onLead(b) {
     if (!pending) return;
     clearTimeout(pending.timer);
-    var place = pending.place; pending = null;
+    var place = pending.place, wf = pending.wf; pending = null;
     ui.sending = false;
     S.lead_id = b.user_id || S.event_id;
     S.booking_url = b['go-to'] || b.go_to || null;
+    wfCopy(wf, { quiz_place: place, lang: doc.documentElement.lang || '', crm_user_id: b.user_id || '', event_id: S.event_id || '' });
     S.fails = 0; save();
     track('bf_lead_created', { lead_temp: leadTemp(), place: place });
     // на сторінках /self… index.js переходить за go-to сам; якщо за 3 с переходу немає — переходимо ми або показуємо «зарезервовано»
