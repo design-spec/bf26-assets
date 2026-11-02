@@ -695,13 +695,16 @@
     $$('[data-bf-cta]').forEach(function (el) {
       el.addEventListener('click', function (e) {
         e.preventDefault();
+        e.stopPropagation();   // інакше webflow.js ще й прокручує до #bf-quiz (уся hero-секція) — картка опинялась унизу екрана
         var place = el.getAttribute('data-bf-cta');
         if (S.lead_id && S.booking_url) { goBooking(place); return; }
         track('bf_cta_click', { place: place });
         var card = $('[data-bf-quiz="hero"] [data-bf-card]') || cards[0];
         if (!card) return;
-        card.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-        setTimeout(function () { focusStep(card); }, reduceMotion ? 0 : 500);
+        // верх картки — одразу під фіксованою смугою (на мобільному форма у верхній половині екрана)
+        var bar = $('.bf_bar'), off = (bar ? Math.max(0, bar.getBoundingClientRect().bottom) : 0) + 16;
+        window.scrollTo({ top: Math.max(0, scrollY + card.getBoundingClientRect().top - off), behavior: reduceMotion ? 'auto' : 'smooth' });
+        setTimeout(function () { focusStep(card); }, reduceMotion ? 0 : 700);
       });
     });
   }
