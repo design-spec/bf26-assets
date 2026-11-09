@@ -397,9 +397,10 @@
       if (t.name === 'consent_marketing') fillAllHidden();
     });
     var tel = field(form, 'phone');
-    if (tel) { tel.type = 'tel'; tel.autocomplete = 'tel'; setupIti(tel); tel.addEventListener('input', function () { setErr(form, 'phone', ''); }); }
+    // Webflow ставить у поля placeholder «Example Text» (атрибут placeholder зарезервований у Designer API) — прибираємо
+    if (tel) { tel.type = 'tel'; tel.autocomplete = 'tel'; tel.removeAttribute('placeholder'); setupIti(tel); tel.addEventListener('input', function () { setErr(form, 'phone', ''); }); }
     var em = field(form, 'email');
-    if (em) { em.autocomplete = 'email'; if (!em.placeholder && T.phEmail) em.placeholder = T.phEmail; em.addEventListener('input', function () { setErr(form, 'email', ''); }); }
+    if (em) { em.autocomplete = 'email'; if (T.phEmail) em.placeholder = T.phEmail; else em.removeAttribute('placeholder'); em.addEventListener('input', function () { setErr(form, 'email', ''); }); }
     // екран «Заявку прийнято» + запасне посилання
     var done = doc.createElement('div'); done.className = 'rt_done'; done.setAttribute('data-rt-donebox', ''); done.hidden = true;
     done.innerHTML = '<div class="rt_done-title">' + esc(T.doneTitle || '') + '</div><p class="rt_done-text">' + esc(T.doneText || '') +
@@ -569,7 +570,7 @@
 
   doc.addEventListener('click', function (e) {
     var t = e.target.closest ? e.target.closest('[data-rt-branch],[data-rt-q],[data-rt-next],[data-rt-done],[data-rt-freq],[data-rt-change],[data-rt-cta]') : null;
-    if (!t) return;
+    if (!t || t === html) return;                     // <html data-rt-branch> — це стан, не кнопка
     if (t.hasAttribute('data-rt-branch')) { e.preventDefault(); setBranch(t.getAttribute('data-rt-branch')); return; }
     if (t.hasAttribute('data-rt-q')) { e.preventDefault(); onOption(t); return; }
     if (t.hasAttribute('data-rt-next')) { e.preventDefault(); quizStep(+t.getAttribute('data-rt-next')); return; }
