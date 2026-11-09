@@ -32,20 +32,26 @@ html[data-rt-branch="yes"] .rt_how-grid, html[data-rt-branch="no"] .rt_how-grid 
   .rt_page .rt_section { padding-top: 56px; padding-bottom: 56px; }
   .rt_page .rt_section.is-tight { padding-top: 24px; padding-bottom: 24px; }
   .rt_page #rt-repeat { padding-top: 16px; }
-  /* верхня смуга: логотип + кнопка, текст дублює H1 */
-  .rt_bar-inner { padding: 8px 16px !important; justify-content: space-between !important; }
-  .rt_bar-text { display: none !important; }
-  .rt_bar-logo-link { display: block !important; flex: none; }
-  .rt_bar-logo { width: 96px; height: auto; display: block; }
 }
 
-/* ---------- верхня смуга: плашка пропозиції + кнопка за станом (rt26.js syncBar) ---------- */
-.rt_bar-text[data-rt-variant~="own"] { flex: none; margin-left: 16px; margin-right: auto; padding: 6px 14px; border-radius: 999px; background: #fff1e3; color: #c25700; font-size: 14px; font-weight: 700; line-height: 1.3; white-space: nowrap; }
+/* ---------- верхня смуга як у прототипі (wireframe v2.1): темна, повне речення, біла кнопка за станом (rt26.js syncBar) ---------- */
+.rt_page .rt_bar { background: var(--haiti, #180d25); color: #fefefe; border-bottom: 0; }
+.rt_page .rt_bar-inner { gap: 16px; min-height: 56px; }
+.rt_page .rt_bar-text { flex: 1 1 auto; min-width: 0; margin: 0; color: #fefefe; font-size: 15px; font-weight: 700; line-height: 1.3; }
+.rt_page .rt_bar-logo-link { flex: none; }
+.rt_page .rt_bar [data-rt-cta="bar"] { flex: none; background: #fefefe; color: var(--haiti, #180d25); }
+.rt_page .rt_bar [data-rt-cta="bar"]:hover { box-shadow: 0 6px 20px rgba(0, 0, 0, .35); }
 .rt_page a[role="button"] { cursor: pointer; }
 .rt_bar [data-rt-cta="bar"] { transition: opacity .2s, transform .2s, visibility .2s; }
 html.rt-js .rt_bar [data-rt-cta="bar"]:not(.is-ready) { visibility: hidden; }
 .rt_bar [data-rt-cta="bar"].is-away { opacity: 0; visibility: hidden; transform: translateY(-6px); pointer-events: none; }
-html[data-rt-theme="dark"] .rt_bar-text[data-rt-variant~="own"] { background: #2a1c12; color: #ffb36b; }
+@media (max-width: 767px) {
+  /* мобільний: як у прототипі — текст + кнопка, без логотипа */
+  .rt_page .rt_bar-inner { padding: 8px 16px !important; gap: 10px; min-height: 52px; }
+  .rt_page .rt_bar-logo-link { display: none !important; }
+  .rt_page .rt_bar-text { font-size: 13px; }
+  .rt_page .rt_bar [data-rt-cta="bar"] { min-height: 36px; padding: 6px 14px; font-size: 13px; }
+}
 
 /* ---------- варіанти текстів: head ставить html[data-rt-v] = own | bf | off | ended ---------- */
 html:not([data-rt-v]) [data-rt-variant]:not([data-rt-variant~="own"]),
