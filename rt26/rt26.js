@@ -410,6 +410,14 @@
     var fb = doc.createElement('p'); fb.className = 'rt_fallback'; fb.hidden = true; fb.setAttribute('data-rt-fallback', '');
     fb.innerHTML = esc(T.fallback || '') + ' <a class="rt_link" href="#" target="_self">' + esc(T.fallbackLink || '') + '</a>';
     form.appendChild(fb);
+    // поки Webflow (Turnstile) тримає кнопку неактивною — пояснюємо, що відбувається
+    var sb = btnOf(form);
+    if (sb && T.verifying && window.MutationObserver) {
+      var wait = doc.createElement('p'); wait.className = 'rt_wait'; wait.hidden = true; wait.textContent = T.verifying;
+      sb.parentNode.insertBefore(wait, sb.nextSibling);
+      var syncWait = function () { wait.hidden = !(sb.disabled && !o.sending); };
+      new MutationObserver(syncWait).observe(sb, { attributes: true, attributeFilter: ['disabled'] }); syncWait();
+    }
     form.addEventListener('submit', onSubmit, true);   // capture: раніше за webflow.js та index.js
     fillHidden(form);
     return o;
