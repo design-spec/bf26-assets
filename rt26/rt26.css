@@ -42,15 +42,19 @@ html[data-rt-branch="yes"] .rt_how-grid, html[data-rt-branch="no"] .rt_how-grid 
 .rt_page .rt_bar [data-rt-cta="bar"] { flex: none; background: #fefefe; color: var(--haiti, #180d25); }
 .rt_page .rt_bar [data-rt-cta="bar"]:hover { box-shadow: 0 6px 20px rgba(0, 0, 0, .35); }
 .rt_page a[role="button"] { cursor: pointer; }
-.rt_bar [data-rt-cta="bar"] { transition: opacity .2s, transform .2s, visibility .2s; }
-html.rt-js .rt_bar [data-rt-cta="bar"]:not(.is-ready) { visibility: hidden; }
-.rt_bar [data-rt-cta="bar"].is-away { opacity: 0; visibility: hidden; transform: translateY(-6px); pointer-events: none; }
+/* вибір мови (створює rt26.js) */
+.rt_lang { flex: none; display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; font-weight: 500; color: #fefefe; cursor: pointer; }
+.rt_lang-select { min-height: 36px; padding: 0 26px 0 10px; border: 1px solid #ffffff59; border-radius: 10px; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23fefefe' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") right 9px center/10px no-repeat; color: #fefefe; font: inherit; font-weight: 600; text-transform: uppercase; -webkit-appearance: none; appearance: none; cursor: pointer; }
+.rt_lang-select:focus-visible { outline: 3px solid rgba(254, 254, 254, .5); outline-offset: 2px; }
+.rt_lang-select option { color: #180d25; background: #fff; }
 @media (max-width: 767px) {
-  /* мобільний: як у прототипі — текст + кнопка, без логотипа */
-  .rt_page .rt_bar-inner { padding: 8px 16px !important; gap: 10px; min-height: 52px; }
+  /* мобільний, як у прототипі: 1-й рядок — текст, 2-й — мова зліва, кнопка справа; без логотипа */
+  .rt_page .rt_bar-inner { flex-wrap: wrap !important; padding: 8px 16px !important; gap: 6px 10px; min-height: 0; }
   .rt_page .rt_bar-logo-link { display: none !important; }
-  .rt_page .rt_bar-text { font-size: 13px; }
-  .rt_page .rt_bar [data-rt-cta="bar"] { min-height: 36px; padding: 6px 14px; font-size: 13px; }
+  .rt_page .rt_bar-text { flex: 1 1 100%; font-size: 13px; }
+  .rt_lang { font-size: 12px; }
+  .rt_lang-select { min-height: 32px; }
+  .rt_page .rt_bar [data-rt-cta="bar"] { margin-left: auto; min-height: 36px; padding: 6px 14px; font-size: 13px; }
 }
 
 /* ---------- варіанти текстів: head ставить html[data-rt-v] = own | bf | off | ended ---------- */

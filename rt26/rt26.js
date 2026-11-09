@@ -125,7 +125,6 @@
     $$('[data-rt-answer-label]').forEach(function (el) { el.textContent = b === 'yes' ? (T.answerYes || '') : (T.answerNo || ''); });
     fillAllHidden();
     renderQuiz();
-    syncBar();
     if (!silent && b !== 'none') {
       track('rt_branch_select', { value: v === 'unsure' ? 'unsure' : b === 'yes' ? 'trial_yes' : 'trial_no' });
       if (b === 'yes') track('rt_quiz_step', { step: Q.step, doubt: Q.doubt || 'none' });
@@ -180,7 +179,7 @@
         function pick() {
           S.pkg = label; store.set(K.pkg, label);
           $$('.rt_pkg').forEach(function (c) { var on = c.getAttribute('data-rt-pkg') === label; c.classList.toggle('is-sel', on); c.setAttribute('aria-pressed', on ? 'true' : 'false'); });
-          renderPkgLabel(); fillAllHidden(); syncBar();
+          renderPkgLabel(); fillAllHidden();
           track('rt_package_select', { package: label, freq: f });
         }
         card.addEventListener('click', pick);
@@ -561,50 +560,32 @@
   }
   function closePopup() { if (!popup || popup.hidden) return; popup.hidden = true; if (lastFocus) try { lastFocus.focus(); } catch (e) {} }
 
-  /* ---------------------------------------------------------------- верхня смуга: кнопка за станом сторінки */
+  /* ---------------------------------------------------------------- верхня смуга (ТЗ блок 0, як у прототипі) */
 
-  // none → питання (hero), yes → квіз/пакети, yes + пакет → оплата, no → форма.
-  // Кнопка ховається, поки її ціль уже на екрані (IntersectionObserver).
-  var bar = { btn: null, seen: [], mode: '' };
-  function barMode() {
-    if (S.branch === 'yes') return S.pkg ? 'pay' : 'yes';
-    if (S.branch === 'no') return 'no';
-    return offerOn() ? 'none' : 'noneOff';
-  }
-  function barTargets(m) {
-    return m === 'pay' ? '[data-rt-pay]' : m === 'yes' ? '#rt-quiz .rt_quiz, #rt-prices [data-rt-packages]' : m === 'no' ? '[data-rt-place] form, [data-rt-donebox]' : '.rt_question';
-  }
-  function syncBar() {
-    var b = bar.btn; if (!b) return;
-    var m = barMode(), L = T.bar || {};
-    if (m !== bar.mode) { bar.mode = m; var tx = L[m] || L.none; if (tx) b.textContent = tx; }
-    var sel = barTargets(m);
-    var away = bar.seen.some(function (el) { return el.matches(sel); });
-    b.classList.toggle('is-away', away);
-    b.setAttribute('aria-hidden', away ? 'true' : 'false'); b.tabIndex = away ? -1 : 0;
-    b.classList.add('is-ready');
-  }
+  // Кнопка «Скористатись» завжди видна: гілка «так» → квіз, «ні» → форма, без відповіді → питання.
+  // Поруч вибір мови: та сама сторінка /{мова}/back з усіма параметрами URL.
   function setupBar() {
-    bar.btn = $('[data-rt-cta="bar"]'); if (!bar.btn) return;
-    if (window.IntersectionObserver) {
-      var io = new IntersectionObserver(function (ents) {
-        ents.forEach(function (en) {
-          var i = bar.seen.indexOf(en.target);
-          if (en.isIntersecting && i < 0) bar.seen.push(en.target); else if (!en.isIntersecting && i > -1) bar.seen.splice(i, 1);
-        });
-        syncBar();
-      }, { rootMargin: '-' + Math.round(barH()) + 'px 0px -15% 0px' });
-      $$('.rt_question, #rt-quiz .rt_quiz, #rt-prices [data-rt-packages], [data-rt-pay], [data-rt-place] form, [data-rt-donebox]').forEach(function (el) { io.observe(el); });
+    var btn = $('[data-rt-cta="bar"]'); if (!btn) return;
+    var langs = CFG.langs || [];
+    if (langs.length > 1 && !$('[data-rt-lang]')) {
+      var wrap = doc.createElement('label'); wrap.className = 'rt_lang'; wrap.setAttribute('data-rt-lang', '');
+      wrap.innerHTML = '<span class="rt_lang-label">' + esc(T.lang || 'Мова') + '</span>';
+      var sel = doc.createElement('select'); sel.className = 'rt_lang-select'; sel.setAttribute('aria-label', T.lang || 'Мова');
+      langs.forEach(function (c) { var o = doc.createElement('option'); o.value = c; o.textContent = c; if (c === LOCALE) o.selected = true; sel.appendChild(o); });
+      sel.addEventListener('change', function () {
+        var c = sel.value; if (c === LOCALE) return;
+        track('rt_lang_change', { from: LOCALE, to: c });
+        var path = location.pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '/' + c);
+        if (path === location.pathname) path = '/' + c + '/back';
+        location.href = path + location.search + location.hash;
+      });
+      wrap.appendChild(sel);
+      btn.parentNode.insertBefore(wrap, btn);
     }
-    syncBar();
   }
   function barClick() {
-    var m = barMode();
-    track('rt_cta_click', { place: 'bar', mode: m });
-    if (m === 'pay') { track('rt_price_click', { package: S.pkg || 'none', place: 'bar' }); window.open(priceUrl(), '_blank', 'noopener'); return; }
-    if (m === 'yes') { scrollToEl(Q.step >= 4 ? $('#rt-prices') : $('#rt-quiz')); return; }
-    if (m === 'no') { scrollToEl($('#rt-time')); return; }
-    scrollToEl($('#rt-top .rt_question') || $('#rt-top'));
+    track('rt_cta_click', { place: 'bar' });
+    scrollToEl(S.branch === 'yes' ? $('#rt-quiz') : S.branch === 'no' ? $('#rt-time') : ($('#rt-top .rt_question') || $('#rt-top')));
   }
 
   /* ---------------------------------------------------------------- юридичні посилання, мітки на посиланнях оплати */
@@ -704,7 +685,7 @@
   }
 
   window.RT26 = {
-    version: '1.2.0', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.3.0', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
