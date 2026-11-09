@@ -125,6 +125,7 @@
     $$('[data-rt-answer-label]').forEach(function (el) { el.textContent = b === 'yes' ? (T.answerYes || '') : (T.answerNo || ''); });
     fillAllHidden();
     renderQuiz();
+    dwSync();
     if (!silent && b !== 'none') {
       track('rt_branch_select', { value: v === 'unsure' ? 'unsure' : b === 'yes' ? 'trial_yes' : 'trial_no' });
       if (b === 'yes') track('rt_quiz_step', { step: Q.step, doubt: Q.doubt || 'none' });
@@ -230,42 +231,97 @@
 
   /* ---------------------------------------------------------------- блок «Що зазвичай зупиняє?» */
 
+  // Блок «Що зазвичай зупиняє?»: інтерактив «крок 1 + крок 2 = відповідь» (референс: englishdom-speaking-boost, «Курс підлаштовується під тебе»).
+  // Крок 1 — сумнів (картки [data-rt-dcard] з Webflow — джерело назв), крок 2 — «Пробний урок уже був?» (спільний стан з першим екраном),
+  // відповідь — аргумент із кроку 2 квізу (#rt-quiz [data-rt-doubt] .rt_arg) і кнопка наступного кроку.
+  // Без JS лишаються статичні картки Webflow.
+  var dwSync = function () {};
+  var ICON = {
+    doubt: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"/><path d="M12 17h.01"/></svg>',
+    trial: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M9 15l2 2 4-4"/></svg>',
+    res: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8z"/></svg>'
+  };
   function setupDoubts() {
-    var panel = $('[data-rt-dpanel]');
-    if (!panel) return;
-    var body = doc.createElement('div'); body.className = 'rt_dpanel-body';
-    var next = doc.createElement('a'); next.href = '#rt-top'; next.className = 'rt_btn is-secondary'; next.textContent = T.next || 'Далі';
-    panel.innerHTML = ''; panel.appendChild(body); panel.appendChild(next);
-    var open = null;
-    function show(d) {
-      open = d;
-      $$('[data-rt-dcard]').forEach(function (c) { c.setAttribute('aria-expanded', c.getAttribute('data-rt-dcard') === d ? 'true' : 'false'); });
-      panel.classList.toggle('is-on', !!d);
-      if (!d) return;
-      var src = $('#rt-quiz [data-rt-doubt="' + d + '"] .rt_arg');
-      body.innerHTML = src ? src.innerHTML : '';
-      renderPrices();
+    var cards = $$('[data-rt-dcard]');
+    var grid = cards.length ? cards[0].parentNode : null;
+    if (!grid) return;
+    var D = T.dw || {};
+    var doubts = cards.map(function (c) {
+      var t = c.querySelector('.rt_dcard-title');
+      return { k: c.getAttribute('data-rt-dcard'), label: (t ? t.textContent : c.textContent).replace(/[«»"]/g, '').trim() };
+    });
+    var yesB = $('#rt-top [data-rt-branch="yes"]'), noB = $('#rt-top [data-rt-branch="no"]');
+    var trials = [{ k: 'yes', label: yesB ? yesB.textContent.trim() : 'Так' }, { k: 'no', label: noB ? noB.textContent.trim() : 'Ні' }];
+    var sel = { d: doubts.some(function (x) { return x.k === Q.doubt; }) ? Q.doubt : doubts[0].k };
+
+    function chips(list, kind) {
+      return list.map(function (x) { return '<button type="button" class="rt_dw-chip" data-dw-' + kind + '="' + esc(x.k) + '" aria-pressed="false">' + esc(x.label) + '</button>'; }).join('');
     }
-    $$('[data-rt-dcard]').forEach(function (c) {
-      c.setAttribute('role', 'button'); c.tabIndex = 0; c.setAttribute('aria-expanded', 'false');
-      function act(e) {
-        if (e) e.preventDefault();
-        var d = c.getAttribute('data-rt-dcard');
-        if (open === d) { show(null); return; }
-        show(d);
-        track('rt_objection_open', { q: d });
-        Q.doubt = d; saveQ(); renderQuiz(); fillAllHidden();
-        setTimeout(function () { panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 60);
+    function head(icon, k, s) { return '<div class="rt_dw-head"><span class="rt_dw-ico">' + ICON[icon] + '</span><span><span class="rt_dw-k">' + esc(k) + '</span><span class="rt_dw-s">' + esc(s) + '</span></span></div>'; }
+    var w = doc.createElement('div'); w.className = 'rt_dw'; w.setAttribute('data-rt-dw', '');
+    w.innerHTML =
+      '<div class="rt_dw-in">' +
+      '<div class="rt_dw-card">' + head('doubt', D.k1 || 'Що зупиняє', D.s1 || 'Крок 1') + '<div class="rt_dw-chips" role="group" aria-label="' + esc(D.k1 || '') + '">' + chips(doubts, 'd') + '</div></div>' +
+      '<div class="rt_dw-op" aria-hidden="true">+</div>' +
+      '<div class="rt_dw-card">' + head('trial', D.k2 || 'Пробний урок уже був?', D.s2 || 'Крок 2') + '<div class="rt_dw-chips" role="group" aria-label="' + esc(D.k2 || '') + '">' + chips(trials, 't') + '</div></div>' +
+      '</div>' +
+      '<div class="rt_dw-op is-eq" aria-hidden="true">=</div>' +
+      '<div class="rt_dw-res" aria-live="polite"><div class="rt_dw-badge" data-rt-variant="own bf" aria-hidden="true">-60%</div>' + head('res', D.k3 || 'Відповідь', D.s3 || 'Для вас') +
+        '<div class="rt_dw-path"></div><div class="rt_dw-title"></div><div class="rt_dw-body"></div>' +
+        '<button type="button" class="rt_dw-cta"></button><p class="rt_dw-hint"></p></div>';
+    grid.parentNode.insertBefore(w, grid);
+    html.classList.add('rt-dw');                       // CSS ховає статичні картки і стару панель
+    var res = w.querySelector('.rt_dw-res'), cta = w.querySelector('.rt_dw-cta'), hint = w.querySelector('.rt_dw-hint');
+
+    function render() {
+      var d = sel.d, b = S.branch;
+      $$('[data-dw-d]', w).forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-dw-d') === d ? 'true' : 'false'); });
+      $$('[data-dw-t]', w).forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-dw-t') === b ? 'true' : 'false'); });
+      var src = $('#rt-quiz [data-rt-doubt="' + d + '"] .rt_arg');
+      var title = src && src.querySelector('.rt_arg-title') ? src.querySelector('.rt_arg-title').textContent.trim() : '';
+      var dl = (doubts.filter(function (x) { return x.k === d; })[0] || {}).label || '';
+      var tl = b === 'yes' || b === 'no' ? (trials.filter(function (x) { return x.k === b; })[0] || {}).label : '';
+      w.querySelector('.rt_dw-path').textContent = dl + (tl ? ' → ' + tl : '');
+      w.querySelector('.rt_dw-title').textContent = title.replace(/^[^?]*\?\s*/, '') || title;   // «Дорого? Є розтермінування…» → «Є розтермінування…»
+      var body = '';
+      if (src) {
+        var tx = src.querySelector('.rt_text'); if (tx) body += '<p class="rt_dw-text">' + tx.innerHTML + '</p>';
+        var li = $$('.rt_facts li', src); if (li.length) body += '<ul class="rt_dw-facts">' + li.map(function (x) { return '<li>' + x.innerHTML + '</li>'; }).join('') + '</ul>';
       }
-      c.addEventListener('click', act);
-      c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') act(e); });
+      w.querySelector('.rt_dw-body').innerHTML = body;
+      var go = b === 'yes' ? 'yes' : b === 'no' ? 'no' : '';
+      cta.hidden = !go; cta.textContent = go === 'yes' ? (D.ctaYes || 'Подивитись пакети') : (D.ctaNo || 'Обрати час уроку');
+      hint.hidden = !!go; hint.textContent = D.hint || '';
+      res.classList.remove('is-flash'); void res.offsetWidth; res.classList.add('is-flash');
+      renderPrices();                                   // числа в аргументі «Дорого» під ринок і частоту
+    }
+    dwSync = render;
+
+    w.addEventListener('click', function (e) {
+      var c = e.target.closest('[data-dw-d],[data-dw-t]'); if (!c) return;
+      if (c.hasAttribute('data-dw-d')) {
+        sel.d = c.getAttribute('data-dw-d');
+        Q.doubt = sel.d; saveQ(); renderQuiz(); fillAllHidden();
+        track('rt_objection_open', { q: sel.d });
+        render();
+      } else {
+        var v = c.getAttribute('data-dw-t');
+        if (S.branch !== v) {
+          // гілка відкриває/ховає блоки вище (квіз, ціни, форма) — тримаємо блок на тому ж місці екрана
+          var y0 = w.getBoundingClientRect().top;
+          setBranch(v, true);
+          window.scrollBy(0, w.getBoundingClientRect().top - y0);
+          track('rt_branch_select', { value: v === 'yes' ? 'trial_yes' : 'trial_no', place: 'doubts' });
+        }
+        render();
+      }
     });
-    next.addEventListener('click', function (e) {
-      e.preventDefault();
-      var nx = S.branch === 'yes' ? 'packages' : S.branch === 'no' ? 'time' : 'question';
-      track('rt_objection_next', { q: open || 'none', next: nx });
-      scrollToEl(nx === 'packages' ? $('#rt-prices') : nx === 'time' ? $('#rt-time') : $('#rt-top'));
+    cta.addEventListener('click', function () {
+      var nx = S.branch === 'yes' ? 'packages' : 'time';
+      track('rt_objection_next', { q: sel.d, next: nx });
+      scrollToEl(nx === 'packages' ? $('#rt-prices') : $('#rt-time'));
     });
+    render();
   }
 
   /* ---------------------------------------------------------------- телефон (intl-tel-input) */
@@ -685,7 +741,7 @@
   }
 
   window.RT26 = {
-    version: '1.3.0', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.4.0', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
