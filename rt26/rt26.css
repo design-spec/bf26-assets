@@ -1,0 +1,157 @@
+/* RT26 — стани, варіанти, елементи, які створює JS, форма і темна тема (v=dark).
+   Базова верстка блоків — стилі rt_* у Webflow Designer; тут лише те, що Designer не виражає. */
+
+/* ---------- варіанти текстів: head ставить html[data-rt-v] = own | bf | off | ended ---------- */
+html:not([data-rt-v]) [data-rt-variant]:not([data-rt-variant~="own"]),
+html[data-rt-v="own"] [data-rt-variant]:not([data-rt-variant~="own"]),
+html[data-rt-v="bf"] [data-rt-variant]:not([data-rt-variant~="bf"]),
+html[data-rt-v="off"] [data-rt-variant]:not([data-rt-variant~="off"]),
+html[data-rt-v="ended"] [data-rt-variant]:not([data-rt-variant~="ended"]) { display: none !important; }
+
+/* ---------- гілки (лише зі скриптом; без скрипта все видно підряд) ---------- */
+html.rt-js:not([data-rt-branch="yes"]) [data-rt-only="yes"],
+html.rt-js:not([data-rt-branch="no"]) [data-rt-only="no"],
+html.rt-js:not([data-rt-branch="none"]) [data-rt-only="none"],
+html.rt-js[data-rt-branch="none"] [data-rt-answer],
+html.rt-js[data-rt-branch="yes"] [data-rt-row="no"],
+html.rt-js[data-rt-branch="no"] [data-rt-row="yes"] { display: none !important; }
+html[data-rt-branch="yes"] .rt_how-grid,
+html[data-rt-branch="no"] .rt_how-grid { grid-template-columns: 1fr; max-width: 720px; margin-left: auto; margin-right: auto; }
+
+/* ринки ЄС: Omnibus, згода на листи */
+html:not([data-rt-eu]) [data-rt-eu-only] { display: none !important; }
+
+/* квіз: один крок і один варіант аргументу */
+html.rt-js #rt-quiz [data-rt-step]:not(.is-on),
+html.rt-js #rt-quiz [data-rt-doubt]:not(.is-on) { display: none !important; }
+html.rt-js #rt-quiz [data-rt-step].is-on { animation: rt-in .2s ease-out; }
+@keyframes rt-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ринок без активної зони цін: картки і перемикач сховані, кнопка лишається */
+html[data-rt-noplan] [data-rt-packages], html[data-rt-noplan] [data-rt-freqwrap] { display: none !important; }
+
+/* ---------- кнопки-варіанти (aria-pressed) ---------- */
+.rt_choice, .rt_opt, .rt_chip, .rt_dcard, .rt_btn { cursor: pointer; transition: border-color .15s, background-color .15s, color .15s, transform .15s, box-shadow .15s; -webkit-tap-highlight-color: transparent; }
+.rt_choice:hover, .rt_opt:hover, .rt_chip:hover, .rt_dcard:hover { border-color: var(--heliotrope, #9762fd); }
+.rt_btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(254, 139, 33, .28); }
+.rt_btn.is-secondary:hover, .rt_btn.is-ghost:hover { box-shadow: 0 6px 20px rgba(24, 13, 37, .12); }
+.rt_btn:active, .rt_choice:active, .rt_opt:active, .rt_chip:active { transform: scale(.98); }
+[aria-pressed="true"].rt_opt, [aria-pressed="true"].rt_chip, [aria-pressed="true"].rt_choice, .rt_dcard[aria-expanded="true"] {
+  border-color: var(--heliotrope, #9762fd) !important; background-color: #f1eaff !important; color: var(--haiti, #180d25);
+}
+.rt_opt[aria-pressed="true"]::after { content: ""; width: 20px; height: 20px; margin-left: auto; flex: none; border-radius: 50%; background: var(--heliotrope, #9762fd) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat; }
+:focus-visible { outline: 3px solid rgba(151, 98, 253, .55); outline-offset: 2px; }
+
+/* переваги з галочкою */
+.rt_benefit, .rt_facts li { position: relative; }
+.rt_benefit::before { content: ""; position: absolute; left: 16px; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 50%; background: var(--green, #45b82e) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat; }
+
+/* кроки «Як це працює»: номери */
+.rt_steps { counter-reset: rt-step; }
+.rt_stepitem { counter-increment: rt-step; }
+.rt_stepitem::before { content: counter(rt-step); position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: #f1eaff; color: var(--heliotrope, #9762fd); font-weight: 800; font-size: 16px; }
+
+/* ---------- пакети (картки рендерить rt26.js) ---------- */
+.rt_pkg { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 24px 20px 20px; border-radius: 20px; background: #fff; border: 2px solid #ece6f7; cursor: pointer; text-align: left; transition: border-color .15s, box-shadow .15s, transform .15s; }
+.rt_pkg:hover { box-shadow: 0 10px 30px rgba(24, 13, 37, .08); transform: translateY(-2px); }
+.rt_pkg.is-best { border-color: var(--tree-poppy, #fe8b21); }
+.rt_pkg.is-sel { border-color: var(--heliotrope, #9762fd); box-shadow: 0 0 0 3px rgba(151, 98, 253, .18); }
+.rt_pkg-tag { position: absolute; top: -12px; left: 16px; padding: 4px 10px; border-radius: 999px; background: var(--tree-poppy, #fe8b21); color: #fff; font-size: 12px; font-weight: 700; line-height: 1.3; white-space: nowrap; }
+.rt_pkg-name { font-size: 20px; font-weight: 800; line-height: 1.2; }
+.rt_pkg-sub { font-size: 14px; color: var(--mid-gray, #6e6e73); }
+.rt_pkg-price { margin-top: 8px; font-size: 15px; color: var(--mid-gray, #6e6e73); }
+.rt_pkg-price b { font-size: 30px; line-height: 1.1; color: var(--haiti, #180d25); font-weight: 800; letter-spacing: -.01em; }
+.rt_pkg-month { font-size: 14px; color: var(--haiti, #180d25); }
+.rt_pkg-inst { margin-top: auto; padding-top: 10px; border-top: 1px solid #f0ebf8; font-size: 13px; color: var(--mid-gray, #6e6e73); }
+.rt_pkg-omni { font-size: 12px; color: var(--mid-gray, #6e6e73); }
+@media (max-width: 767px) {
+  .rt_pkgs { display: grid !important; grid-auto-flow: column; grid-template-columns: none !important; grid-auto-columns: 78%; overflow-x: auto; scroll-snap-type: x mandatory; padding: 14px 16px 8px; margin-left: -16px !important; margin-right: -16px !important; scrollbar-width: none; }
+  .rt_pkgs::-webkit-scrollbar { display: none; }
+  .rt_pkg { scroll-snap-align: start; }
+}
+
+/* ---------- блок «Що зазвичай зупиняє?»: панель з аргументом ---------- */
+.rt_dpanel { display: none; flex-direction: column; gap: 16px; align-items: flex-start; margin-top: 16px; padding: 24px; border-radius: 20px; background: var(--magnolia, #f6f4fb); }
+.rt_dpanel.is-on { display: flex; animation: rt-in .2s ease-out; }
+html:not(.rt-js) .rt_dpanel { display: none; }
+.rt_dpanel-body { display: flex; flex-direction: column; gap: 12px; }
+.rt_dpanel-body .rt_clarify { display: none; }
+
+/* ---------- форма вибору часу ---------- */
+[data-rt-place] .w-form { margin: 0; }
+[data-rt-place] form { display: flex; flex-direction: column; gap: 20px; margin: 0; }
+[data-rt-place] form[hidden] { display: none; }
+.rt_fieldset { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.rt_legend { padding: 0; margin: 0 0 4px; font-size: 17px; font-weight: 700; color: inherit; }
+.rt_ages { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.rt_ages.is-collapsed { display: none; }
+.rt_ages .w-radio, .rt_age { position: relative; display: flex; align-items: center; justify-content: center; min-height: 56px; margin: 0; padding: 0; border-radius: 12px; border: 2px solid #e6def5; background: #fff; font-weight: 700; font-size: 17px; color: var(--haiti, #180d25); cursor: pointer; transition: border-color .15s, background-color .15s; }
+.rt_ages .w-radio::before, .rt_ages .w-radio::after { display: none !important; content: none !important; }
+.rt_ages .w-radio:hover { border-color: var(--heliotrope, #9762fd); }
+.rt_ages input[type="radio"] { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.rt_ages .w-form-label, .rt_ages label span { margin: 0; pointer-events: none; }
+.rt_ages .w-radio:has(input:checked) { border-color: var(--heliotrope, #9762fd); background: #f1eaff; }
+.rt_ages .w-radio:has(input:focus-visible) { outline: 3px solid rgba(151, 98, 253, .55); outline-offset: 2px; }
+@media (max-width: 479px) { .rt_ages { grid-template-columns: repeat(5, 1fr); } }
+.rt_agerow { font-size: 16px; }
+.rt_agerow[hidden] { display: none; }
+.rt_input, [data-rt-place] input[type="tel"], [data-rt-place] input[type="email"] { width: 100%; height: 56px; margin: 0; padding: 0 16px; border-radius: 12px; border: 2px solid #e6def5; background: #fff; color: var(--haiti, #180d25); font-size: 16px; box-shadow: none; }
+[data-rt-place] input[type="tel"]:focus, [data-rt-place] input[type="email"]:focus { border-color: var(--heliotrope, #9762fd); outline: none; }
+[data-rt-place] input[aria-invalid="true"] { border-color: var(--red, #f32525); }
+[data-rt-place] .iti { width: 100%; display: block; }
+[data-rt-place] .iti--separate-dial-code .iti__selected-flag { border-radius: 10px 0 0 10px; background: #f6f4fb; }
+.iti__country-list { z-index: 1000; max-width: min(360px, 90vw); }
+.rt_err { min-height: 0; color: var(--red, #f32525); font-size: 14px; line-height: 1.35; }
+.rt_err:empty { display: none; }
+.rt_note { font-size: 14px; line-height: 1.45; color: var(--mid-gray, #6e6e73); margin: 0; }
+.rt_consent { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--mid-gray, #6e6e73); margin: 0; padding: 0; }
+.rt_consent input { margin: 2px 0 0; width: 18px; height: 18px; flex: none; accent-color: var(--heliotrope, #9762fd); }
+.rt_consent::before, .rt_consent::after { display: none !important; }
+.rt_submit, [data-rt-place] input[type="submit"] { width: 100%; min-height: 56px; border: 0; border-radius: 999px; background: var(--tree-poppy, #fe8b21); color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; -webkit-appearance: none; }
+[data-rt-place] input[type="submit"]:disabled { opacity: .6; cursor: progress; }
+.rt_legal { font-size: 13px; color: var(--mid-gray, #6e6e73); margin: 0; text-align: center; }
+.rt_legal a { color: inherit; text-decoration: underline; }
+.rt_done { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.rt_done[hidden] { display: none; }
+.rt_done-title { font-size: 24px; font-weight: 800; }
+.rt_done-text { margin: 0; color: var(--mid-gray, #6e6e73); }
+.rt_fallback { margin: 0; font-size: 14px; }
+.rt_fallback[hidden] { display: none; }
+.rt_link { color: var(--heliotrope, #9762fd); font-weight: 600; text-decoration: underline; cursor: pointer; }
+[data-rt-place] .w-form-done, [data-rt-place] .w-form-fail { display: none !important; }
+
+/* попап форми підвалу (ft=popup) */
+.rt_modal { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(24, 13, 37, .55); }
+.rt_modal[hidden] { display: none; }
+.rt_modal-box { position: relative; width: 100%; max-width: 560px; max-height: calc(100vh - 32px); overflow: auto; padding: 32px 24px 24px; border-radius: 24px; background: #fff; color: var(--haiti, #180d25); text-align: left; }
+.rt_modal-x { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: #f6f4fb; font-size: 18px; cursor: pointer; }
+html[data-rt-ft="popup"] #rt-repeat [data-rt-footform] { display: none; }
+.rt_modal [data-rt-footform] { display: block !important; }
+
+/* відгуки: обрізаємо довгі */
+.rt_review-text { display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* ---------- темна тема (тест H5, ?v=dark): змінні _bf26-dark ---------- */
+html[data-rt-theme="dark"] .rt_page { background: #0f0a17; color: #fefefe; }
+html[data-rt-theme="dark"] .rt_hero { background: linear-gradient(180deg, #1b1426 0%, #0f0a17 100%); }
+html[data-rt-theme="dark"] .rt_bar, html[data-rt-theme="dark"] .rt_footer { background: #1b1426; border-color: #ffffff24; color: #fefefe; }
+html[data-rt-theme="dark"] .rt_card, html[data-rt-theme="dark"] .rt_question, html[data-rt-theme="dark"] .rt_answer, html[data-rt-theme="dark"] .rt_pkg,
+html[data-rt-theme="dark"] .rt_dcard, html[data-rt-theme="dark"] .rt_formcard, html[data-rt-theme="dark"] .rt_quiz, html[data-rt-theme="dark"] .rt_how-col,
+html[data-rt-theme="dark"] .rt_review, html[data-rt-theme="dark"] .rt_modal-box { background: #1b1426; border-color: #ffffff24; color: #fefefe; box-shadow: none; }
+html[data-rt-theme="dark"] .rt_arg, html[data-rt-theme="dark"] .rt_benefit, html[data-rt-theme="dark"] .rt_dpanel { background: #251c33; color: #fefefe; }
+html[data-rt-theme="dark"] .rt_choice, html[data-rt-theme="dark"] .rt_opt, html[data-rt-theme="dark"] .rt_chip, html[data-rt-theme="dark"] .rt_ages .w-radio,
+html[data-rt-theme="dark"] [data-rt-place] input[type="tel"], html[data-rt-theme="dark"] [data-rt-place] input[type="email"] { background: #251c33; border-color: #ffffff24; color: #fefefe; }
+html[data-rt-theme="dark"] [aria-pressed="true"].rt_opt, html[data-rt-theme="dark"] [aria-pressed="true"].rt_chip, html[data-rt-theme="dark"] .rt_dcard[aria-expanded="true"],
+html[data-rt-theme="dark"] .rt_ages .w-radio:has(input:checked) { background: #2f2342 !important; color: #fefefe; }
+html[data-rt-theme="dark"] .rt_muted, html[data-rt-theme="dark"] .rt_note, html[data-rt-theme="dark"] .rt_pkg-sub, html[data-rt-theme="dark"] .rt_pkg-price,
+html[data-rt-theme="dark"] .rt_pkg-inst, html[data-rt-theme="dark"] .rt_stepitem-text, html[data-rt-theme="dark"] .rt_dcard-sub, html[data-rt-theme="dark"] .rt_hint,
+html[data-rt-theme="dark"] .rt_legal, html[data-rt-theme="dark"] .rt_progress { color: #fefefeb8; }
+html[data-rt-theme="dark"] .rt_pkg-price b, html[data-rt-theme="dark"] .rt_pkg-month, html[data-rt-theme="dark"] .rt_flink, html[data-rt-theme="dark"] .rt_terms { color: #fefefe; }
+html[data-rt-theme="dark"] .rt_btn:not(.is-secondary):not(.is-ghost), html[data-rt-theme="dark"] [data-rt-place] input[type="submit"] { color: #180d25; }
+html[data-rt-theme="dark"] .rt_btn.is-secondary { background: #fefefe; color: #180d25; }
+html[data-rt-theme="dark"] .rt_btn.is-ghost { color: #fefefe; border-color: #ffffff3d; }
+html[data-rt-theme="dark"] .rt_discount, html[data-rt-theme="dark"] .rt_offerline { background: #2a1c12; color: #fefefe; }
+html[data-rt-theme="dark"] .rt_err { color: #ff6b6b; }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
