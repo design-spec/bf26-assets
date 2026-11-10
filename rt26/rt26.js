@@ -172,6 +172,8 @@
       var v = k === 'm1' ? rows.m[0] : k === 'm12' ? rows.m[3] : k === 'inst12' ? (rows.i[2] != null ? rows.i[2] : rows.m[3]) : null;
       el.textContent = v != null ? money(v) : (T.noZonePrice || '—');
     });
+    var bestM = 0;                                     // найдовший доступний термін = найнижча ціна за урок
+    if (rows) (T.terms || []).forEach(function (t, idx) { if (rows.m[idx] != null && t[1] > bestM) bestM = t[1]; });
     $$('[data-rt-packages]').forEach(function (box) {
       box.innerHTML = '';
       if (!rows) return;
@@ -181,12 +183,12 @@
         var label = t[0] + ' · ' + tpl(T.perWeekShort || '{n} на тиждень', { n: f });
         var sel = S.pkg === label;
         var card = doc.createElement('div');
-        card.className = 'rt_pkg' + (months === 12 ? ' is-best' : '') + (sel ? ' is-sel' : '');
+        card.className = 'rt_pkg' + (months === bestM ? ' is-best' : '') + (sel ? ' is-sel' : '');
         card.setAttribute('role', 'button'); card.tabIndex = 0;
         card.setAttribute('aria-pressed', sel ? 'true' : 'false');
         card.setAttribute('data-rt-pkg', label);
         card.innerHTML =
-          (months === 12 ? '<div class="rt_pkg-tag">' + esc(T.bestTag || '') + '</div>' : '') +
+          (months === bestM ? '<div class="rt_pkg-tag">' + esc(T.bestTag || '') + '</div>' : '') +
           '<div class="rt_pkg-name">' + esc(t[0]) + '</div>' +
           '<div class="rt_pkg-sub">' + esc(tpl(T.pkgLessons || '{n} уроків', { n: months * lpm })) + '</div>' +
           '<div class="rt_pkg-price"><b>' + esc(money(per)) + '</b> <span>' + esc(T.perLesson || '') + '</span></div>' +
@@ -209,10 +211,10 @@
         var label = t[0] + ' · ' + tpl(T.perWeekShort || '{n} на тиждень', { n: f });
         var sel = S.pkg === label;
         var b = doc.createElement('button'); b.type = 'button';
-        b.className = 'rt_mpkg' + (months === 12 ? ' is-best' : '') + (sel ? ' is-sel' : '');
+        b.className = 'rt_mpkg' + (months === bestM ? ' is-best' : '') + (sel ? ' is-sel' : '');
         b.setAttribute('aria-pressed', sel ? 'true' : 'false'); b.setAttribute('data-rt-pkg', label);
         b.innerHTML = '<span class="rt_mpkg-name">' + esc(t[0]) + '</span><span class="rt_mpkg-price"><b>' + esc(money(per)) + '</b> ' + esc(T.perLesson || '') + '</span>' +
-          (months === 12 ? '<span class="rt_mpkg-tag">' + esc(T.bestShort || T.bestTag || '') + '</span>' : '');
+          (months === bestM ? '<span class="rt_mpkg-tag">' + esc(T.bestShort || T.bestTag || '') + '</span>' : '');
         b.addEventListener('click', function () { pickPkg(label, f, 'repeat'); });
         box.appendChild(b);
       });
@@ -925,7 +927,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.16', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.17', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();

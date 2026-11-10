@@ -512,7 +512,7 @@ html[data-rt-theme="main"] .rt_mpkg.is-sel { background: #2a2060; border-color: 
 html[data-rt-theme="main"] .rt_mpkg-price, html[data-rt-theme="main"] .rt_mini-freq, html[data-rt-theme="main"] .rt_trust { color: var(--m-muted); }
 html[data-rt-theme="main"] .rt_mpkg-price b { color: #fefefe; }
 @media (max-width: 767px) {
-  .rt_mini-pkgs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .rt_mini-pkgs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 8px; }
   .rt_mpkg { min-height: 76px; padding: 14px 6px; }
   .rt_mpkg-name { font-size: 14px; } .rt_mpkg-price { font-size: 12px; } .rt_mpkg-price b { display: block; font-size: 16px; }
   .rt_mpkg-tag { font-size: 11px; padding: 1px 6px; }
