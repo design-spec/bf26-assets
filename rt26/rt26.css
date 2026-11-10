@@ -624,17 +624,15 @@ html[data-rt-theme="dark"] .rt_seg-opt:hover, html[data-rt-theme="dark"] .rt_seg
 @keyframes rt-sticker { from { opacity: 0; scale: 1.6; rotate: -16deg; } }
 .rt_sticker { display: inline-block; padding: 0 .16em; margin: 0 .04em; border-radius: .14em; background: linear-gradient(115deg, #57cd6b 0%, #8fe27d 50%, #c6f891 100%); color: #11112c; line-height: 1.12; rotate: -3deg; box-shadow: .1em .1em 0 rgba(0, 0, 0, .38); white-space: nowrap; animation: rt-sticker .6s cubic-bezier(.3, 1.55, .5, 1) .75s both; }
 
-/* шапка на мобільному: зліва фіолетова нахилена плашка в два рядки (setupBarMobile), справа мова і кнопка */
-.rt_bar-m { display: none; }
+/* шапка: фіолетова нахилена плашка «Знижка до -60% до 30 листопада» (setupBarMobile) замість рядка тексту варіантів own/bf;
+   десктоп — в один рядок після логотипа, мобільний — у два рядки зліва, справа мова і кнопка. Картинка hero на мобільному схована (стиль Webflow) */
+.rt_bar-m { display: flex; align-items: center; gap: .3em; flex: none; margin-right: auto; padding: 6px 14px; border-radius: 10px; background: linear-gradient(115deg, #9762fd 0%, #7d4cf0 100%); color: #fff; font-size: 15px; font-weight: 700; line-height: 1.22; rotate: -2deg; box-shadow: 0 4px 14px rgba(151, 98, 253, .35); white-space: nowrap; }
+.rt_page .rt_bar-inner:has(.rt_bar-m) .rt_bar-text[data-rt-variant~="own"] { display: none !important; }
 @media (max-width: 767px) {
   .rt_page .rt_bar-inner:has(.rt_bar-m) { flex-wrap: nowrap !important; align-items: center; gap: 6px; padding: 10px 16px !important; }
-  .rt_page .rt_bar-inner:has(.rt_bar-m) .rt_bar-text[data-rt-variant~="own"] { display: none !important; }
-  .rt_bar-m { display: flex; flex-direction: column; align-items: flex-start; flex: 1 1 auto; min-width: 0; margin-right: auto; padding: 5px 10px; border-radius: 10px; background: linear-gradient(115deg, #9762fd 0%, #7d4cf0 100%); color: #fff; font-size: 13px; font-weight: 700; line-height: 1.22; rotate: -2.5deg; box-shadow: 0 4px 14px rgba(151, 98, 253, .35); flex-grow: 0; white-space: nowrap; }
+  .rt_bar-m { flex-direction: column; align-items: flex-start; gap: 0; min-width: 0; padding: 5px 10px; font-size: 13px; rotate: -2.5deg; }
   .rt_page .rt_bar-inner:has(.rt_bar-m) .rt_lang { margin-left: auto; }
   .rt_page .rt_bar-inner:has(.rt_bar-m) [data-rt-cta="bar"] { margin-left: 0; }
-  /* картинка hero на мобільному — над текстом, компактно */
-  .rt_page .rt_hero-media { display: block !important; order: -1; width: 100%; max-width: 250px; margin: 0 auto; }
-  .rt_page .rt_hero-media .rt_hero-img { display: block; width: 100%; height: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
