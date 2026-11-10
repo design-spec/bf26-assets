@@ -708,6 +708,31 @@
 
   /* ---------------------------------------------------------------- старт */
 
+  // Підвал як у BF26: ключові фрази умов (T.termsHl) — span.rt_hl; абзац проявляється з розмиття, коли підвал на екрані.
+  function setupFooter() {
+    var main = $('.rt_footer [data-rt-ft="main"]'); if (!main) return;
+    var hl = T.termsHl || [], i = 0;
+    $$('.rt_terms', main).forEach(function (p) {
+      hl.forEach(function (ph) {
+        if (!ph) return;
+        var walker = doc.createTreeWalker(p, NodeFilter.SHOW_TEXT, null), n;
+        while ((n = walker.nextNode())) {
+          if (n.parentNode.classList && n.parentNode.classList.contains('rt_hl')) continue;
+          var k = n.nodeValue.replace(/ /g, ' ').indexOf(ph.replace(/ /g, ' '));
+          if (k < 0) continue;
+          var mid = n.splitText(k); mid.splitText(ph.length);
+          var sp = doc.createElement('span'); sp.className = 'rt_hl'; sp.style.setProperty('--rt-i', i++);
+          mid.parentNode.replaceChild(sp, mid); sp.appendChild(mid);
+          break;
+        }
+      });
+    });
+    if (!window.IntersectionObserver) { main.classList.add('is-in'); return; }
+    main.classList.add('rt-hl-ready');
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { main.classList.add('is-in'); io.disconnect(); } }); }, { threshold: 0.35 });
+    io.observe(main);
+  }
+
   // Кнопки-якорі (#rt-quiz, #rt-prices…) потрібні лише без JS. Зі скриптом прибираємо href:
   // інакше webflow.js на кожен клік сам прокручує до якоря і сторінка «стрибає».
   function anchorsToButtons() {
@@ -729,6 +754,7 @@
       if (slot && field(f, 'phone')) setupForm(f, slot.getAttribute('data-rt-place'));
     });
     setupDoubts();
+    setupFooter();
     setupLinks();
     setupPopup();
     setupBar();
@@ -741,7 +767,7 @@
   }
 
   window.RT26 = {
-    version: '1.4.0', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.5.0', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
