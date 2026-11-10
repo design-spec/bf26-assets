@@ -454,7 +454,7 @@ html[data-rt-theme="main"] .rt_stepitem:nth-child(4)::before { background: #6ba4
 /* фінальний блок — як «Розпочніть навчання в All Right вже сьогодні!»: промені, градієнтна рамка, лисеня Charlie зверху */
 html[data-rt-theme="main"] #rt-repeat { padding-top: 140px; background: url(img/bg-dark.avif) center bottom/max(1440px, 100%) auto no-repeat; }
 html[data-rt-theme="main"] .rt_repeat { position: relative; overflow: visible; border: 20px solid transparent; border-radius: 40px; background: linear-gradient(#1d1846, #1d1846) padding-box, linear-gradient(90deg, #9762fd 0%, #3e1f8a 100%) border-box; box-shadow: 0 8px 24px rgba(20, 0, 26, .1); }
-html[data-rt-theme="main"] .rt_repeat::before { content: ""; position: absolute; left: 50%; bottom: 100%; width: 164px; height: 164px; margin: 0 0 -38px -82px; background: url(img/charlie-holds-phone-163x163.avif) center bottom/contain no-repeat; pointer-events: none; z-index: -1; }
+html[data-rt-theme="main"] .rt_repeat::before { content: ""; position: absolute; left: 50%; bottom: 100%; width: 164px; height: 164px; margin: 0 0 var(--rt-fox-drop, -20px) -82px; background: url(img/charlie-holds-phone-163x163.avif) center bottom/contain no-repeat; pointer-events: none; z-index: 1; }
 html[data-rt-theme="main"] .rt_repeat .rt_question { background: var(--m-bg); }
 /* шапка як на головній allright.com: темна #11112c, логотип з білим текстом і помаранчевим серцем, світлий текст, мова як «UK» на головній */
 html[data-rt-theme="main"] .rt_page .rt_bar { background: var(--m-bg); border-bottom: 1px solid rgba(146, 116, 219, .2); box-shadow: none; color: #fefefe; }
@@ -480,7 +480,7 @@ html[data-rt-theme="main"] .rt_modal-x { background: rgba(255, 255, 255, .1); co
   html[data-rt-theme="main"] .rt_page .rt_q-title { font-size: 20px; }
   html[data-rt-theme="main"] .rt_question, html[data-rt-theme="main"] .rt_quiz, html[data-rt-theme="main"] .rt_formcard { padding: 20px; }
   html[data-rt-theme="main"] .rt_eyebrow { font-size: 14px; min-height: 38px; padding: 8px 14px; }
-  html[data-rt-theme="main"] .rt_repeat { border-width: 10px; border-radius: 28px; }
+  html[data-rt-theme="main"] .rt_repeat { border-width: 10px; border-radius: 28px; --rt-fox-drop: -24px; }
   html[data-rt-theme="main"] #rt-repeat { padding-top: 120px; }
   html[data-rt-theme="main"] .rt_how-col { padding: 24px 20px; border-radius: 24px; }
 }
