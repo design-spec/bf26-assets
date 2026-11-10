@@ -334,9 +334,8 @@ html[data-rt-theme="main"] .rt_pkg-sub, html[data-rt-theme="main"] .rt_pkg-price
 html[data-rt-theme="main"] .rt_lead { font-size: 18px; font-weight: 500; }
 html[data-rt-theme="main"] .rt_text strong, html[data-rt-theme="main"] .rt_answer-text strong, html[data-rt-theme="main"] .rt_pkg-price b, html[data-rt-theme="main"] .rt_pkg-month { color: #fefefe; }
 html[data-rt-theme="main"] .rt_link { color: var(--m-link); }
-/* бейдж над заголовком — рожевий ярлик із «хвостиком», як «Безкоштовний пробний урок» */
-html[data-rt-theme="main"] .rt_eyebrow { position: relative; display: inline-flex; align-items: center; min-height: 44px; margin-right: 30px; padding: 10px 4px 10px 20px; border-radius: 12px 0 0 12px; background: #f2c9d9; color: #d5367d; font-size: 16px; font-weight: 700; line-height: 1.2; letter-spacing: 0; text-transform: none; box-shadow: inset 0 -2px 0 rgba(255, 255, 255, .7); transform: rotate(-2deg); }
-html[data-rt-theme="main"] .rt_eyebrow::after { content: ""; position: absolute; left: 100%; top: -2px; width: 32px; height: 48px; margin-left: -1px; background: url(img/tail_pink.svg) 0 0/32px 48px no-repeat; transform: rotate(-5.4deg); transform-origin: 0 50%; }
+/* бейдж над заголовком — рожевий нахилений ярлик, як «Безкоштовний пробний урок» */
+html[data-rt-theme="main"] .rt_eyebrow { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 10px 20px; border-radius: 12px; background: #f2c9d9; color: #d5367d; font-size: 16px; font-weight: 700; line-height: 1.2; letter-spacing: 0; text-transform: none; box-shadow: inset 0 -2px 0 rgba(255, 255, 255, .7); transform: rotate(-2deg); }
 /* картки (як «Оберіть вік дитини» і пакети на головній) */
 html[data-rt-theme="main"] .rt_question, html[data-rt-theme="main"] .rt_answer, html[data-rt-theme="main"] .rt_quiz, html[data-rt-theme="main"] .rt_formcard, html[data-rt-theme="main"] .rt_dw-card, html[data-rt-theme="main"] .rt_modal-box, html[data-rt-theme="main"] .rt_dcard {
   background: var(--m-card); border: 1px solid var(--m-line); border-radius: 24px; color: #fefefe; box-shadow: 0 4px 40px rgba(32, 32, 41, .08); }
@@ -393,7 +392,7 @@ html[data-rt-theme="main"] .rt_stepitem:nth-child(4)::before { background: #6ba4
 /* фінальний блок — як «Розпочніть навчання в All Right вже сьогодні!»: промені, градієнтна рамка, лисеня Charlie зверху */
 html[data-rt-theme="main"] #rt-repeat { padding-top: 140px; background: url(img/bg-dark.avif) center bottom/max(1440px, 100%) auto no-repeat; }
 html[data-rt-theme="main"] .rt_repeat { position: relative; overflow: visible; border: 20px solid transparent; border-radius: 40px; background: linear-gradient(#1d1846, #1d1846) padding-box, linear-gradient(90deg, #9762fd 0%, #3e1f8a 100%) border-box; box-shadow: 0 8px 24px rgba(20, 0, 26, .1); }
-html[data-rt-theme="main"] .rt_repeat::before { content: ""; position: absolute; left: 50%; bottom: 100%; width: 164px; height: 164px; margin: 0 0 -38px -82px; background: url(img/charlie-holds-phone.avif) center bottom/contain no-repeat; pointer-events: none; z-index: -1; }
+html[data-rt-theme="main"] .rt_repeat::before { content: ""; position: absolute; left: 50%; bottom: 100%; width: 164px; height: 164px; margin: 0 0 -38px -82px; background: url(img/charlie-holds-phone-163x163.avif) center bottom/contain no-repeat; pointer-events: none; z-index: -1; }
 html[data-rt-theme="main"] .rt_repeat .rt_question { background: var(--m-bg); }
 /* «Що зазвичай зупиняє?» */
 html[data-rt-theme="main"] .rt_dw-k { color: #fefefe; }
@@ -412,8 +411,7 @@ html[data-rt-theme="main"] .rt_modal-x { background: rgba(255, 255, 255, .1); co
   html[data-rt-theme="main"] .rt_page .rt_quiz .rt_h2, html[data-rt-theme="main"] .rt_page .rt_h2.is-form { font-size: 22px; }
   html[data-rt-theme="main"] .rt_page .rt_q-title { font-size: 20px; }
   html[data-rt-theme="main"] .rt_question, html[data-rt-theme="main"] .rt_quiz, html[data-rt-theme="main"] .rt_formcard { padding: 20px; }
-  html[data-rt-theme="main"] .rt_eyebrow { font-size: 14px; min-height: 38px; padding: 8px 4px 8px 14px; }
-  html[data-rt-theme="main"] .rt_eyebrow::after { width: 27px; height: 41px; background-size: 27px 41px; }
+  html[data-rt-theme="main"] .rt_eyebrow { font-size: 14px; min-height: 38px; padding: 8px 14px; }
   html[data-rt-theme="main"] .rt_repeat { border-width: 10px; border-radius: 28px; }
   html[data-rt-theme="main"] #rt-repeat { padding-top: 120px; }
   html[data-rt-theme="main"] .rt_how-col { padding: 24px 20px; border-radius: 24px; }
