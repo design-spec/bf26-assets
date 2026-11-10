@@ -514,7 +514,7 @@ html[data-rt-theme="main"] .rt_mpkg-price b { color: #fefefe; }
 @media (max-width: 767px) {
   .rt_mini-pkgs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 8px; }
   .rt_mpkg { min-height: 76px; padding: 14px 6px; }
-  .rt_mpkg-name { font-size: 14px; } .rt_mpkg-price { font-size: 12px; } .rt_mpkg-price b { display: block; font-size: 16px; }
+  .rt_mpkg-name { font-size: 14px; }
   .rt_mpkg-tag { font-size: 11px; padding: 1px 6px; }
   .rt_repeat [data-rt-pay="footer"] { min-width: 0; width: 100%; }
   .rt_trust { flex-direction: column; align-items: center; gap: 8px; }
@@ -541,6 +541,29 @@ html[data-rt-theme="main"] .rt_modal-x { background: rgba(255, 255, 255, .1); co
   html[data-rt-theme="main"] .rt_repeat { border-width: 10px; border-radius: 28px; --rt-fox-drop: -24px; }
   html[data-rt-theme="main"] #rt-repeat { padding-top: 120px; }
   html[data-rt-theme="main"] .rt_how-col { padding: 24px 20px; border-radius: 24px; }
+}
+
+/* ціна за урок — формат сторінки цін allright.com: «574» + «,38 ₴» / «за урок» */
+.rt_pr { display: inline-flex; align-items: flex-start; gap: 6px; direction: ltr; text-align: left; vertical-align: top; }
+.rt_pr-int { font-size: 40px; font-weight: 700; line-height: 1.05; letter-spacing: -.01em; color: var(--haiti, #180d25); white-space: nowrap; }
+.rt_pr-side { display: flex; flex-direction: column; padding-top: 4px; }
+.rt_pr-dec { font-size: 17px; font-weight: 600; line-height: 1.25; color: var(--haiti, #180d25); white-space: nowrap; }
+.rt_pr-per { font-size: 14px; line-height: 1.3; color: var(--mid-gray, #6e6e73); white-space: nowrap; }
+.rt_pkg-price { margin-top: 10px; }
+.rt_mpkg .rt_pr { gap: 4px; }
+.rt_mpkg .rt_pr-int { font-size: 26px; }
+.rt_mpkg .rt_pr-side { padding-top: 2px; }
+.rt_mpkg .rt_pr-dec { font-size: 13px; }
+.rt_mpkg .rt_pr-per { font-size: 12px; }
+html[data-rt-theme="dark"] .rt_pr-int, html[data-rt-theme="dark"] .rt_pr-dec,
+html[data-rt-theme="main"] .rt_pr-int, html[data-rt-theme="main"] .rt_pr-dec { color: #fefefe; }
+html[data-rt-theme="dark"] .rt_pr-per { color: rgba(254, 254, 254, .7); }
+html[data-rt-theme="main"] .rt_pr-per { color: var(--m-muted); }
+@media (max-width: 767px) {
+  .rt_pr-int { font-size: 34px; }
+  .rt_pr-dec { font-size: 15px; } .rt_pr-per { font-size: 13px; }
+  .rt_mpkg .rt_pr-int { font-size: 24px; }
+  .rt_mpkg .rt_pr-dec { font-size: 12px; } .rt_mpkg .rt_pr-per { font-size: 11px; }
 }
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }

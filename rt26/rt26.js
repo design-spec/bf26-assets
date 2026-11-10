@@ -151,10 +151,21 @@
 
   /* ---------------------------------------------------------------- ціни */
 
+  // як на allright.com/{мова}/app/price: розряди через пробіл, копійки після коми — «4 595,04 ₴»
+  function num2(n) { return (+n).toLocaleString(T.numLocale || 'uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function money(n) {
     var cur = PLAN ? PLAN.cur : '';
-    var s = (+n).toFixed(2).replace('.', T.decimal || ',');
-    return (PLAN && PLAN.curBefore) ? cur + s : s + ' ' + cur;
+    var s = num2(n);
+    return (PLAN && PLAN.curBefore) ? cur + s : s + '\u00a0' + cur;
+  }
+  // ціна за урок як на сторінці цін: велике ціле, поруч дрібно «,38 ₴», під ним «за урок»
+  function priceHtml(n) {
+    var cur = PLAN ? PLAN.cur : '', s = num2(n), dp = (T.decimal || ','), i = s.lastIndexOf(dp);
+    if (i < 0) { dp = /[.,]\d\d$/.test(s) ? s.charAt(s.length - 3) : ''; i = dp ? s.length - 3 : s.length; }
+    var whole = s.slice(0, i), dec = s.slice(i);
+    if (PLAN && PLAN.curBefore) whole = cur + whole; else dec += '\u00a0' + cur;
+    return '<span class="rt_pr"><span class="rt_pr-int">' + esc(whole) + '</span><span class="rt_pr-side"><span class="rt_pr-dec">' + esc(dec) +
+      '</span><span class="rt_pr-per">' + esc(T.perLesson || '') + '</span></span></span>';
   }
   function money0(n) {
     var cur = PLAN ? PLAN.cur : '';
@@ -191,7 +202,7 @@
           (months === bestM ? '<div class="rt_pkg-tag">' + esc(T.bestTag || '') + '</div>' : '') +
           '<div class="rt_pkg-name">' + esc(t[0]) + '</div>' +
           '<div class="rt_pkg-sub">' + esc(tpl(T.pkgLessons || '{n} уроків', { n: months * lpm })) + '</div>' +
-          '<div class="rt_pkg-price"><b>' + esc(money(per)) + '</b> <span>' + esc(T.perLesson || '') + '</span></div>' +
+          '<div class="rt_pkg-price">' + priceHtml(per) + '</div>' +
           '<div class="rt_pkg-month">' + esc(tpl(T.perMonth || '', { sum: money0(per * lpm), n: lpm })) + '</div>' +
           '<div class="rt_pkg-inst">' + esc(inst != null ? tpl(T.installments || '', { p: money(inst) }) : idx === 0 ? (T.payMonthly || '') : (T.payUpfront || '')) + '</div>' +
           (EU ? '<div class="rt_pkg-omni" data-rt-variant="own bf">' + esc(tpl(T.omnibus || '', { p: money(per) })) + '</div>' : '');
@@ -213,7 +224,7 @@
         var b = doc.createElement('button'); b.type = 'button';
         b.className = 'rt_mpkg' + (months === bestM ? ' is-best' : '') + (sel ? ' is-sel' : '');
         b.setAttribute('aria-pressed', sel ? 'true' : 'false'); b.setAttribute('data-rt-pkg', label);
-        b.innerHTML = '<span class="rt_mpkg-name">' + esc(t[0]) + '</span><span class="rt_mpkg-price"><b>' + esc(money(per)) + '</b> ' + esc(T.perLesson || '') + '</span>' +
+        b.innerHTML = '<span class="rt_mpkg-name">' + esc(t[0]) + '</span><span class="rt_mpkg-price">' + priceHtml(per) + '</span>' +
           (months === bestM ? '<span class="rt_mpkg-tag">' + esc(T.bestShort || T.bestTag || '') + '</span>' : '');
         b.addEventListener('click', function () { pickPkg(label, f, 'repeat'); });
         box.appendChild(b);
@@ -927,7 +938,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.17', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.18', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
