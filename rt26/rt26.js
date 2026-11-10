@@ -750,15 +750,19 @@
     // стрічка як на головній: Embla Carousel (та сама бібліотека) — перетягування з інерцією і плавне докручування до картки;
     // якщо бібліотека не завантажилась — лишається нативна горизонтальна прокрутка
     var rail = $('.rt_reviews', slot), vp = rail && rail.parentNode; if (!rail || html.getAttribute('data-rt-theme') !== 'main') return;
+    // + плагін embla-carousel-wheel-gestures: горизонтальний свайп двома пальцями на тачпаді гортає стрічку (вертикальний — сторінку)
     function init() {
       if (!window.EmblaCarousel || box.classList.contains('is-embla')) return;
       box.classList.add('is-embla');
-      try { window.EmblaCarousel(vp, { align: 'start', containScroll: 'trimSnaps', dragFree: false, duration: 30 }); }
+      var plugins = window.EmblaCarouselWheelGestures ? [window.EmblaCarouselWheelGestures()] : [];
+      try { window.EmblaCarousel(vp, { align: 'start', containScroll: 'trimSnaps', dragFree: false, duration: 30 }, plugins); }
       catch (e) { box.classList.remove('is-embla'); }
     }
-    if (window.EmblaCarousel) return init();
-    var sc = doc.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/embla-carousel@8.5.2/embla-carousel.umd.js'; sc.async = true; sc.onload = init;
-    doc.head.appendChild(sc);
+    function load(src, cb) { var sc = doc.createElement('script'); sc.src = src; sc.async = true; sc.onload = sc.onerror = cb; doc.head.appendChild(sc); }
+    var CDN = 'https://cdn.jsdelivr.net/npm/';
+    load(CDN + 'embla-carousel@8.5.2/embla-carousel.umd.js', function () {
+      load(CDN + 'embla-carousel-wheel-gestures@8.0.2/dist/embla-carousel-wheel-gestures.umd.js', init);
+    });
   }
 
   // Підвал як у BF26: ключові фрази умов (T.termsHl) — span.rt_hl; абзац проявляється з розмиття, коли підвал на екрані.
@@ -821,7 +825,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.7', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.8', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
