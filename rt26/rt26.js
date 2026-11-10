@@ -502,6 +502,13 @@
       ITI.forEach(function (o) { if (o !== iti && o.getSelectedCountryData().iso2 !== c.iso2) o.setCountry(c.iso2); });
     });
     tel.__iti = iti;
+    // відступ тексту від «🇺🇦 +380 ▾»: intl-tel-input ставить лише ~4 px — робимо ширина блоку коду + 14 px;
+    // ResizeObserver перераховує при зміні країни (+1 / +380 / +1 868) і коли форма стає видимою
+    var flagBox = tel.parentNode && tel.parentNode.querySelector('.iti__flag-container');
+    var pad = function () { var w = flagBox && flagBox.offsetWidth; if (w) tel.style.setProperty('padding-left', (w + 14) + 'px', 'important'); };
+    if (flagBox && window.ResizeObserver) new ResizeObserver(pad).observe(flagBox);
+    tel.addEventListener('countrychange', function () { setTimeout(pad, 0); });
+    pad();
     return iti;
   }
   function phoneE164(tel) {
@@ -1069,7 +1076,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.27', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.28', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
