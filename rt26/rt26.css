@@ -303,4 +303,120 @@ html[data-rt-theme="dark"] .rt_lead { color: #fefefeb8; }
 html[data-rt-theme="dark"] .rt_section.is-soft { background: #150f1f; }
 html[data-rt-theme="dark"] .rt_progress-track { background: #ffffff24; }
 
+
+/* ======================================================================================================
+   ТЕМА «main» — як головна allright.com/{мова} (рішення 10.11: стиль головної, структура з ТЗ).
+   За замовчуванням (head ставить data-rt-theme="main"); ?v=light — попередня світла, ?v=dark — темна BF26 (тест H5).
+   Токени головної: фон #11112c, фіолетове сяйво #6d4eaf + шум, картки rgba(17,17,44,.7) з рамкою rgba(146,116,219,.2),
+   плитки #11112c з рамкою #4e3e75, текст #fefefe / #b5b4be, зелений #57cd6b, градієнт #9762fd → #3e1f8a, підвал #14001a.
+   ====================================================================================================== */
+html[data-rt-theme="main"] { --m-bg: #11112c; --m-card: rgba(17, 17, 44, .7); --m-card2: rgba(255, 255, 255, .04); --m-line: rgba(146, 116, 219, .28); --m-tile: #4e3e75; --m-muted: #b5b4be; --m-violet: #9762fd; --m-link: #b597ff; --m-green: #57cd6b; --m-glow: 109, 78, 175; }
+html[data-rt-theme="main"] body { background: var(--m-bg); }
+html[data-rt-theme="main"] .rt_page { background: var(--m-bg); color: #fefefe; }
+/* сяйво і шум (як .hero-bg-dark і .bg-noise на головній) */
+html[data-rt-theme="main"] .rt_hero, html[data-rt-theme="main"] #rt-reviews, html[data-rt-theme="main"] #rt-quiz, html[data-rt-theme="main"] #rt-prices, html[data-rt-theme="main"] #rt-time, html[data-rt-theme="main"] #rt-doubts, html[data-rt-theme="main"] #rt-repeat { position: relative; isolation: isolate; background: transparent; }
+html[data-rt-theme="main"] .rt_hero::before, html[data-rt-theme="main"] #rt-reviews::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: url(img/bg-noise.png) 0 0/240px repeat; opacity: .5; }
+html[data-rt-theme="main"] .rt_hero { background: radial-gradient(ellipse 95% 120% at 72% 18%, rgb(var(--m-glow)) 0%, rgba(var(--m-glow), .9) 22%, rgba(var(--m-glow), .7) 38%, rgba(var(--m-glow), .4) 58%, rgba(var(--m-glow), .12) 80%, rgba(var(--m-glow), 0) 100%), var(--m-bg); }
+html[data-rt-theme="main"] #rt-quiz, html[data-rt-theme="main"] #rt-prices, html[data-rt-theme="main"] #rt-time { background: linear-gradient(180deg, rgba(var(--m-glow), .22) 0%, rgba(var(--m-glow), 0) 100%); }
+html[data-rt-theme="main"] #rt-prices { background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(var(--m-glow), .45) 0%, rgba(var(--m-glow), 0) 75%); }
+html[data-rt-theme="main"] #rt-doubts { background: radial-gradient(ellipse 60% 55% at 50% 55%, rgba(var(--m-glow), .3) 0%, rgba(var(--m-glow), 0) 75%); }
+html[data-rt-theme="main"] #rt-reviews { background: radial-gradient(ellipse 85% 90% at 50% 50%, rgb(var(--m-glow)) 0%, rgba(var(--m-glow), .75) 30%, rgba(var(--m-glow), .35) 60%, rgba(var(--m-glow), 0) 92%), var(--m-bg); }
+/* типографіка: білі заголовки 700, як на головній (h1 56, h2 44) */
+html[data-rt-theme="main"] .rt_h1, html[data-rt-theme="main"] .rt_h2, html[data-rt-theme="main"] .rt_h3, html[data-rt-theme="main"] .rt_q-title, html[data-rt-theme="main"] .rt_arg-title,
+html[data-rt-theme="main"] .rt_pkg-name, html[data-rt-theme="main"] .rt_dcard-title, html[data-rt-theme="main"] .rt_done-title, html[data-rt-theme="main"] .rt_legend, html[data-rt-theme="main"] .rt_clarify-q { color: #fefefe; }
+html[data-rt-theme="main"] .rt_page .rt_h1 { font-size: 56px; line-height: 1.1; font-weight: 700; letter-spacing: -.02em; }
+html[data-rt-theme="main"] .rt_page .rt_h2 { font-size: 44px; line-height: 1.15; font-weight: 700; letter-spacing: -.015em; }
+html[data-rt-theme="main"] .rt_page .rt_quiz .rt_h2, html[data-rt-theme="main"] .rt_page .rt_h2.is-form { font-size: 28px; }
+html[data-rt-theme="main"] .rt_page .rt_q-title { font-size: 24px; font-weight: 700; }
+html[data-rt-theme="main"] .rt_lead, html[data-rt-theme="main"] .rt_muted, html[data-rt-theme="main"] .rt_text, html[data-rt-theme="main"] .rt_note, html[data-rt-theme="main"] .rt_hint,
+html[data-rt-theme="main"] .rt_legal, html[data-rt-theme="main"] .rt_consent, html[data-rt-theme="main"] .rt_done-text, html[data-rt-theme="main"] .rt_wait, html[data-rt-theme="main"] .rt_progress,
+html[data-rt-theme="main"] .rt_pkg-sub, html[data-rt-theme="main"] .rt_pkg-price, html[data-rt-theme="main"] .rt_pkg-inst, html[data-rt-theme="main"] .rt_pkg-omni, html[data-rt-theme="main"] .rt_dcard-sub, html[data-rt-theme="main"] .rt_answer-text { color: var(--m-muted); }
+html[data-rt-theme="main"] .rt_lead { font-size: 18px; font-weight: 500; }
+html[data-rt-theme="main"] .rt_text strong, html[data-rt-theme="main"] .rt_answer-text strong, html[data-rt-theme="main"] .rt_pkg-price b, html[data-rt-theme="main"] .rt_pkg-month { color: #fefefe; }
+html[data-rt-theme="main"] .rt_link { color: var(--m-link); }
+/* бейдж над заголовком — рожевий ярлик із «хвостиком», як «Безкоштовний пробний урок» */
+html[data-rt-theme="main"] .rt_eyebrow { position: relative; display: inline-flex; align-items: center; min-height: 44px; margin-right: 30px; padding: 10px 4px 10px 20px; border-radius: 12px 0 0 12px; background: #f2c9d9; color: #d5367d; font-size: 16px; font-weight: 700; line-height: 1.2; letter-spacing: 0; text-transform: none; box-shadow: inset 0 -2px 0 rgba(255, 255, 255, .7); transform: rotate(-2deg); }
+html[data-rt-theme="main"] .rt_eyebrow::after { content: ""; position: absolute; left: 100%; top: -2px; width: 32px; height: 48px; margin-left: -1px; background: url(img/tail_pink.svg) 0 0/32px 48px no-repeat; transform: rotate(-5.4deg); transform-origin: 0 50%; }
+/* картки (як «Оберіть вік дитини» і пакети на головній) */
+html[data-rt-theme="main"] .rt_question, html[data-rt-theme="main"] .rt_answer, html[data-rt-theme="main"] .rt_quiz, html[data-rt-theme="main"] .rt_formcard, html[data-rt-theme="main"] .rt_dw-card, html[data-rt-theme="main"] .rt_modal-box, html[data-rt-theme="main"] .rt_dcard {
+  background: var(--m-card); border: 1px solid var(--m-line); border-radius: 24px; color: #fefefe; box-shadow: 0 4px 40px rgba(32, 32, 41, .08); }
+html[data-rt-theme="main"] .rt_question, html[data-rt-theme="main"] .rt_quiz, html[data-rt-theme="main"] .rt_formcard { padding: 32px; }
+html[data-rt-theme="main"] .rt_arg, html[data-rt-theme="main"] .rt_benefit, html[data-rt-theme="main"] .rt_clarify { background: var(--m-card2); border: 1px solid var(--m-line); border-radius: 20px; color: #fefefe; }
+/* плитки-відповіді (як плитки віку): #11112c, рамка #4e3e75, 56 px, радіус 12 */
+html[data-rt-theme="main"] .rt_choice, html[data-rt-theme="main"] .rt_opt, html[data-rt-theme="main"] .rt_ages .w-radio, html[data-rt-theme="main"] .rt_age {
+  min-height: 56px; background: var(--m-bg); border: 1px solid var(--m-tile); border-radius: 12px; color: #fefefe; font-weight: 700; }
+html[data-rt-theme="main"] .rt_choice { font-size: 18px; }
+html[data-rt-theme="main"] .rt_chip, html[data-rt-theme="main"] .rt_dw-chip:not([aria-pressed="true"]) { background: var(--m-bg); border: 1px solid var(--m-tile); color: #fefefe; }
+html[data-rt-theme="main"] .rt_choice:hover, html[data-rt-theme="main"] .rt_opt:hover, html[data-rt-theme="main"] .rt_chip:hover, html[data-rt-theme="main"] .rt_dw-chip:hover, html[data-rt-theme="main"] .rt_ages .w-radio:hover { border-color: var(--m-violet); background-color: #1c1840; }
+html[data-rt-theme="main"] [aria-pressed="true"].rt_opt, html[data-rt-theme="main"] [aria-pressed="true"].rt_chip, html[data-rt-theme="main"] [aria-pressed="true"].rt_choice, html[data-rt-theme="main"] .rt_dcard[aria-expanded="true"],
+html[data-rt-theme="main"] .rt_ages .w-radio:has(input:checked) { background-color: #2a2060 !important; border-color: var(--m-violet) !important; color: #fefefe; }
+/* кнопки: помаранчева пігулка з білим текстом; другорядна — напівпрозора, як «Увійти» */
+html[data-rt-theme="main"] .rt_btn.is-secondary, html[data-rt-theme="main"] .rt_btn.is-ghost { background: rgba(240, 232, 255, .2); border-color: transparent; color: #fefefe; }
+html[data-rt-theme="main"] .rt_btn.is-secondary:hover, html[data-rt-theme="main"] .rt_btn.is-ghost:hover { background: rgba(240, 232, 255, .3); box-shadow: none; }
+html[data-rt-theme="main"] .rt_btn:hover { box-shadow: 0 8px 24px rgba(254, 139, 33, .35); }
+/* рядки знижки і статусу; прогрес */
+html[data-rt-theme="main"] .rt_discount, html[data-rt-theme="main"] .rt_offerline, html[data-rt-theme="main"] .rt_status { background: rgba(254, 139, 33, .14); border: 1px solid rgba(254, 139, 33, .35); color: #ffd2a8; }
+html[data-rt-theme="main"] .rt_progress-track { background: rgba(255, 255, 255, .12); }
+html[data-rt-theme="main"] .rt_benefit::before, html[data-rt-theme="main"] .rt_facts li::before { background-color: var(--m-green); }
+/* пакети — як картки «Вартість уроків» */
+html[data-rt-theme="main"] .rt_pkg { background: var(--m-card); border: 1px solid var(--m-line); border-radius: 32px; padding: 32px 24px 24px; box-shadow: 0 0 32px rgba(20, 0, 26, .05); }
+html[data-rt-theme="main"] .rt_pkg-name { font-size: 22px; font-weight: 700; }
+html[data-rt-theme="main"] .rt_pkg-price b { font-size: 40px; font-weight: 700; }
+html[data-rt-theme="main"] .rt_pkg-inst { border-top-color: var(--m-line); }
+html[data-rt-theme="main"] .rt_pkg.is-best { border-color: rgba(87, 205, 107, .7); }
+html[data-rt-theme="main"] .rt_pkg-tag { top: -16px; left: auto; right: 20px; padding: 4px 12px; border: 2px solid #f7f6f7; border-radius: 8px; background: var(--m-green); color: #fff; font-size: 14px; font-weight: 500; box-shadow: 0 0 32px rgba(20, 0, 26, .05); }
+html[data-rt-theme="main"] .rt_pkg.is-sel { border-color: var(--m-violet); box-shadow: 0 0 0 3px rgba(151, 98, 253, .35); }
+html[data-rt-theme="main"] .rt_pkg:hover { box-shadow: 0 12px 36px rgba(0, 0, 0, .3); }
+/* форма */
+html[data-rt-theme="main"] .rt_page [data-rt-place] input[type="tel"], html[data-rt-theme="main"] .rt_page [data-rt-place] input[type="email"], html[data-rt-theme="main"] .rt_input { background: var(--m-bg); border: 1px solid var(--m-tile); color: #fefefe; }
+html[data-rt-theme="main"] [data-rt-place] input::placeholder { color: #8b8a9b; }
+html[data-rt-theme="main"] [data-rt-place] .iti--separate-dial-code .iti__selected-flag { background: rgba(255, 255, 255, .06); color: #fefefe; }
+html[data-rt-theme="main"] .iti__country-list { color: #180d25; }
+html[data-rt-theme="main"] .rt_ages .w-radio { font-size: 20px; }
+html[data-rt-theme="main"] .rt_err { color: #ff7979; }
+/* відгуки — темні картки зі зірками, як «Батьки говорять про нас» */
+html[data-rt-theme="main"] .rt_review { background: var(--m-card); border: 1px solid var(--m-line); border-radius: 24px; box-shadow: none; color: #fefefe; }
+html[data-rt-theme="main"] .rt_review-name { color: #fefefe; font-size: 14px; font-weight: 700; }
+html[data-rt-theme="main"] .rt_review-name::after { content: "★★★★★"; display: block; margin-top: 2px; color: #feb634; font-size: 13px; letter-spacing: 2px; line-height: 1; }
+html[data-rt-theme="main"] .rt_review-text { color: var(--m-muted); font-size: 15px; font-weight: 500; line-height: 1.55; }
+/* «Як це працює» — біла секція з кольоровими кроками (як «Не знаєте, з чого почати?» на головній) */
+html[data-rt-theme="main"] #rt-how { background: #fff; color: #180d25; }
+html[data-rt-theme="main"] #rt-how .rt_h2 { color: #180d25; }
+html[data-rt-theme="main"] .rt_how-col { background: linear-gradient(129deg, rgba(247, 246, 247, .8) 0%, rgba(247, 246, 247, .5) 100%), #f7f6f7; border: 0; border-radius: 32px; padding: 32px; box-shadow: none; }
+html[data-rt-theme="main"] .rt_how-title { color: #823cdc; }
+html[data-rt-theme="main"] .rt_stepitem-title { color: #180d25; }
+html[data-rt-theme="main"] .rt_stepitem-text { color: #6e6e73; }
+html[data-rt-theme="main"] .rt_stepitem::before { color: #fff; font-weight: 700; background: #ff7979; }
+html[data-rt-theme="main"] .rt_stepitem:nth-child(2)::before { background: #feb634; }
+html[data-rt-theme="main"] .rt_stepitem:nth-child(3)::before { background: #57cd6b; }
+html[data-rt-theme="main"] .rt_stepitem:nth-child(4)::before { background: #6ba4ee; }
+/* фінальний блок — як «Розпочніть навчання в All Right вже сьогодні!»: промені, градієнтна рамка, лисеня Charlie зверху */
+html[data-rt-theme="main"] #rt-repeat { padding-top: 140px; background: url(img/bg-dark.avif) center bottom/max(1440px, 100%) auto no-repeat; }
+html[data-rt-theme="main"] .rt_repeat { position: relative; overflow: visible; border: 20px solid transparent; border-radius: 40px; background: linear-gradient(#1d1846, #1d1846) padding-box, linear-gradient(90deg, #9762fd 0%, #3e1f8a 100%) border-box; box-shadow: 0 8px 24px rgba(20, 0, 26, .1); }
+html[data-rt-theme="main"] .rt_repeat::before { content: ""; position: absolute; left: 50%; bottom: 100%; width: 164px; height: 164px; margin: 0 0 -38px -82px; background: url(img/charlie-holds-phone.avif) center bottom/contain no-repeat; pointer-events: none; z-index: -1; }
+html[data-rt-theme="main"] .rt_repeat .rt_question { background: var(--m-bg); }
+/* «Що зазвичай зупиняє?» */
+html[data-rt-theme="main"] .rt_dw-k { color: #fefefe; }
+html[data-rt-theme="main"] .rt_dw-s { color: var(--m-muted); }
+html[data-rt-theme="main"] .rt_dw-ico, html[data-rt-theme="main"] .rt_dw-op { background: rgba(151, 98, 253, .2); color: #c6adff; }
+html[data-rt-theme="main"] .rt_dw-op.is-eq { background: rgba(254, 139, 33, .2); color: #ffb46b; }
+html[data-rt-theme="main"] .rt_dw-res { background: linear-gradient(135deg, #9762fd 0%, #3e1f8a 100%); box-shadow: 0 8px 24px rgba(20, 0, 26, .25); }
+html[data-rt-theme="main"] .rt_dw-res .rt_dw-ico { background: rgba(255, 255, 255, .18); color: #fff; }
+/* попап */
+html[data-rt-theme="main"] .rt_modal { background: rgba(10, 10, 30, .7); }
+html[data-rt-theme="main"] .rt_modal-box { background: #16163a; }
+html[data-rt-theme="main"] .rt_modal-x { background: rgba(255, 255, 255, .1); color: #fefefe; }
+@media (max-width: 767px) {
+  html[data-rt-theme="main"] .rt_page .rt_h1 { font-size: 32px; }
+  html[data-rt-theme="main"] .rt_page .rt_h2 { font-size: 28px; }
+  html[data-rt-theme="main"] .rt_page .rt_quiz .rt_h2, html[data-rt-theme="main"] .rt_page .rt_h2.is-form { font-size: 22px; }
+  html[data-rt-theme="main"] .rt_page .rt_q-title { font-size: 20px; }
+  html[data-rt-theme="main"] .rt_question, html[data-rt-theme="main"] .rt_quiz, html[data-rt-theme="main"] .rt_formcard { padding: 20px; }
+  html[data-rt-theme="main"] .rt_eyebrow { font-size: 14px; min-height: 38px; padding: 8px 4px 8px 14px; }
+  html[data-rt-theme="main"] .rt_eyebrow::after { width: 27px; height: 41px; background-size: 27px 41px; }
+  html[data-rt-theme="main"] .rt_repeat { border-width: 10px; border-radius: 28px; }
+  html[data-rt-theme="main"] #rt-repeat { padding-top: 120px; }
+  html[data-rt-theme="main"] .rt_how-col { padding: 24px 20px; border-radius: 24px; }
+}
+
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
