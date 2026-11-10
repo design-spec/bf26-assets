@@ -64,7 +64,13 @@
     store.set(K.attr, saved);
     return saved;
   })();
-  function hasCookieUtm() { var c = doc.cookie; try { c = decodeURIComponent(c); } catch (e) {} return /utm_source/.test(c); }
+  // справжні мітки в cookie: на kid.allright.com скрипт сайту ставить utm_source={"src":"<адреса сторінки>"} навіть без міток —
+  // це не мітка; рахуємо лише значення utm_source/medium/campaign усередині cookie (або в src)
+  function hasCookieUtm() {
+    var c = doc.cookie; try { c = decodeURIComponent(c); } catch (e) {}
+    var m = c.match(/(?:^|;\s*)utm_source=([^;]*)/); if (!m) return false;
+    return /utm_(source|medium|campaign)["']?\s*[:=]\s*["']?[^"'&,}\s]/.test(m[1]) || (!/^\s*\{/.test(m[1]) && !!m[1].trim());
+  }
   function attrValues() {
     var out = {};
     ATTR_KEYS.forEach(function (k) { out[k] = ATTR[k] || ''; });
@@ -1063,7 +1069,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.26', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.27', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
