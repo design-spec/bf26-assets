@@ -172,6 +172,32 @@
     var s = Math.round(n).toLocaleString(T.numLocale || 'uk-UA');
     return (PLAN && PLAN.curBefore) ? cur + s : s + ' ' + cur;
   }
+  // «-60%» у заголовках hero — наліпка (span.rt_sticker), як у reactbits «Nice and Easy»: градієнтна плашка з тінню і нахилом
+  function setupHeroMark() {
+    $$('.rt_hero .rt_h1').forEach(function (h) {
+      if ($('.rt_sticker', h)) return;
+      var walker = doc.createTreeWalker(h, NodeFilter.SHOW_TEXT, null), n;
+      while ((n = walker.nextNode())) {
+        var k = n.nodeValue.search(/[-−–]\s?\d+\s?%/);
+        if (k < 0) continue;
+        var m = n.nodeValue.slice(k).match(/^[-−–]\s?\d+\s?%/)[0];
+        var mid = n.splitText(k); mid.splitText(m.length);
+        var sp = doc.createElement('span'); sp.className = 'rt_sticker';
+        mid.parentNode.replaceChild(sp, mid); sp.appendChild(mid);
+        break;
+      }
+    });
+  }
+  // Шапка на мобільному: зліва нахилена фіолетова плашка в два рядки «Знижка до -60%» / «до 30 листопада»
+  // (як бейдж фінального блоку, лише фіолетова), справа мова і кнопка. Лише для варіантів own/bf; на десктопі — звичайний рядок .rt_bar-text
+  function setupBarMobile() {
+    var inner = $('.rt_bar-inner'), L = T.barMobile;
+    if (!inner || !L || !L.length || $('.rt_bar-m', inner)) return;
+    var src = $('.rt_bar-text[data-rt-variant~="own"]', inner);
+    var box = doc.createElement('div'); box.className = 'rt_bar-m'; box.setAttribute('data-rt-variant', 'own bf');
+    box.innerHTML = L.map(function (t) { return '<span class="rt_bar-m-line">' + esc(t) + '</span>'; }).join('');
+    if (src) src.parentNode.insertBefore(box, src.nextSibling); else inner.insertBefore(box, inner.firstChild);
+  }
   // Перемикач «Уроків на тиждень» — сегментований, як pricing-12 у reactbits: «2 уроки | 3 уроки», повзунок їздить під активним (без бейджа — рішення 10.11).
   // Кнопки ті самі [data-rt-freq] (клік ловить спільний обробник), змінюється лише розмітка; фінальний блок копіює її (setupRepeat).
   function setupFreqToggle() {
@@ -983,6 +1009,7 @@
       var slot = f.closest('[data-rt-place]');
       if (slot && field(f, 'phone')) setupForm(f, slot.getAttribute('data-rt-place'));
     });
+    setupHeroMark();
     setupFreqToggle();
     setupDoubts();
     setupFooter();
@@ -994,6 +1021,7 @@
     setupLinks();
     setupPopup();
     setupBar();
+    setupBarMobile();
     setBranch(S.branch, true);
     syncAge();
     renderDone();
@@ -1004,7 +1032,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.22', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.23', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
