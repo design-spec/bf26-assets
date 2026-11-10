@@ -129,6 +129,7 @@
     fillAllHidden();
     renderQuiz();
     dwSync();
+    repeatSync();
     if ((!silent || silent === 'stay') && b !== 'none') {   // silent === 'stay' — вибір у фінальному блоці: подія є, прокрутки немає
       track('rt_branch_select', { value: v === 'unsure' ? 'unsure' : b === 'yes' ? 'trial_yes' : 'trial_no', place: silent === 'stay' ? 'repeat' : 'top' });
       if (b === 'yes') track('rt_quiz_step', { step: Q.step, doubt: Q.doubt || 'none' });
@@ -180,18 +181,37 @@
           '<div class="rt_pkg-month">' + esc(tpl(T.perMonth || '', { sum: money0(per * lpm), n: lpm })) + '</div>' +
           '<div class="rt_pkg-inst">' + esc(inst != null ? tpl(T.installments || '', { p: money(inst) }) : idx === 0 ? (T.payMonthly || '') : (T.payUpfront || '')) + '</div>' +
           (EU ? '<div class="rt_pkg-omni" data-rt-variant="own bf">' + esc(tpl(T.omnibus || '', { p: money(per) })) + '</div>' : '');
-        function pick() {
-          S.pkg = label; store.set(K.pkg, label);
-          $$('.rt_pkg').forEach(function (c) { var on = c.getAttribute('data-rt-pkg') === label; c.classList.toggle('is-sel', on); c.setAttribute('aria-pressed', on ? 'true' : 'false'); });
-          renderPkgLabel(); fillAllHidden();
-          track('rt_package_select', { package: label, freq: f });
-        }
+        function pick() { pickPkg(label, f, 'prices'); }
         card.addEventListener('click', pick);
         card.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
         box.appendChild(card);
       });
     });
+    // фінальний блок, гілка «так»: компактні плитки пакетів (той самий вибір, що й у блоці цін)
+    $$('[data-rt-minipkgs]').forEach(function (box) {
+      box.innerHTML = '';
+      if (!rows) return;
+      (T.terms || []).forEach(function (t, idx) {
+        var months = t[1], per = rows.m[idx];
+        if (per == null) return;
+        var label = t[0] + ' · ' + tpl(T.perWeekShort || '{n} на тиждень', { n: f });
+        var sel = S.pkg === label;
+        var b = doc.createElement('button'); b.type = 'button';
+        b.className = 'rt_mpkg' + (months === 12 ? ' is-best' : '') + (sel ? ' is-sel' : '');
+        b.setAttribute('aria-pressed', sel ? 'true' : 'false'); b.setAttribute('data-rt-pkg', label);
+        b.innerHTML = '<span class="rt_mpkg-name">' + esc(t[0]) + '</span><span class="rt_mpkg-price"><b>' + esc(money(per)) + '</b> ' + esc(T.perLesson || '') + '</span>' +
+          (months === 12 ? '<span class="rt_mpkg-tag">' + esc(T.bestShort || T.bestTag || '') + '</span>' : '');
+        b.addEventListener('click', function () { pickPkg(label, f, 'repeat'); });
+        box.appendChild(b);
+      });
+    });
     renderPkgLabel();
+  }
+  function pickPkg(label, f, place) {
+    S.pkg = label; store.set(K.pkg, label);
+    $$('.rt_pkg, .rt_mpkg').forEach(function (c) { var on = c.getAttribute('data-rt-pkg') === label; c.classList.toggle('is-sel', on); c.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    renderPkgLabel(); fillAllHidden();
+    track('rt_package_select', { package: label, freq: f, place: place || 'prices' });
   }
   function renderPkgLabel() { $$('[data-rt-pkg-label]').forEach(function (el) { el.textContent = S.pkg || T.pkgNone || ''; }); }
 
@@ -234,6 +254,32 @@
     b3.setAttribute('data-rt-done', b4 ? b4.getAttribute('data-rt-done') || 'packages' : 'packages');
     if (b4) b3.textContent = b4.textContent.trim();
   }
+  // Фінальний блок (ТЗ блок 6): у гілці «так» — вибір пакета на місці (перемикач уроків на тиждень + плитки), «Обрати пакет» не потрібна;
+  // підзаголовок під стан (T.repeatLead.yes/no; без відповіді — текст із Webflow); рядок довіри під діями (T.trust.pay/trial)
+  var repeatSync = function () {};
+  function setupRepeat() {
+    var box = $('#rt-repeat .rt_repeat'); if (!box) return;
+    var yes = $('.rt_repeat-yes', box), btns = yes && $('.rt_repeat-btns', yes);
+    if (yes && btns && !$('[data-rt-minipkgs]', yes)) {
+      var mini = doc.createElement('div'); mini.className = 'rt_mini';
+      var fw = $('[data-rt-freqwrap]');
+      mini.innerHTML = '<div class="rt_mini-freq">' + (fw ? fw.innerHTML : '') + '</div><div class="rt_mini-pkgs" data-rt-minipkgs role="group"></div>';
+      $$('a', mini).forEach(function (a) { a.removeAttribute('href'); a.setAttribute('role', 'button'); a.tabIndex = 0; });
+      yes.insertBefore(mini, btns);
+    }
+    var lead = $('.rt_repeat-lead', box), base = lead ? lead.textContent : '';
+    var L = T.repeatLead || {}, TR = T.trust || {};
+    var trust = doc.createElement('p'); trust.className = 'rt_trust'; box.appendChild(trust);
+    repeatSync = function () {
+      var b = S.branch;
+      if (lead) lead.textContent = (b === 'yes' ? L.yes : b === 'no' ? L.no : '') || base;
+      var t = b === 'no' ? TR.trial : TR.pay;
+      trust.hidden = !t; trust.innerHTML = t ? t.map(function (x) { return '<span>' + esc(x) + '</span>'; }).join('') : '';
+    };
+    repeatSync();
+    renderPrices();
+  }
+
   // кнопка «Назад» квізу — одна, маленька, зліва під прогрес-баром; видно на кроках 2–4 (renderQuiz ховає на кроці 1)
   function setupQuizBack() {
     var head = $('#rt-quiz .rt_quiz-head'); if (!head || $('.rt_back', head)) return;
@@ -851,6 +897,7 @@
     setupDoubts();
     setupFooter();
     setupQuizEnd();
+    setupRepeat();
     setupQuizBack();
     setupTrialRow();
     setupReviews();
@@ -866,7 +913,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.14', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.15', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
