@@ -400,7 +400,11 @@ html[data-rt-theme="main"] .rt_rv-src { font-size: 24px; font-weight: 500; line-
 html[data-rt-theme="main"] .rt_rv .rt_reviews-slot { flex: 1 1 auto; min-width: 0; }
 html[data-rt-theme="main"] .rt_rv .rt_reviews { display: flex !important; gap: 24px; padding: 32px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 32px; scrollbar-width: none; cursor: grab; }
 html[data-rt-theme="main"] .rt_rv .rt_reviews::-webkit-scrollbar { display: none; }
-html[data-rt-theme="main"] .rt_rv .rt_reviews.is-drag { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+/* з Embla: в'юпорт — .w-dyn-list (обрізає), контейнер — .rt_reviews (рухає translate3d) */
+html[data-rt-theme="main"] .rt_rv.is-embla .w-dyn-list { overflow: hidden; padding: 32px; }
+html[data-rt-theme="main"] .rt_rv.is-embla .rt_reviews { overflow: visible; padding: 0; scroll-snap-type: none; touch-action: pan-y pinch-zoom; user-select: none; -webkit-user-select: none; }
+html[data-rt-theme="main"] .rt_rv.is-embla .rt_reviews:active { cursor: grabbing; }
+html[data-rt-theme="main"] .rt_rv.is-embla .rt_review img { -webkit-user-drag: none; }
 html[data-rt-theme="main"] .rt_rv .rt_reviews > .w-dyn-item { flex: 0 0 288px; scroll-snap-align: start; }
 html[data-rt-theme="main"] .rt_rv .rt_review { display: flex; flex-direction: column; gap: 24px; height: 100%; min-height: 312px; padding: 24px; border: 0; border-radius: 16px; background: var(--m-bg); }
 html[data-rt-theme="main"] .rt_rv .rt_review-text { order: 1; flex: 1 1 auto; -webkit-line-clamp: 9; font-size: 16px; line-height: 1.5; }
@@ -414,6 +418,8 @@ html[data-rt-theme="main"] .rt_rv .rt_review-ava { pointer-events: none; }
   html[data-rt-theme="main"] .rt_rv-num img { width: 46px; height: auto; }
   html[data-rt-theme="main"] .rt_rv-src { font-size: 18px; }
   html[data-rt-theme="main"] .rt_rv .rt_reviews { padding: 0 16px; gap: 12px; scroll-padding-inline: 16px; }
+  html[data-rt-theme="main"] .rt_rv.is-embla .w-dyn-list { padding: 0 16px; }
+  html[data-rt-theme="main"] .rt_rv.is-embla .rt_reviews { padding: 0; }
   html[data-rt-theme="main"] .rt_rv .rt_reviews > .w-dyn-item { flex-basis: 78%; }
 }
 /* «Як це працює» — біла секція з кольоровими кроками (як «Не знаєте, з чого почати?» на головній) */

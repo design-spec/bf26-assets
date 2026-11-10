@@ -730,7 +730,7 @@
   /* ---------------------------------------------------------------- старт */
 
   // Відгуки як «Батьки говорять про нас» на головній: синя плашка рейтингу (T.rating) зліва + стрічка карток у темному контейнері.
-  // Немає T.rating для мови — плашки немає, стрічка лишається. Мишею стрічку можна тягнути (на тачі/тачпаді — звичайна прокрутка).
+  // Немає T.rating для мови — плашки немає, стрічка лишається.
   var FB_ICO = '<svg viewBox="0 0 41 41" width="40" height="40" aria-hidden="true"><path d="M17.34 39.24C8.39 37.66 1.55 29.87 1.55 20.5 1.55 10.08 10.08 1.55 20.5 1.55s18.95 8.53 18.95 18.95c0 9.37-6.84 17.16-15.79 18.74l-1.05-.84h-4.21z" fill="#fff"/><path d="M27.87 25.76l.84-5.26h-5.05v-3.68c0-1.48.52-2.64 2.84-2.64h2.42V9.34c-1.37-.21-2.84-.42-4.21-.42-4.32 0-7.37 2.63-7.37 7.37v4.21h-4.73v5.26h4.73v13.37c1.05.21 2.11.32 3.16.32s2.1-.11 3.16-.32V25.76z" fill="#027de5"/></svg>';
   function setupReviews() {
     var slot = $('[data-rt-reviews]'); if (!slot || $('.rt_rv')) return;
@@ -747,11 +747,18 @@
       box.appendChild(b);
     }
     box.appendChild(slot);
-    var rail = $('.rt_reviews', slot); if (!rail) return;
-    var down = null;
-    rail.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') return; down = { x: e.clientX, l: rail.scrollLeft, moved: false }; rail.classList.add('is-drag'); });
-    window.addEventListener('pointermove', function (e) { if (!down) return; var dx = e.clientX - down.x; if (Math.abs(dx) > 4) down.moved = true; rail.scrollLeft = down.l - dx; });
-    window.addEventListener('pointerup', function () { if (!down) return; down = null; rail.classList.remove('is-drag'); });
+    // стрічка як на головній: Embla Carousel (та сама бібліотека) — перетягування з інерцією і плавне докручування до картки;
+    // якщо бібліотека не завантажилась — лишається нативна горизонтальна прокрутка
+    var rail = $('.rt_reviews', slot), vp = rail && rail.parentNode; if (!rail || html.getAttribute('data-rt-theme') !== 'main') return;
+    function init() {
+      if (!window.EmblaCarousel || box.classList.contains('is-embla')) return;
+      box.classList.add('is-embla');
+      try { window.EmblaCarousel(vp, { align: 'start', containScroll: 'trimSnaps', dragFree: false, duration: 30 }); }
+      catch (e) { box.classList.remove('is-embla'); }
+    }
+    if (window.EmblaCarousel) return init();
+    var sc = doc.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/embla-carousel@8.5.2/embla-carousel.umd.js'; sc.async = true; sc.onload = init;
+    doc.head.appendChild(sc);
   }
 
   // Підвал як у BF26: ключові фрази умов (T.termsHl) — span.rt_hl; абзац проявляється з розмиття, коли підвал на екрані.
@@ -814,7 +821,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.6', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.7', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
