@@ -620,24 +620,37 @@
 
   // Кнопка «Скористатись» завжди видна: гілка «так» → квіз, «ні» → форма, без відповіді → питання.
   // Поруч вибір мови: та сама сторінка /{мова}/back з усіма параметрами URL.
+  // Вибір мови — як у BF26 (kid.allright.com/uk/self-black-friday): кнопка «глобус + UA + шеврон» і меню з назвами мов.
+  // Мова без готової сторінки /{мова}/back (немає в CFG.langsLive) неактивна з підказкою «Незабаром».
+  var LANG_NAMES = { uk: ['UA', 'Українська'], ru: ['RU', 'Русский'], pl: ['PL', 'Polski'], ro: ['RO', 'Română'], it: ['IT', 'Italiano'], es: ['ES', 'Español'],
+    he: ['HE', 'עברית'], sr: ['SR', 'Srpski'], sk: ['SK', 'Slovenčina'], cs: ['CS', 'Čeština'], en: ['EN', 'English'], bg: ['BG', 'Български'], hr: ['HR', 'Hrvatski'], sl: ['SL', 'Slovenščina'] };
   function setupBar() {
-    var btn = $('[data-rt-cta="bar"]'); if (!btn) return;
-    var langs = CFG.langs || [];
-    if (langs.length > 1 && !$('[data-rt-lang]')) {
-      var wrap = doc.createElement('label'); wrap.className = 'rt_lang'; wrap.setAttribute('data-rt-lang', '');
-      wrap.innerHTML = '<span class="rt_lang-label">' + esc(T.lang || 'Мова') + '</span>';
-      var sel = doc.createElement('select'); sel.className = 'rt_lang-select'; sel.setAttribute('aria-label', T.lang || 'Мова');
-      langs.forEach(function (c) { var o = doc.createElement('option'); o.value = c; o.textContent = c; if (c === LOCALE) o.selected = true; sel.appendChild(o); });
-      sel.addEventListener('change', function () {
-        var c = sel.value; if (c === LOCALE) return;
-        track('rt_lang_change', { from: LOCALE, to: c });
-        var path = location.pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '/' + c);
-        if (path === location.pathname) path = '/' + c + '/back';
-        location.href = path + location.search + location.hash;
-      });
-      wrap.appendChild(sel);
-      btn.parentNode.insertBefore(wrap, btn);
-    }
+    var cta = $('[data-rt-cta="bar"]'); if (!cta) return;
+    var langs = CFG.langs || [], live = CFG.langsLive || [LOCALE];
+    if (langs.length < 2 || $('[data-rt-lang]')) return;
+    var nm = function (c) { return LANG_NAMES[c] || [c.toUpperCase(), c]; };
+    var wrap = doc.createElement('div'), btn = doc.createElement('button'), menu = doc.createElement('ul');
+    wrap.className = 'rt_lang'; wrap.setAttribute('data-rt-lang', '');
+    btn.type = 'button'; btn.className = 'rt_lang-btn';
+    btn.setAttribute('aria-haspopup', 'true'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', (T.lang || 'Мова') + ': ' + nm(LOCALE)[1]);
+    btn.innerHTML = '<span class="rt_lang-ico" aria-hidden="true"></span><span>' + esc(nm(LOCALE)[0]) + '</span><span class="rt_lang-chev" aria-hidden="true"></span>';
+    menu.className = 'rt_lang-menu';
+    langs.forEach(function (c) {
+      var li = doc.createElement('li'), a = doc.createElement('a'), on = live.indexOf(c) > -1;
+      a.className = 'rt_lang-item' + (c === LOCALE ? ' is-current' : '');
+      a.setAttribute('lang', c); a.setAttribute('data-rt-lang-to', c); a.textContent = nm(c)[1];
+      if (c === LOCALE) a.setAttribute('aria-current', 'true');
+      if (on) { var path = location.pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '/' + c); a.href = (path === location.pathname && c !== LOCALE ? '/' + c + '/back' : path) + location.search; }
+      else { a.setAttribute('aria-disabled', 'true'); a.title = T.langSoon || 'Незабаром'; a.className += ' is-soon'; }
+      a.addEventListener('click', function (e) { if (!on || c === LOCALE) { e.preventDefault(); if (c === LOCALE) close(); return; } track('rt_lang_change', { from: LOCALE, to: c }); });
+      li.appendChild(a); menu.appendChild(li);
+    });
+    function close() { wrap.classList.remove('is-open'); btn.setAttribute('aria-expanded', 'false'); }
+    btn.addEventListener('click', function (e) { e.stopPropagation(); btn.setAttribute('aria-expanded', String(wrap.classList.toggle('is-open'))); });
+    doc.addEventListener('click', function (e) { if (!wrap.contains(e.target)) close(); });
+    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && wrap.classList.contains('is-open')) { close(); btn.focus(); } });
+    wrap.appendChild(btn); wrap.appendChild(menu);
+    cta.parentNode.insertBefore(wrap, cta);
   }
   function barClick() {
     track('rt_cta_click', { place: 'bar' });
@@ -767,7 +780,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.3', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.4', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
