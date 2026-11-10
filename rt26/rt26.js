@@ -126,10 +126,10 @@
     fillAllHidden();
     renderQuiz();
     dwSync();
-    if (!silent && b !== 'none') {
-      track('rt_branch_select', { value: v === 'unsure' ? 'unsure' : b === 'yes' ? 'trial_yes' : 'trial_no' });
+    if ((!silent || silent === 'stay') && b !== 'none') {   // silent === 'stay' — вибір у фінальному блоці: подія є, прокрутки немає
+      track('rt_branch_select', { value: v === 'unsure' ? 'unsure' : b === 'yes' ? 'trial_yes' : 'trial_no', place: silent === 'stay' ? 'repeat' : 'top' });
       if (b === 'yes') track('rt_quiz_step', { step: Q.step, doubt: Q.doubt || 'none' });
-      scrollToEl(b === 'yes' ? $('#rt-quiz') : $('#rt-time'));
+      if (!silent) scrollToEl(b === 'yes' ? $('#rt-quiz') : $('#rt-time'));
     }
   }
 
@@ -676,7 +676,15 @@
   doc.addEventListener('click', function (e) {
     var t = e.target.closest ? e.target.closest('[data-rt-branch],[data-rt-q],[data-rt-next],[data-rt-done],[data-rt-freq],[data-rt-change],[data-rt-cta]') : null;
     if (!t || t === html) return;                     // <html data-rt-branch> — це стан, не кнопка
-    if (t.hasAttribute('data-rt-branch')) { e.preventDefault(); setBranch(t.getAttribute('data-rt-branch')); return; }
+    if (t.hasAttribute('data-rt-branch')) {
+      e.preventDefault();
+      // фінальний блок (ТЗ блок 6) — дзеркало першого екрана: відповідь розкриває форму / пакет тут же, без прокрутки нагору;
+      // блоки над ним (квіз, форма) змінюють висоту, тож компенсуємо зсув, щоб блок лишився на місці
+      var rep = t.closest('#rt-repeat');
+      if (rep) { var y0 = rep.getBoundingClientRect().top; setBranch(t.getAttribute('data-rt-branch'), 'stay'); window.scrollBy(0, rep.getBoundingClientRect().top - y0); }
+      else setBranch(t.getAttribute('data-rt-branch'));
+      return;
+    }
     if (t.hasAttribute('data-rt-q')) { e.preventDefault(); onOption(t); return; }
     if (t.hasAttribute('data-rt-next')) { e.preventDefault(); quizStep(+t.getAttribute('data-rt-next')); return; }
     if (t.hasAttribute('data-rt-done')) {
@@ -780,7 +788,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.4', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.5', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
