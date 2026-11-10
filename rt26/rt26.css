@@ -304,6 +304,7 @@ html.rt-js .rt_hero [data-rt-answer] { display: none !important; }
 .rt_done-text { margin: 0; color: var(--mid-gray, #6e6e73); }
 .rt_fallback { margin: 0; font-size: 14px; }
 .rt_fallback[hidden] { display: none; }
+.rt_known-alt { margin: 0; font-size: 14px; }
 .rt_link { color: var(--heliotrope, #9762fd); font-weight: 600; text-decoration: underline; cursor: pointer; }
 [data-rt-place] .w-form-done, [data-rt-place] .w-form-fail { display: none !important; }
 

@@ -616,6 +616,18 @@
       '</p><a href="#" class="rt_btn" data-rt-book>' + esc(T.bookBtn || '') + '</a>';
     form.parentNode.insertBefore(done, form.nextSibling);
     done.querySelector('[data-rt-book]').addEventListener('click', function (e) { e.preventDefault(); goBooking(place); });
+    // «Ви вже є в All Right»: номер або email уже зареєстровані (бекенд 422 NOT_UNIQUE) — не відмова, а вхід у кабінет,
+    // де можна обрати час пробного; «Вказати інші дані» повертає форму
+    var known = doc.createElement('div'); known.className = 'rt_done rt_known'; known.setAttribute('data-rt-knownbox', ''); known.hidden = true;
+    known.innerHTML = '<div class="rt_done-title">' + esc(T.knownTitle || '') + '</div><p class="rt_done-text" data-rt-knowntext></p>' +
+      '<a class="rt_btn" data-rt-login target="_blank" rel="noopener">' + esc(T.knownBtn || '') + '</a>' +
+      '<p class="rt_known-alt"><a href="#" class="rt_link" data-rt-knownback>' + esc(T.knownBack || '') + '</a></p>';
+    form.parentNode.insertBefore(known, done.nextSibling);
+    known.querySelector('[data-rt-login]').addEventListener('click', function () { track('rt_login_click', { place: place }); });
+    known.querySelector('[data-rt-knownback]').addEventListener('click', function (e) {
+      e.preventDefault(); known.hidden = true; form.hidden = false;
+      var f = field(form, known.getAttribute('data-rt-field') || 'phone'); if (f) try { f.focus(); } catch (er) {}
+    });
     var fb = doc.createElement('p'); fb.className = 'rt_fallback'; fb.hidden = true; fb.setAttribute('data-rt-fallback', '');
     fb.innerHTML = esc(T.fallback || '') + ' <a class="rt_link" href="#" target="_self">' + esc(T.fallbackLink || '') + '</a>';
     form.appendChild(fb);
@@ -670,7 +682,8 @@
       handler.call(form, { preventDefault: function () {}, target: form, currentTarget: form, type: 'submit' });
     } catch (err) { console.error('[rt26] submit', err); onFail(); }
     if (tel) setTimeout(function () { tel.value = shown; }, 0);
-    if (params.has('_t2')) setTimeout(function () { onLead({ user_id: 'test', 'go-to': null }); }, 600);
+    if (params.has('_t422')) setTimeout(function () { onFieldErrors({ errors: [{ field: params.get('_t422') || 'phone', code: 'NOT_UNIQUE' }] }); }, 600);   // тест: уже зареєстрований
+    else if (params.has('_t2')) setTimeout(function () { onLead({ user_id: 'test', 'go-to': null }); }, 600);
   }
   (function () {
     if (!window.fetch || window.__rt26FetchHooked) return;
@@ -708,15 +721,33 @@
   function onFieldErrors(b) {
     var o = pending && pending.o; if (!o) return;
     var list = b && b.errors ? (Array.isArray(b.errors) ? b.errors : Object.keys(b.errors).map(function (k) { return { field: k, detail: b.errors[k] }; })) : [];
-    var any = false;
+    var any = false, taken = null;
     list.forEach(function (er) {
       var f = String(er.field || (er.source && er.source.pointer) || '').split('/').pop().split('.').pop();
       var msg = er.detail || er.message || er.title;
-      if (/NOT_UNIQUE/.test(er.code || '') || /already in use/i.test(msg || '')) msg = (f === 'email' ? T.emailTaken : T.phoneTaken) || msg;
+      if (/NOT_UNIQUE/.test(er.code || '') || /already in use/i.test(msg || '')) { taken = taken || (f === 'email' ? 'email' : 'phone'); return; }
       if ((f === 'phone' || f === 'email') && msg) { setErr(o.form, f, String(msg)); any = true; }
     });
+    if (taken) return onKnown(o, taken);
     if (!any) return onFail();
     clearTimeout(pending.timer); pending = null; setSending(o, false);
+  }
+  // уже зареєстрований: замість помилки — блок «Ви вже є в All Right» з входом у кабінет
+  function loginUrl() {
+    var q = {}, a = attrValues(); Object.keys(a).forEach(function (k) { if (a[k]) q[k] = a[k]; });
+    q.quiz_version = CFG.quizVersion;
+    return 'https://allright.com/' + LOCALE + '/app/login?' + new URLSearchParams(q).toString();
+  }
+  function onKnown(o, f) {
+    clearTimeout(pending.timer); pending = null; setSending(o, false);
+    var box = o.form.parentNode.querySelector('[data-rt-knownbox]');
+    track('rt_lead_known', { form: o.form.getAttribute('data-name'), field: f });
+    if (!box) { setErr(o.form, f, (f === 'email' ? T.emailTaken : T.phoneTaken) || ''); return; }
+    box.setAttribute('data-rt-field', f);
+    box.querySelector('[data-rt-knowntext]').textContent = (f === 'email' ? T.knownTextEmail : T.knownTextPhone) || '';
+    box.querySelector('[data-rt-login]').href = loginUrl();
+    o.form.hidden = true; box.hidden = false;
+    try { box.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {}
   }
   function onFail() {
     var o = pending && pending.o;
@@ -1032,7 +1063,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.25', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.26', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
