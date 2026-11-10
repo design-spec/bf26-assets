@@ -204,6 +204,7 @@
     });
     $$('[data-rt-progress]').forEach(function (el) { el.textContent = tpl(T.progress || 'Крок {n} з 4', { n: Q.step }); });
     $$('[data-rt-progress-bar]').forEach(function (el) { el.style.width = (Q.step / 4 * 100) + '%'; });
+    $$('#rt-quiz .rt_back').forEach(function (el) { el.hidden = Q.step < 2; });
     renderPrices();
   }
   function quizStep(n) {
@@ -211,23 +212,20 @@
     track('rt_quiz_step', { step: n, doubt: Q.doubt || 'none' });
     scrollToEl($('#rt-quiz'));
   }
-  // кнопка «Назад» на кроках 2–4 квізу (ліворуч від основної кнопки кроку); крок 1 → змінити сумнів
+  // кнопка «Назад» квізу — одна, маленька, зліва під прогрес-баром; видно на кроках 2–4 (renderQuiz ховає на кроці 1)
   function setupQuizBack() {
-    $$('#rt-quiz [data-rt-step]').forEach(function (st) {
-      var n = +st.getAttribute('data-rt-step'); if (n < 2 || $('.rt_back', st)) return;
-      var main = [].slice.call(st.children).filter(function (c) { return c.classList.contains('rt_btn'); }).pop();
-      var row = doc.createElement('div'); row.className = 'rt_step-nav';
-      var b = doc.createElement('button'); b.type = 'button'; b.className = 'rt_back';
-      b.innerHTML = '<span class="rt_back-ico" aria-hidden="true"></span>' + esc(T.back || 'Назад');
-      b.addEventListener('click', function () {
-        Q.step = n - 1; saveQ(); renderQuiz();
-        track('rt_quiz_back', { from: n, to: n - 1, doubt: Q.doubt || 'none' });
-        var q = $('#rt-quiz'); if (q && q.getBoundingClientRect().top < 0) scrollToEl(q);
-        var t = $('#rt-quiz [data-rt-step].is-on .rt_back') || $('#rt-quiz [data-rt-step].is-on [data-rt-q]'); if (t) t.focus({ preventScroll: true });
-      });
-      row.appendChild(b);
-      if (main) { st.insertBefore(row, main); row.appendChild(main); } else st.appendChild(row);
+    var head = $('#rt-quiz .rt_quiz-head'); if (!head || $('.rt_back', head)) return;
+    var b = doc.createElement('button'); b.type = 'button'; b.className = 'rt_back'; b.hidden = Q.step < 2;
+    b.innerHTML = '<span class="rt_back-ico" aria-hidden="true"></span>' + esc(T.back || 'Назад');
+    b.addEventListener('click', function () {
+      if (Q.step < 2) return;
+      var from = Q.step; Q.step = from - 1; saveQ(); renderQuiz();
+      track('rt_quiz_back', { from: from, to: Q.step, doubt: Q.doubt || 'none' });
+      var q = $('#rt-quiz'); if (q && q.getBoundingClientRect().top < 0) scrollToEl(q);
+      if (b.hidden) { var t = $('#rt-quiz [data-rt-step].is-on [data-rt-q]'); if (t) t.focus({ preventScroll: true }); }
     });
+    var bar = $('.rt_progress-track', head);
+    if (bar && bar.nextSibling) head.insertBefore(b, bar.nextSibling); else head.appendChild(b);
   }
   function onOption(o) {
     var q = o.getAttribute('data-rt-q'), v = o.getAttribute('data-rt-v');
@@ -844,7 +842,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.10', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.11', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();

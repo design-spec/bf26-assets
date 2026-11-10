@@ -163,14 +163,15 @@ html[data-rt-noplan] [data-rt-packages], html[data-rt-noplan] [data-rt-freqwrap]
 .rt_page .rt_clarify-q { margin: 0; font-size: 17px; font-weight: 700; line-height: 1.35; }
 .rt_page .rt_clarify .rt_chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; }
 .rt_page .rt_clarify .rt_hint { margin: 0; font-size: 14px; line-height: 1.45; }
-.rt_step-nav { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.rt_step-nav > .rt_btn { margin: 0; }
-.rt_back { display: inline-flex; align-items: center; gap: 8px; min-height: 56px; padding: 0 22px; border: 1px solid #e6def5; border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer; transition: border-color .15s, background-color .15s; }
+/* «Назад» — маленька, зліва під прогрес-баром; основна кнопка кроку — широка, по центру картки квізу */
+.rt_page .rt_quiz-head { display: flex; flex-direction: column; }
+.rt_back { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; margin-top: 12px; padding: 0 12px 0 10px; border: 1px solid #e6def5; border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: 13px; font-weight: 600; line-height: 1; cursor: pointer; transition: border-color .15s, background-color .15s; }
+.rt_back[hidden] { display: none; }
 .rt_back:hover { border-color: var(--heliotrope, #9762fd); }
-.rt_back-ico { width: 8px; height: 8px; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); margin-left: 3px; }
+.rt_back-ico { width: 6px; height: 6px; margin-left: 2px; border-left: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); }
 html[data-rt-theme="main"] .rt_back, html[data-rt-theme="dark"] .rt_back { border-color: rgba(255, 255, 255, .24); color: #fefefe; }
 html[data-rt-theme="main"] .rt_back:hover { border-color: var(--m-violet); background: rgba(255, 255, 255, .06); }
-@media (max-width: 479px) { .rt_step-nav { flex-wrap: nowrap; } .rt_step-nav > .rt_btn { flex: 1 1 auto; } .rt_back { padding: 0 16px; } }
+.rt_page #rt-quiz [data-rt-step] > .rt_btn { display: flex; justify-content: center; width: 100%; max-width: 360px; margin-left: auto; margin-right: auto; }
 
 /* кроки «Як це працює»: номери */
 .rt_steps { counter-reset: rt-step; }
