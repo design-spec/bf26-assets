@@ -72,12 +72,24 @@
     if (!real && !hasCookieUtm()) Object.keys(CFG.defaultUtm || {}).forEach(function (k) { if (!out[k]) out[k] = CFG.defaultUtm[k]; });
     return out;
   }
-  function priceUrl(pkg) {
-    var q = {};
+  // обраний пакет: S.pkg = «6 місяців · 3 на тиждень» → { months: 6, freq: 3 }
+  function pkgInfo() {
+    if (!S.pkg) return null;
+    var t = (T.terms || []).filter(function (x) { return S.pkg.indexOf(x[0] + ' · ') === 0; })[0];
+    var m = S.pkg.match(/·\s*(\d+)/);
+    return t ? { months: t[1], freq: m ? +m[1] : freq() } : null;
+  }
+  // сторінка цін allright.com/{мова}/app/price одразу показує обраний пакет: planSubType (термін, CFG.planSubTypes)
+  // і planQtyPerWeek (уроків на тиждень); без обраного пакета — лише кількість уроків з перемикача
+  function priceUrl() {
+    var q = {}, info = pkgInfo(), st = info && (CFG.planSubTypes || {})[info.months];
+    if (st) q.planSubType = st;
+    q.planQtyPerWeek = info ? info.freq : freq();
     var a = attrValues(); Object.keys(a).forEach(function (k) { if (a[k]) q[k] = a[k]; });
     q.quiz_version = CFG.quizVersion;
     return 'https://allright.com/' + LOCALE + '/app/price?' + new URLSearchParams(q).toString();
   }
+  function syncPayLinks() { $$('[data-rt-pay]').forEach(function (a) { a.href = priceUrl(); }); }
 
   /* ---------------------------------------------------------------- аналітика */
 
@@ -213,7 +225,7 @@
     renderPkgLabel(); fillAllHidden();
     track('rt_package_select', { package: label, freq: f, place: place || 'prices' });
   }
-  function renderPkgLabel() { $$('[data-rt-pkg-label]').forEach(function (el) { el.textContent = S.pkg || T.pkgNone || ''; }); }
+  function renderPkgLabel() { $$('[data-rt-pkg-label]').forEach(function (el) { el.textContent = S.pkg || T.pkgNone || ''; }); syncPayLinks(); }
 
   /* ---------------------------------------------------------------- квіз-розігрів */
 
@@ -751,7 +763,7 @@
     });
     $$('[data-rt-pay]').forEach(function (a) {
       a.href = priceUrl(); a.target = '_blank'; a.rel = 'noopener';
-      a.addEventListener('click', function () { a.href = priceUrl(); track('rt_price_click', { package: S.pkg || 'none', place: a.getAttribute('data-rt-pay') || 'prices' }); });
+      a.addEventListener('click', function () { a.href = priceUrl(); var ps = new URL(a.href).searchParams; track('rt_price_click', { package: S.pkg || 'none', place: a.getAttribute('data-rt-pay') || 'prices', plan_sub_type: ps.get('planSubType') || '', qty_per_week: ps.get('planQtyPerWeek') || '' }); });
     });
   }
 
@@ -913,7 +925,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.15', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.16', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
