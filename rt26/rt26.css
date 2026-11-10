@@ -139,6 +139,7 @@ html:not([data-rt-eu]) [data-rt-eu-only] { display: none !important; }
 html.rt-js #rt-quiz [data-rt-step]:not(.is-on),
 html.rt-js #rt-quiz [data-rt-doubt]:not(.is-on) { display: none !important; }
 html.rt-js #rt-quiz [data-rt-step].is-on { animation: rt-in .2s ease-out; }
+html.rt-js #rt-quiz [data-rt-step="4"] { display: none !important; }   /* квіз на 3 кроки: крок 4 прибрано */
 @keyframes rt-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
 /* ринок без активної зони цін: картки і перемикач сховані, кнопка лишається */

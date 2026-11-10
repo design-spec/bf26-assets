@@ -108,8 +108,11 @@
 
   /* ---------------------------------------------------------------- стан */
 
+  // квіз — 3 кроки (рішення 10.11): крок 4 «Тепер оберіть пакет» прибрано, кнопка кроку 3 одразу веде до цін
+  var QUIZ_STEPS = 3;
   var Q = store.get(K.quiz) || {};
   if (!Q.step) Q.step = 1;
+  if (Q.step > QUIZ_STEPS) Q.step = QUIZ_STEPS;           // збережений крок 4 зі старої версії квізу
   if (!Q.a) Q.a = {};
   var S = { branch: store.get(K.branch) || 'none', pkg: store.get(K.pkg) || '', lead: store.get(K.lead) || null, fails: 0 };
   function freq() { return +(Q.a.freq || 3) === 2 ? 2 : 3; }
@@ -202,8 +205,8 @@
       var on = q === 'doubt' ? Q.doubt === v : Q.a[q] === v;
       o.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
-    $$('[data-rt-progress]').forEach(function (el) { el.textContent = tpl(T.progress || 'Крок {n} з 4', { n: Q.step }); });
-    $$('[data-rt-progress-bar]').forEach(function (el) { el.style.width = (Q.step / 4 * 100) + '%'; });
+    $$('[data-rt-progress]').forEach(function (el) { el.textContent = tpl(T.progress || 'Крок {n} з 3', { n: Q.step }); });
+    $$('[data-rt-progress-bar]').forEach(function (el) { el.style.width = (Q.step / QUIZ_STEPS * 100) + '%'; });
     $$('#rt-quiz .rt_back').forEach(function (el) { el.hidden = Q.step < 2; });
     renderPrices();
   }
@@ -222,6 +225,14 @@
       var before = $('.rt_progress', box);
       if (before) box.insertBefore(row, before); else box.appendChild(row);
     });
+  }
+  // крок 3 — останній: його кнопка стає «Подивитись пакети» (текст і дія з кнопки кроку 4 Webflow), крок 4 ховається (CSS)
+  function setupQuizEnd() {
+    var b3 = $('#rt-quiz [data-rt-step="3"] [data-rt-next]'), b4 = $('#rt-quiz [data-rt-step="4"] [data-rt-done]');
+    if (!b3) return;
+    b3.removeAttribute('data-rt-next');
+    b3.setAttribute('data-rt-done', b4 ? b4.getAttribute('data-rt-done') || 'packages' : 'packages');
+    if (b4) b3.textContent = b4.textContent.trim();
   }
   // кнопка «Назад» квізу — одна, маленька, зліва під прогрес-баром; видно на кроках 2–4 (renderQuiz ховає на кроці 1)
   function setupQuizBack() {
@@ -839,6 +850,7 @@
     });
     setupDoubts();
     setupFooter();
+    setupQuizEnd();
     setupQuizBack();
     setupTrialRow();
     setupReviews();
@@ -854,7 +866,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.13', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.14', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
