@@ -389,6 +389,33 @@ html[data-rt-theme="main"] .rt_review { background: var(--m-card); border: 1px s
 html[data-rt-theme="main"] .rt_review-name { color: #fefefe; font-size: 14px; font-weight: 700; }
 html[data-rt-theme="main"] .rt_review-name::after { content: "★★★★★"; display: block; margin-top: 2px; color: #feb634; font-size: 13px; letter-spacing: 2px; line-height: 1; }
 html[data-rt-theme="main"] .rt_review-text { color: var(--m-muted); font-size: 15px; font-weight: 500; line-height: 1.55; }
+/* блок відгуків як на головній: темний контейнер (радіус 40, рамка), синя плашка рейтингу 288 px зліва, стрічка карток 288 px */
+.rt_rv-badge { display: none; }
+html[data-rt-theme="main"] .rt_rv { display: flex; align-items: stretch; max-width: 1280px; margin: 0 auto; border: 1px solid rgba(146, 116, 219, .4); border-radius: 40px; background: var(--m-card); overflow: hidden; }
+html[data-rt-theme="main"] .rt_rv-badge { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: space-around; gap: 48px; width: 288px; margin: 32px 0 32px 32px; padding: 48px 0; border-radius: 16px; background: #027de5; }
+html[data-rt-theme="main"] .rt_rv-stat { display: flex; flex-direction: column; align-items: center; gap: 8px; color: #fff; }
+html[data-rt-theme="main"] .rt_rv-num { display: flex; align-items: center; gap: 8px; font-size: 36px; font-weight: 500; line-height: 1.22; }
+html[data-rt-theme="main"] .rt_rv-num svg, html[data-rt-theme="main"] .rt_rv-num img { flex: none; display: block; }
+html[data-rt-theme="main"] .rt_rv-src { font-size: 24px; font-weight: 500; line-height: 1.16; }
+html[data-rt-theme="main"] .rt_rv .rt_reviews-slot { flex: 1 1 auto; min-width: 0; }
+html[data-rt-theme="main"] .rt_rv .rt_reviews { display: flex !important; gap: 24px; padding: 32px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 32px; scrollbar-width: none; cursor: grab; }
+html[data-rt-theme="main"] .rt_rv .rt_reviews::-webkit-scrollbar { display: none; }
+html[data-rt-theme="main"] .rt_rv .rt_reviews.is-drag { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+html[data-rt-theme="main"] .rt_rv .rt_reviews > .w-dyn-item { flex: 0 0 288px; scroll-snap-align: start; }
+html[data-rt-theme="main"] .rt_rv .rt_review { display: flex; flex-direction: column; gap: 24px; height: 100%; min-height: 312px; padding: 24px; border: 0; border-radius: 16px; background: var(--m-bg); }
+html[data-rt-theme="main"] .rt_rv .rt_review-text { order: 1; flex: 1 1 auto; -webkit-line-clamp: 9; font-size: 16px; line-height: 1.5; }
+html[data-rt-theme="main"] .rt_rv .rt_review-head { order: 2; padding-top: 24px; border-top: 1px solid rgba(146, 116, 219, .2); }
+html[data-rt-theme="main"] .rt_rv .rt_review-ava { pointer-events: none; }
+@media (max-width: 767px) {
+  html[data-rt-theme="main"] .rt_rv { flex-direction: column-reverse; gap: 16px; margin: 0 -16px; border: 0; border-radius: 0; background: none; overflow: visible; }
+  html[data-rt-theme="main"] .rt_rv-badge { flex-direction: row; width: auto; margin: 0 16px; padding: 24px 12px; gap: 12px; }
+  html[data-rt-theme="main"] .rt_rv-num { font-size: 28px; }
+  html[data-rt-theme="main"] .rt_rv-num svg { width: 32px; height: 32px; }
+  html[data-rt-theme="main"] .rt_rv-num img { width: 46px; height: auto; }
+  html[data-rt-theme="main"] .rt_rv-src { font-size: 18px; }
+  html[data-rt-theme="main"] .rt_rv .rt_reviews { padding: 0 16px; gap: 12px; scroll-padding-inline: 16px; }
+  html[data-rt-theme="main"] .rt_rv .rt_reviews > .w-dyn-item { flex-basis: 78%; }
+}
 /* «Як це працює» — біла секція з кольоровими кроками (як «Не знаєте, з чого почати?» на головній) */
 html[data-rt-theme="main"] #rt-how { background: #fff; color: #180d25; }
 html[data-rt-theme="main"] #rt-how .rt_h2 { color: #180d25; }
