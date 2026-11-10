@@ -14,7 +14,8 @@
 .rt_page .rt_quiz .rt_h2, .rt_page .rt_h2.is-form { font-size: 24px; line-height: 1.25; letter-spacing: -0.01em; }
 .rt_page .rt_h3, .rt_page .rt_q-title { font-size: 20px; line-height: 1.3; }
 .rt_page .rt_dcard-title { font-size: 19px; }
-/* дві ширини: 1136 — сітки (контейнер), 760 — картки з діями */
+/* дві ширини: 1280 — сітки (контейнер, як на allright.com: 1440 − 2×80), 760 — картки з діями */
+.rt_page .rt_container, .rt_bar-inner { max-width: 1344px !important; }   /* 1280 + відступи 2×32 */
 .rt_quiz, .rt_formcard, .rt_head-center, .rt_question.is-repeat, .rt_repeat-lead, .rt_pay { max-width: 760px !important; margin-left: auto; margin-right: auto; }
 html[data-rt-branch="yes"] .rt_how-grid, html[data-rt-branch="no"] .rt_how-grid { max-width: 760px !important; }
 /* ритм: однаковий відступ між секціями; фінальний блок — картка, тож зверху менше */
@@ -24,7 +25,7 @@ html[data-rt-branch="yes"] .rt_how-grid, html[data-rt-branch="no"] .rt_how-grid 
 .rt_page .rt_footer { padding-top: 40px; }
 /* картки цін: по центру, на всю ширину контейнера */
 @media (min-width: 768px) {
-  .rt_pkgs { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important; gap: 16px; max-width: 1136px; margin-left: auto; margin-right: auto; }
+  .rt_pkgs { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important; gap: 16px; max-width: 1280px; margin-left: auto; margin-right: auto; }
   .rt_pkgs:has(.rt_pkg:nth-child(3):last-child) { max-width: 960px; }
 }
 /* підказка, поки кнопку форми тримає перевірка Turnstile */
@@ -599,5 +600,24 @@ html[data-rt-theme="main"] .rt_seg-opt:hover, html[data-rt-theme="main"] .rt_seg
 html[data-rt-theme="dark"] .rt_seg-opt:hover, html[data-rt-theme="dark"] .rt_seg-opt[aria-pressed="true"] { color: #fefefe; }
 .rt_mini-freq .rt_seg-opt { min-height: 38px; padding: 0 16px; font-size: 15px; }
 @media (max-width: 767px) { .rt_seg-opt { padding: 0 16px; font-size: 15px; } }
+
+/* поява hero при завантаженні (як hero-19 reactbits): елементи по черзі піднімаються, заголовок проявляється з розмиття, картинка — з легкого масштабу.
+   Чистий CSS, стартує з першого кадру, не чекає rt26.js; вимикається prefers-reduced-motion (правило нижче) */
+@keyframes rt-hero-up { from { opacity: 0; translate: 0 20px; } }
+@keyframes rt-hero-h1 { from { opacity: 0; translate: 0 26px; filter: blur(8px); } }
+@keyframes rt-hero-row { from { opacity: 0; translate: 0 12px; } }
+@keyframes rt-hero-media { from { opacity: 0; translate: 0 32px; scale: .97; } }
+.rt_hero .rt_hero-text > *, .rt_hero .rt_question > *, .rt_hero .rt_choices > *, .rt_hero .rt_hero-media { animation: rt-hero-up .7s cubic-bezier(.22, 1, .36, 1) both; }
+.rt_hero .rt_eyebrow { animation-delay: .05s; }
+.rt_hero .rt_h1 { animation-name: rt-hero-h1; animation-duration: .8s; animation-delay: .13s; }
+.rt_hero .rt_lead { animation-delay: .21s; }
+.rt_hero .rt_question, .rt_hero .rt_answer { animation-delay: .29s; }
+.rt_hero .rt_question > *, .rt_hero .rt_choices > * { animation-name: rt-hero-row; }
+.rt_hero .rt_question > .rt_q-title { animation-delay: .42s; }
+.rt_hero .rt_question > .rt_choices { animation: none; }
+.rt_hero .rt_choices > :nth-child(1) { animation-delay: .5s; }
+.rt_hero .rt_choices > :nth-child(2) { animation-delay: .58s; }
+.rt_hero .rt_question > .rt_link { animation-delay: .66s; }
+.rt_hero .rt_hero-media { animation-name: rt-hero-media; animation-duration: .9s; animation-delay: .3s; }
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
