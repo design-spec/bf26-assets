@@ -454,13 +454,12 @@ html[data-rt-theme="main"] .rt_rv .rt_review-ava { pointer-events: none; }
   html[data-rt-theme="main"] .rt_rv.is-embla .rt_reviews { padding: 0; }
   html[data-rt-theme="main"] .rt_rv .rt_reviews > .w-dyn-item { flex-basis: 78%; }
 }
-/* «Як це працює» — біла секція з кольоровими кроками (як «Не знаєте, з чого почати?» на головній) */
-html[data-rt-theme="main"] #rt-how { background: #fff; color: #180d25; }
-html[data-rt-theme="main"] #rt-how .rt_h2 { color: #180d25; }
-html[data-rt-theme="main"] .rt_how-col { background: linear-gradient(129deg, rgba(247, 246, 247, .8) 0%, rgba(247, 246, 247, .5) 100%), #f7f6f7; border: 0; border-radius: 32px; padding: 32px; box-shadow: none; }
-html[data-rt-theme="main"] .rt_how-title { color: #823cdc; }
-html[data-rt-theme="main"] .rt_stepitem-title { color: #180d25; }
-html[data-rt-theme="main"] .rt_stepitem-text { color: #6e6e73; }
+/* «Як це працює» — темна секція (рішення 10.11), картки як на головній, кольорові номери кроків (як «Не знаєте, з чого почати?») */
+html[data-rt-theme="main"] #rt-how { position: relative; isolation: isolate; background: radial-gradient(ellipse 75% 50% at 50% 50%, rgba(var(--m-glow), .28) 0%, rgba(var(--m-glow), .1) 55%, rgba(var(--m-glow), 0) 100%); color: #fefefe; }
+html[data-rt-theme="main"] .rt_how-col { background: var(--m-card); border: 1px solid var(--m-line); border-radius: 32px; padding: 32px; box-shadow: none; }
+html[data-rt-theme="main"] .rt_how-title { color: #b597ff; }
+html[data-rt-theme="main"] .rt_stepitem-title { color: #fefefe; }
+html[data-rt-theme="main"] .rt_stepitem-text { color: var(--m-muted); }
 html[data-rt-theme="main"] .rt_stepitem::before { color: #fff; font-weight: 700; background: #ff7979; }
 html[data-rt-theme="main"] .rt_stepitem:nth-child(2)::before { background: #feb634; }
 html[data-rt-theme="main"] .rt_stepitem:nth-child(3)::before { background: #57cd6b; }
