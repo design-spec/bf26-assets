@@ -2,6 +2,12 @@
    Базова верстка блоків — стилі rt_* у Webflow Designer; тут лише те, що Designer не виражає. */
 
 /* ---------- загальний шар сторінки (UX v1.1): шрифт, шкала заголовків, ширини, ритм секцій ---------- */
+/* перенос рядків: заголовки й короткі тексти — balance (рівні рядки), довгі абзаци — pretty (без «вдів») */
+.rt_page h1, .rt_page h2, .rt_page h3, .rt_page .rt_h1, .rt_page .rt_h2, .rt_page .rt_h3, .rt_page .rt_q-title, .rt_page .rt_arg-title, .rt_page .rt_dw-title,
+.rt_page .rt_lead, .rt_page .rt_muted, .rt_page .rt_clarify-q, .rt_page .rt_hint, .rt_page .rt_stepitem-title, .rt_page .rt_pkg-name, .rt_page .rt_bar-text,
+.rt_page .rt_repeat-lead, .rt_page .rt_eyebrow, .rt_page .rt_badge, .rt_page .rt_how-title, .rt_page .rt_dcard-title, .rt_page .rt_done-title, .rt_page .rt_legend,
+.rt_page .rt_note, .rt_page .rt_legal, .rt_page .rt_discount, .rt_page .rt_offerline, .rt_page .rt_dw-k, .rt_page .rt_dw-hint, .rt_modal .rt_h2 { text-wrap: balance; }
+.rt_page p, .rt_page li, .rt_page .rt_text, .rt_page .rt_review-text, .rt_page .rt_stepitem-text, .rt_page .rt_dw-text, .rt_page .rt_terms { text-wrap: pretty; }
 .rt_page, .rt_modal, .iti__country-list { font-family: Inter, Arial, "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
 .rt_page .rt_h1 { font-size: 48px; line-height: 1.08; letter-spacing: -0.025em; }
 .rt_page .rt_h2 { font-size: 36px; line-height: 1.15; letter-spacing: -0.02em; }
@@ -266,6 +272,13 @@ html[data-rt-theme="dark"] .rt_dw-op { background: #251c33; }
 .rt_ages .w-radio:has(input:focus-visible) { outline: 3px solid rgba(151, 98, 253, .55); outline-offset: 2px; }
 @media (max-width: 479px) { .rt_ages { grid-template-columns: repeat(5, 1fr); } }
 .rt_agerow { font-size: 16px; }
+/* «Пробний урок: … · змінити» у квізі й формі; плашку-відповідь на першому екрані ховаємо (зі скриптом) */
+.rt_trialrow { margin: 4px 0 0; font-size: 15px; line-height: 1.4; color: var(--mid-gray, #6e6e73); }
+.rt_trialrow b { color: var(--haiti, #180d25); font-weight: 700; }
+.rt_quiz-head .rt_trialrow { margin: 0 0 14px; }
+html[data-rt-theme="main"] .rt_trialrow, html[data-rt-theme="dark"] .rt_trialrow { color: #b5b4be; }
+html[data-rt-theme="main"] .rt_trialrow b, html[data-rt-theme="dark"] .rt_trialrow b { color: #fefefe; }
+html.rt-js .rt_hero [data-rt-answer] { display: none !important; }
 .rt_agerow[hidden] { display: none; }
 .rt_input, [data-rt-place] input[type="tel"], [data-rt-place] input[type="email"] { width: 100%; height: 56px; margin: 0; padding: 0 16px; border-radius: 12px; border: 2px solid #e6def5; background: #fff; color: var(--haiti, #180d25); font-size: 16px; box-shadow: none; }
 [data-rt-place] input[type="tel"]:focus, [data-rt-place] input[type="email"]:focus { border-color: var(--heliotrope, #9762fd); outline: none; }

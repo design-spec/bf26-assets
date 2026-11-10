@@ -212,6 +212,17 @@
     track('rt_quiz_step', { step: n, doubt: Q.doubt || 'none' });
     scrollToEl($('#rt-quiz'));
   }
+  // рядок «Пробний урок: ще не було · змінити» — у картці квізу (гілка «так») і форми (гілка «ні»), як «Вік: 6 · змінити»;
+  // замість плашки-відповіді на першому екрані (її ховає CSS). «змінити» — [data-rt-change]: скидає гілку і веде до питання
+  function setupTrialRow() {
+    [$('#rt-quiz .rt_quiz-head'), $('#rt-time .rt_form-head')].forEach(function (box) {
+      if (!box || $('.rt_trialrow', box)) return;
+      var row = doc.createElement('div'); row.className = 'rt_trialrow';
+      row.innerHTML = esc(T.trialLabel || 'Пробний урок:') + ' <b data-rt-answer-label>' + esc(S.branch === 'yes' ? (T.answerYes || '') : (T.answerNo || '')) + '</b> · <a href="#" class="rt_link" data-rt-change>' + esc(T.change || 'змінити') + '</a>';
+      var before = $('.rt_progress', box);
+      if (before) box.insertBefore(row, before); else box.appendChild(row);
+    });
+  }
   // кнопка «Назад» квізу — одна, маленька, зліва під прогрес-баром; видно на кроках 2–4 (renderQuiz ховає на кроці 1)
   function setupQuizBack() {
     var head = $('#rt-quiz .rt_quiz-head'); if (!head || $('.rt_back', head)) return;
@@ -829,6 +840,7 @@
     setupDoubts();
     setupFooter();
     setupQuizBack();
+    setupTrialRow();
     setupReviews();
     setupLinks();
     setupPopup();
@@ -842,7 +854,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.11', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.12', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
