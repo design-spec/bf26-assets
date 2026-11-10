@@ -172,10 +172,32 @@
     var s = Math.round(n).toLocaleString(T.numLocale || 'uk-UA');
     return (PLAN && PLAN.curBefore) ? cur + s : s + ' ' + cur;
   }
+  // Перемикач «Уроків на тиждень» — сегментований, як pricing-12 у reactbits: «2 уроки | 3 уроки −12%», повзунок їздить під активним.
+  // Кнопки ті самі [data-rt-freq] (клік ловить спільний обробник), змінюється лише розмітка; фінальний блок копіює її (setupRepeat).
+  function setupFreqToggle() {
+    $$('[data-rt-freqwrap]').forEach(function (w) {
+      var chips = $$('[data-rt-freq]', w); if (chips.length < 2 || $('.rt_seg', w)) return;
+      var seg = doc.createElement('div'); seg.className = 'rt_seg'; seg.setAttribute('role', 'group');
+      var lb = $('.rt_freq-label', w); if (lb) seg.setAttribute('aria-label', lb.textContent.replace(/:\s*$/, ''));
+      seg.innerHTML = '<span class="rt_seg-thumb" aria-hidden="true"></span>'; seg.setAttribute('data-on', freq());
+      chips.forEach(function (c) {
+        var n = c.getAttribute('data-rt-freq');
+        c.className = 'rt_seg-opt';
+        c.innerHTML = '<span>' + esc(tpl(T.freqOpt || '{n} уроки', { n: n })) + '</span>' + (n === '3' ? '<span class="rt_seg-badge" data-rt-freqsave hidden></span>' : '');
+        seg.appendChild(c);
+      });
+      w.appendChild(seg);
+    });
+  }
   function renderPrices() {
     var f = freq(), rows = PLAN ? PLAN.f[f] : null, lpm = (CFG.lessonsPerMonth || { 2: 8, 3: 12 })[f];
     html.toggleAttribute('data-rt-noplan', !PLAN);
     $$('[data-rt-freq]').forEach(function (b) { b.setAttribute('aria-pressed', +b.getAttribute('data-rt-freq') === f ? 'true' : 'false'); });
+    $$('.rt_seg').forEach(function (s) { s.setAttribute('data-on', f); });
+    // бейдж на «3 уроки»: на скільки дешевший урок при 3/тижд — найменша вигода серед доступних термінів (чесне «−N%»)
+    var sv = null;
+    if (PLAN && PLAN.f[2] && PLAN.f[3]) PLAN.f[3].m.forEach(function (v, i) { var v2 = PLAN.f[2].m[i]; if (v != null && v2) { var k = 1 - v / v2; sv = sv == null ? k : Math.min(sv, k); } });
+    $$('[data-rt-freqsave]').forEach(function (el) { var p = sv > 0 ? Math.round(sv * 100) : 0; el.hidden = !p; el.textContent = p ? tpl(T.freqSave || '−{p}%', { p: p }) : ''; });
     $$('[data-rt-freqn]').forEach(function (el) { el.textContent = f; });
     $$('[data-rt-price]').forEach(function (el) {
       var k = el.getAttribute('data-rt-price');
@@ -965,6 +987,7 @@
       var slot = f.closest('[data-rt-place]');
       if (slot && field(f, 'phone')) setupForm(f, slot.getAttribute('data-rt-place'));
     });
+    setupFreqToggle();
     setupDoubts();
     setupFooter();
     setupQuizEnd();
@@ -985,7 +1008,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.19', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.20', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
