@@ -899,6 +899,52 @@
     io.observe(main);
   }
 
+  // Поява при скролі (як halloween.englishdom.com): IntersectionObserver додає .in, рух робить CSS (rt26.css «поява при скролі»).
+  // rise — діти блока піднімаються по черзі; deal — картки «роздаються» з поворотом; pop — фінальний блок + Чарлі; stamp — бейдж-штамп.
+  // Позначаємо лише те, що на старті нижче першого екрана (без мигання); після анімації атрибут знімаємо — повертаються власні transition.
+  // Вимкнено при prefers-reduced-motion і з ?anim=off.
+  function setupReveal() {
+    if (!('IntersectionObserver' in window) || /[?&]anim=off/.test(location.search)) return;
+    try { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) {}
+    var MAP = [
+      ['rise', '.rt_section .rt_head-center, .rt_quiz-head, #rt-time .rt_form-head, .rt_pay, .rt_rv-badge, .rt_steps'],
+      ['deal', '.rt_pkgs, .rt_dcards, .rt_dw, .rt_rv .rt_reviews, .rt_how-grid'],
+      ['pop', '.rt_repeat'],
+      ['stamp', '.rt_repeat > .rt_badge.is-big']
+    ];
+    var fold = window.innerHeight * 0.92, els = [];
+    MAP.forEach(function (m) {
+      $$(m[1]).forEach(function (el) {
+        if (el.hasAttribute('data-rt-a')) return;
+        var r = el.getBoundingClientRect();
+        if (!r.height || r.top < fold) return;
+        el.setAttribute('data-rt-a', m[0]); els.push(el);
+      });
+    });
+    if (!els.length) return;
+    html.classList.add('rt-anim');
+    function countUp(span) {
+      var t = span.textContent, m = t.match(/^(\D*)(\d+(?:[.,]\d+)?)(.*)$/);
+      if (!m) return;
+      var to = parseFloat(m[2].replace(',', '.')), dec = (m[2].split(/[.,]/)[1] || '').length, sep = m[2].indexOf(',') > -1 ? ',' : '.', t0 = 0;
+      function step(ts) {
+        t0 = t0 || ts; var k = Math.min(1, (ts - t0) / 1400), e = 1 - Math.pow(1 - k, 3);
+        span.textContent = k < 1 ? m[1] + (to * e).toFixed(dec).replace('.', sep) + m[3] : t;
+        if (k < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+    function show(el) {
+      el.classList.add('in');
+      if (el.matches('.rt_rv-badge')) $$('.rt_rv-num span', el).forEach(countUp);
+      setTimeout(function () { el.removeAttribute('data-rt-a'); el.classList.remove('in'); }, 1900);
+    }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } });
+    }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (el) { io.observe(el); });
+  }
+
   // Кнопки-якорі (#rt-quiz, #rt-prices…) потрібні лише без JS. Зі скриптом прибираємо href:
   // інакше webflow.js на кожен клік сам прокручує до якоря і сторінка «стрибає».
   function anchorsToButtons() {
@@ -933,12 +979,13 @@
     syncAge();
     renderDone();
     html.classList.add('rt-ready');
+    setupReveal();
     track('rt_page_view', {});
     log('market', MARKET || '(none)', 'zone', ZONE, 'branch', S.branch);
   }
 
   window.RT26 = {
-    version: '1.6.18', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.6.19', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();

@@ -566,4 +566,22 @@ html[data-rt-theme="main"] .rt_pr-per { color: var(--m-muted); }
   .rt_mpkg .rt_pr-dec { font-size: 12px; } .rt_mpkg .rt_pr-per { font-size: 11px; }
 }
 
+/* поява при скролі (setupReveal у rt26.js; як halloween.englishdom.com). translate/rotate/scale — окремі властивості, не ламають власні transform елементів */
+html.rt-anim { --rt-ease-out: cubic-bezier(.2, .8, .2, 1); --rt-ease-back: cubic-bezier(.3, 1.55, .5, 1); }
+html.rt-anim [data-rt-a="rise"]:not(.in) > * { opacity: 0; translate: 0 26px; }
+html.rt-anim [data-rt-a="rise"] > * { transition: opacity .5s ease var(--rt-d, 0s), translate .8s var(--rt-ease-out) var(--rt-d, 0s); }
+html.rt-anim [data-rt-a="deal"]:not(.in) > * { opacity: 0; translate: 70px 30px; rotate: 6deg; }
+html.rt-anim [data-rt-a="deal"] > * { transition: opacity .3s ease var(--rt-d, 0s), translate .75s var(--rt-ease-back) var(--rt-d, 0s), rotate .75s var(--rt-ease-back) var(--rt-d, 0s); }
+html.rt-anim [data-rt-a] > :nth-child(2) { --rt-d: .09s; }
+html.rt-anim [data-rt-a] > :nth-child(3) { --rt-d: .18s; }
+html.rt-anim [data-rt-a] > :nth-child(4) { --rt-d: .27s; }
+html.rt-anim [data-rt-a] > :nth-child(5) { --rt-d: .36s; }
+html.rt-anim [data-rt-a] > :nth-child(n+6) { --rt-d: .45s; }
+html.rt-anim [data-rt-a="pop"]:not(.in) { opacity: 0; translate: 0 46px; scale: .95; }
+html.rt-anim [data-rt-a="pop"] { transition: opacity .5s ease, translate .9s var(--rt-ease-out), scale .9s var(--rt-ease-out); }
+html.rt-anim .rt_repeat[data-rt-a]:not(.in)::before { opacity: 0; translate: 0 50px; }
+html.rt-anim .rt_repeat[data-rt-a]::before { transition: opacity .3s ease .35s, translate .7s var(--rt-ease-back) .35s; }
+html.rt-anim [data-rt-a="stamp"]:not(.in) { opacity: 0; scale: 1.9; rotate: -40deg; }
+html.rt-anim [data-rt-a="stamp"] { transition: scale .6s var(--rt-ease-back) .45s, rotate .6s var(--rt-ease-back) .45s, opacity .25s ease .45s; }
+
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
