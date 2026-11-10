@@ -591,8 +591,6 @@ html.rt-anim [data-rt-a="stamp"] { transition: scale .6s var(--rt-ease-back) .45
 .rt_seg-opt { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 22px; border-radius: 999px; color: var(--mid-gray, #6e6e73); font-size: 16px; font-weight: 600; text-decoration: none !important; white-space: nowrap; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; transition: color .2s; }
 .rt_seg-opt:hover, .rt_seg-opt[aria-pressed="true"] { color: var(--haiti, #180d25); }
 .rt_seg-opt:focus-visible { outline: 2px solid var(--heliotrope, #9762fd); outline-offset: 2px; }
-.rt_seg-badge { padding: 2px 8px; border-radius: 999px; background: #57cd6b; color: #fff; font-size: 13px; font-weight: 700; line-height: 1.35; }
-.rt_seg-badge[hidden] { display: none; }
 [data-rt-freqwrap], .rt_mini-freq { flex-wrap: wrap; row-gap: 10px; }
 html[data-rt-theme="main"] .rt_seg, html[data-rt-theme="dark"] .rt_seg { border-color: var(--m-line, rgba(146, 116, 219, .28)); background: rgba(17, 17, 44, .7); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04); }
 html[data-rt-theme="main"] .rt_seg-thumb, html[data-rt-theme="dark"] .rt_seg-thumb { background: linear-gradient(180deg, #34287a 0%, #2a2060 100%); box-shadow: inset 0 0 0 1px rgba(151, 98, 253, .55), 0 4px 18px rgba(151, 98, 253, .25); }
@@ -600,7 +598,6 @@ html[data-rt-theme="main"] .rt_seg-opt, html[data-rt-theme="dark"] .rt_seg-opt {
 html[data-rt-theme="main"] .rt_seg-opt:hover, html[data-rt-theme="main"] .rt_seg-opt[aria-pressed="true"],
 html[data-rt-theme="dark"] .rt_seg-opt:hover, html[data-rt-theme="dark"] .rt_seg-opt[aria-pressed="true"] { color: #fefefe; }
 .rt_mini-freq .rt_seg-opt { min-height: 38px; padding: 0 16px; font-size: 15px; }
-.rt_mini-freq .rt_seg-badge { font-size: 12px; }
 @media (max-width: 767px) { .rt_seg-opt { padding: 0 16px; font-size: 15px; } }
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
