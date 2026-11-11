@@ -116,6 +116,8 @@
   /* ---------------------------------------------------------------- прокрутка */
 
   function barH() { var b = $('.rt_bar'); return b ? b.getBoundingClientRect().height : 0; }
+  // квіз: при зміні кроку тримаємо в кадрі рядок «Крок N з 3» і прогрес-бар (а не верх секції із заголовком)
+  function quizAnchor() { return $('#rt-quiz .rt_progress') || $('#rt-quiz .rt_quiz-head') || $('#rt-quiz'); }
   function scrollToEl(el) {
     if (!el) return;
     setTimeout(function () {
@@ -365,10 +367,28 @@
     $$('#rt-quiz .rt_back').forEach(function (el) { el.hidden = Q.step < 2; });
     renderPrices();
   }
+  // Крок 2 «Дорого?» на мобільному: перемикач «Уроків на тиждень: 2 уроки | 3 уроки» прямо в картці аргументу під переліком,
+  // щоб на одному екрані було видно, як змінюються ціни в тексті; окремий блок «Уточнимо: скільки уроків…» на мобільному схований (CSS).
+  // Кнопки — ті самі [data-rt-q="freq"] (onOption), повзунок рухає renderPrices через .rt_seg[data-on].
+  function setupArgFreq() {
+    $$('#rt-quiz [data-rt-doubt="price"] .rt_arg').forEach(function (arg) {
+      if ($('.rt_argfreq', arg)) return;
+      var lb = $('.rt_freq-label'), w = doc.createElement('div');
+      w.className = 'rt_argfreq';
+      w.innerHTML = '<div class="rt_argfreq-label">' + esc(lb ? lb.textContent.trim() : '') + '</div>' +
+        '<div class="rt_seg" role="group" data-on="' + freq() + '"><span class="rt_seg-thumb" aria-hidden="true"></span>' +
+        [2, 3].map(function (n) { return '<a role="button" tabindex="0" class="rt_seg-opt" data-rt-q="freq" data-rt-v="' + n + '" aria-pressed="' + (freq() === n) + '"><span>' + esc(tpl(T.freqOpt || '{n} уроки', { n: n })) + '</span></a>'; }).join('') + '</div>';
+      var list = $('.rt_facts', arg);
+      if (list) list.parentNode.insertBefore(w, list.nextSibling); else arg.appendChild(w);
+      w.addEventListener('keydown', function (e) { var t = e.target.closest('[data-rt-q]'); if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); t.click(); } });
+      var cl = arg.parentNode && $('.rt_clarify', arg.parentNode);
+      if (cl && $('[data-rt-q="freq"]', cl)) cl.classList.add('is-freq');
+    });
+  }
   function quizStep(n) {
     Q.step = n; saveQ(); renderQuiz();
     track('rt_quiz_step', { step: n, doubt: Q.doubt || 'none' });
-    scrollToEl($('#rt-quiz'));
+    scrollToEl(quizAnchor());
   }
   // рядок «Пробний урок: ще не було · змінити» — у картці квізу (гілка «так») і форми (гілка «ні»), як «Вік: 6 · змінити»;
   // замість плашки-відповіді на першому екрані (її ховає CSS). «змінити» — [data-rt-change]: скидає гілку і веде до питання
@@ -424,7 +444,7 @@
       if (Q.step < 2) return;
       var from = Q.step; Q.step = from - 1; saveQ(); renderQuiz();
       track('rt_quiz_back', { from: from, to: Q.step, doubt: Q.doubt || 'none' });
-      var q = $('#rt-quiz'); if (q && q.getBoundingClientRect().top < 0) scrollToEl(q);
+      var q = quizAnchor(); if (q && q.getBoundingClientRect().top < barH()) scrollToEl(q);
       if (b.hidden) { var t = $('#rt-quiz [data-rt-step].is-on [data-rt-q]'); if (t) t.focus({ preventScroll: true }); }
     });
     var bar = $('.rt_progress-track', head);
@@ -437,10 +457,11 @@
       track('rt_quiz_answer', { step: 1, field: 'doubt', value: v });
       renderQuiz(); fillAllHidden();
       track('rt_quiz_step', { step: 2, doubt: v });
-      scrollToEl($('#rt-quiz'));
+      scrollToEl(quizAnchor());
       return;
     }
-    Q.a[q] = Q.a[q] === v ? undefined : v;            // повторний клік знімає відповідь (уточнення необов'язкове)
+    if (o.closest('.rt_argfreq')) Q.a[q] = v;          // сегментований перемикач не знімається повторним кліком
+    else Q.a[q] = Q.a[q] === v ? undefined : v;       // повторний клік знімає відповідь (уточнення необов'язкове)
     if (Q.a[q] === undefined) delete Q.a[q];
     saveQ();
     if (Q.a[q]) track('rt_quiz_answer', { step: Q.step, field: q, value: v });
@@ -1139,6 +1160,7 @@
     setupFreqToggle();
     loadLivePlans();
     setupDoubts();
+    setupArgFreq();
     setupFooter();
     setupQuizEnd();
     setupRepeat();
@@ -1159,7 +1181,7 @@
   }
 
   window.RT26 = {
-    version: '1.8.0', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.8.1', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();

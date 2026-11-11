@@ -654,3 +654,14 @@ html[data-rt-theme="dark"] .rt_seg-opt:hover, html[data-rt-theme="dark"] .rt_seg
 /* v1.7.0 ціни наживо з API: поки чекаємо відповідь (до 5 с) — числа притлумлені, без «стрибка» зі старих xlsx-цін */
 [data-rt-packages], [data-rt-minipkgs], [data-rt-price] { transition: opacity .25s ease; }
 html[data-rt-prices="loading"] [data-rt-packages], html[data-rt-prices="loading"] [data-rt-minipkgs], html[data-rt-prices="loading"] [data-rt-price] { opacity: 0; }
+
+/* v1.8.1 мобільний квіз, крок 2 «Дорого?»: перемикач частоти в картці аргументу (setupArgFreq), окремий блок уточнення схований */
+.rt_argfreq { display: none; }
+@media (max-width: 767px) {
+  .rt_argfreq { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 20px 0 4px; padding: 16px 12px; border-radius: 16px; background: rgba(151, 98, 253, .10); }
+  .rt_argfreq-label { font-size: 16px; font-weight: 700; line-height: 1.3; text-align: center; }
+  html[data-rt-theme="main"] .rt_argfreq-label, html[data-rt-theme="dark"] .rt_argfreq-label { color: #fefefe; }
+  .rt_argfreq .rt_seg { width: 100%; max-width: 320px; }
+  .rt_argfreq .rt_seg-opt { min-height: 44px; }
+  .rt_clarify.is-freq { display: none !important; }
+}
