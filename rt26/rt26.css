@@ -650,3 +650,7 @@ html[data-rt-theme="dark"] .rt_seg-opt:hover, html[data-rt-theme="dark"] .rt_seg
 }
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+/* v1.7.0 ціни наживо з API: поки чекаємо відповідь (до 5 с) — числа притлумлені, без «стрибка» зі старих xlsx-цін */
+[data-rt-packages], [data-rt-minipkgs], [data-rt-price] { transition: opacity .25s ease; }
+html[data-rt-prices="loading"] [data-rt-packages], html[data-rt-prices="loading"] [data-rt-minipkgs], html[data-rt-prices="loading"] [data-rt-price] { opacity: 0; }

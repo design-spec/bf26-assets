@@ -173,6 +173,58 @@
     return '<span class="rt_pr"><span class="rt_pr-int">' + esc(whole) + '</span><span class="rt_pr-side"><span class="rt_pr-dec">' + esc(dec) +
       '</span><span class="rt_pr-per">' + esc(T.perLesson || '') + '</span></span></span>';
   }
+  // Ціни наживо з API allright.com — той самий запит, що робить allright.com/{мова}/app/price
+  // (валюта зони, ринок, тариф Standard, уроків на тиждень, мова сторінки — від мови залежить ціна).
+  // CFG.plans (xlsx) лишається запасом: показується, якщо API не відповів за CFG.plansApiTimeoutMs або CORS не пустив (staging *.webflow.io).
+  // ?prices=static — лише xlsx. PRICES_SRC: static | api | cache → html[data-rt-prices] і поле price_source у подіях цін.
+  var PRICES_SRC = 'static';
+  function loadLivePlans() {
+    var cur = ZONE && (CFG.zoneCurrency || {})[ZONE];
+    if (!cur || !CFG.plansApi || !window.fetch || params.get('prices') === 'static') return;
+    var key = 'rt26_pp2_' + [MARKET || '-', cur, LOCALE].join('_'), done = false;
+    function apply(f, sub, src) {
+      if (done) return; done = true;
+      PLAN = { cur: PLAN ? PLAN.cur : cur, curBefore: !!(PLAN && PLAN.curBefore), f: f };
+      CFG.planSubTypes = Object.assign({}, CFG.planSubTypes || {}, sub);
+      PRICES_SRC = src; html.setAttribute('data-rt-prices', src);
+      renderPrices(); log('prices', src, PLAN);
+    }
+    function fallback(why) {
+      if (done) return; done = true;
+      html.setAttribute('data-rt-prices', 'static'); log('prices api fail → xlsx', why);
+      track('rt_prices_fallback', { reason: String(why).slice(0, 80) });
+    }
+    try { var c = JSON.parse(sessionStorage.getItem(key) || 'null'); if (c && Date.now() - c.t < 30 * 60e3) return apply(c.f, c.sub, 'cache'); } catch (e) {}
+    html.setAttribute('data-rt-prices', 'loading');
+    setTimeout(function () { fallback('timeout'); }, CFG.plansApiTimeoutMs || 5000);
+    function get(qpw) {
+      var q = { currency: cur, locale: LOCALE, tutor_type_alias: 'standard', qty_per_week: qpw };
+      if (MARKET) q.country_code = MARKET;
+      var u = CFG.plansApi + '?' + Object.keys(q).map(function (k) { return 'filter%5B' + k + '%5D=' + encodeURIComponent(q[k]); }).join('&');
+      return fetch(u, { credentials: 'omit' }).then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); });
+    }
+    Promise.all([get(2), get(3)]).then(function (res) {
+      var f = {}, sub = {}, terms = (T.terms || []).map(function (t) { return t[1]; });
+      [2, 3].forEach(function (qpw, n) {
+        var d = res[n] || {}, inc = {};
+        (d.included || []).forEach(function (x) { if (x.type === 'payment-plan') inc[x.id] = x.attributes; });
+        var row = { m: terms.map(function () { return null; }), i: terms.slice(1).map(function () { return null; }) };
+        (d.data || []).forEach(function (p) {
+          var a = p.attributes || {}, ix = terms.indexOf(+a['period-amount']);
+          if (!/^months?$/.test(a['period-unit'] || '') || ix < 0 || a['is-show'] === false || a.currency !== cur) return;
+          var pp = a['price-curr-parts'], per = pp ? +pp.priceWithDecimal : (a['price-curr'] / 100);
+          if (!(per > 0)) return;
+          row.m[ix] = per; sub[a['period-amount']] = a['sub-type'];
+          var ir = p.relationships && p.relationships['installment-plan'] && p.relationships['installment-plan'].data, ia = ir && inc[ir.id];
+          if (ix > 0 && ia && ia['price-curr-parts']) row.i[ix - 1] = +ia['price-curr-parts'].priceWithDecimal;
+        });
+        if (row.m.some(function (v) { return v != null; })) f[qpw] = row;
+      });
+      if (!f[2] || !f[3]) throw new Error('no plans');
+      try { sessionStorage.setItem(key, JSON.stringify({ t: Date.now(), f: f, sub: sub })); } catch (e) {}
+      apply(f, sub, 'api');
+    }).catch(function (e) { fallback(e && e.message || e); });
+  }
   function money0(n) {
     var cur = PLAN ? PLAN.cur : '';
     var s = Math.round(n).toLocaleString(T.numLocale || 'uk-UA');
@@ -286,7 +338,7 @@
     S.pkg = label; store.set(K.pkg, label);
     $$('.rt_pkg, .rt_mpkg').forEach(function (c) { var on = c.getAttribute('data-rt-pkg') === label; c.classList.toggle('is-sel', on); c.setAttribute('aria-pressed', on ? 'true' : 'false'); });
     renderPkgLabel(); fillAllHidden();
-    track('rt_package_select', { package: label, freq: f, place: place || 'prices' });
+    track('rt_package_select', { package: label, freq: f, place: place || 'prices', price_source: PRICES_SRC });
   }
   function renderPkgLabel() { $$('[data-rt-pkg-label]').forEach(function (el) { el.textContent = S.pkg || T.pkgNone || ''; }); syncPayLinks(); }
 
@@ -864,7 +916,7 @@
     });
     $$('[data-rt-pay]').forEach(function (a) {
       a.href = priceUrl(); a.target = '_blank'; a.rel = 'noopener';
-      a.addEventListener('click', function () { a.href = priceUrl(); var ps = new URL(a.href).searchParams; track('rt_price_click', { package: S.pkg || 'none', place: a.getAttribute('data-rt-pay') || 'prices', plan_sub_type: ps.get('planSubType') || '', qty_per_week: ps.get('planQtyPerWeek') || '' }); });
+      a.addEventListener('click', function () { a.href = priceUrl(); var ps = new URL(a.href).searchParams; track('rt_price_click', { package: S.pkg || 'none', place: a.getAttribute('data-rt-pay') || 'prices', plan_sub_type: ps.get('planSubType') || '', qty_per_week: ps.get('planQtyPerWeek') || '', price_source: PRICES_SRC }); });
     });
   }
 
@@ -1055,6 +1107,7 @@
     });
     setupHeroMark();
     setupFreqToggle();
+    loadLivePlans();
     setupDoubts();
     setupFooter();
     setupQuizEnd();
@@ -1076,7 +1129,7 @@
   }
 
   window.RT26 = {
-    version: '1.6.28', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.7.0', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
