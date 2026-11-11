@@ -685,3 +685,4 @@ html[dir="rtl"] .rt_dw-badge { right: auto; left: -10px; }
 html[dir="rtl"] .rt_bar-m { margin-right: 0; margin-left: auto; }
 html[dir="rtl"] .rt_page .rt_bar [data-rt-cta="bar"] { margin-left: 0; }
 @media (max-width: 767px) { html[dir="rtl"] .rt_dw-badge { left: -6px; } html[dir="rtl"] .rt_page .rt_bar-inner:has(.rt_bar-m) .rt_lang { margin-left: 0; margin-right: auto; } }
+html[dir="rtl"] .rt_dw-badge, html[dir="rtl"] .rt_sticker { direction: ltr; unicode-bidi: isolate; }
