@@ -758,6 +758,26 @@
     if (on) { b.__txt = b.value || b.textContent; b.disabled = true; if (b.tagName === 'INPUT') b.value = T.sending; else b.textContent = T.sending; }
     else { b.disabled = false; if (b.__txt) { if (b.tagName === 'INPUT') b.value = b.__txt; else b.textContent = b.__txt; } }
   }
+  // Копія заявки в Webflow Forms (журнал «rt26-form-time» у Dashboard → Forms), як це робив би webflow.js:
+  // POST https://formdata.webflow.com/api/v1/form/<site> з name/pageId/elementId/fields[…] (разом із cf-turnstile-response з форми).
+  // Лід у CRM усе одно відправляє index.js; копія — паралельно, keepalive, щоб не обірвалась переходом на go-to.
+  // Не надсилається в тестових режимах ?_t2 / ?_t422 і якщо CFG.wfCopy === false.
+  function wfCopy(form) {
+    if (CFG.wfCopy === false || params.has('_t2') || params.has('_t422')) return;
+    try {
+      var site = html.getAttribute('data-wf-site'); if (!site) return;
+      var q = new URLSearchParams();
+      q.append('name', form.getAttribute('data-name') || form.getAttribute('name') || 'rt26-form-time');
+      q.append('pageId', form.getAttribute('data-wf-page-id') || html.getAttribute('data-wf-page') || '');
+      q.append('elementId', form.getAttribute('data-wf-element-id') || '');
+      var dom = html.getAttribute('data-wf-domain'); if (dom) q.append('domain', dom);
+      q.append('source', location.href); q.append('test', 'false'); q.append('dolphin', 'false');
+      new FormData(form).forEach(function (v, k) { if (typeof v === 'string') q.append('fields[' + k + ']', v); });
+      fetch('https://formdata.webflow.com/api/v1/form/' + site, { method: 'POST', body: q, keepalive: true, credentials: 'omit' })
+        .then(function (r) { return r.json().catch(function () { return null; }).then(function (b) { log('wf copy', r.status, b); track('rt_wf_copy', { ok: !!(r.ok && b && b.code === 200), status: r.status }); }); })
+        .catch(function (err) { log('wf copy fail', err); track('rt_wf_copy', { ok: false, status: 0 }); });
+    } catch (err) { log('wf copy error', err); }
+  }
   function onSubmit(e) {
     var form = e.currentTarget, o = formObj(form);
     e.preventDefault(); e.stopImmediatePropagation();        // нативний сабміт Webflow не потрібен: заявку відправляє index.js
@@ -768,6 +788,7 @@
     fillHidden(form);
     var tel = field(form, 'phone'), shown = tel ? tel.value : '';
     if (tel) tel.value = phoneE164(tel);
+    wfCopy(form);
     var handler = form.onsubmit;
     setSending(o, true);
     pending = { o: o, timer: setTimeout(function () { onFail(); }, CFG.submitTimeoutMs || 15000) };
@@ -1183,7 +1204,7 @@
   }
 
   window.RT26 = {
-    version: '1.8.3', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.8.4', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
