@@ -180,13 +180,16 @@
   var PRICES_SRC = 'static';
   function loadLivePlans() {
     // ринки без зони в xlsx (RS, BG, HR, DE…): валюта з CFG.marketCurrency, ціни лише з API (без запасу — блок цін схований)
-    var cur = (CFG.marketCurrency || {})[MARKET] || (ZONE && (CFG.zoneCurrency || {})[ZONE]);
+    // en/ru (CFG.marketByIp) без utm_market: країну й валюту визначає API за IP відвідувача, як у кабінеті
+    var byIp = !!CFG.marketByIp && !params.get('utm_market');
+    var cur = byIp ? '*' : (CFG.marketCurrency || {})[MARKET] || (ZONE && (CFG.zoneCurrency || {})[ZONE]);
     if (!cur || !CFG.plansApi || !window.fetch || params.get('prices') === 'static') return;
     var key = 'rt26_pp2_' + [MARKET || '-', cur, LOCALE].join('_'), done = false;
     function apply(f, sub, src) {
       if (done) return; done = true;
+      if (cur === '*') cur = (f._cur || '').toUpperCase() || 'USD';
       var fm = (CFG.currencyFmt || {})[cur];
-      PLAN = { cur: fm ? fm[0] : PLAN ? PLAN.cur : cur, curBefore: fm ? !!fm[1] : !!(PLAN && PLAN.curBefore), f: f };
+      PLAN = { cur: fm ? fm[0] : f._sym || cur, curBefore: fm ? !!fm[1] : !!(PLAN && PLAN.curBefore), f: f };
       CFG.planSubTypes = Object.assign({}, CFG.planSubTypes || {}, sub);
       PRICES_SRC = src; html.setAttribute('data-rt-prices', src);
       renderPrices(); log('prices', src, PLAN);
@@ -200,8 +203,8 @@
     html.setAttribute('data-rt-prices', 'loading');
     setTimeout(function () { fallback('timeout'); }, CFG.plansApiTimeoutMs || 5000);
     function get(qpw) {
-      var q = { currency: cur, locale: LOCALE, tutor_type_alias: 'standard', qty_per_week: qpw };
-      if (MARKET) q.country_code = MARKET;
+      var q = { locale: LOCALE, tutor_type_alias: 'standard', qty_per_week: qpw };
+      if (!byIp) { q.currency = cur; if (MARKET) q.country_code = MARKET; }
       var u = CFG.plansApi + '?' + Object.keys(q).map(function (k) { return 'filter%5B' + k + '%5D=' + encodeURIComponent(q[k]); }).join('&');
       return fetch(u, { credentials: 'omit' }).then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); });
     }
@@ -213,7 +216,10 @@
         var row = { m: terms.map(function () { return null; }), i: terms.slice(1).map(function () { return null; }) };
         (d.data || []).forEach(function (p) {
           var a = p.attributes || {}, ix = terms.indexOf(+a['period-amount']);
-          if (!/^months?$/.test(a['period-unit'] || '') || ix < 0 || a['is-show'] === false || !a['price-curr-parts'] || a['price-curr-parts'].currency !== cur) return;
+          if (!/^months?$/.test(a['period-unit'] || '') || ix < 0 || a['is-show'] === false || !a['price-curr-parts']) return;
+          var pc = a['price-curr-parts'].currency;
+          if (cur === '*') { if (!f._cur) { f._cur = pc; f._sym = a['price-curr-parts'].currencySymbol; } if (pc !== f._cur) return; }
+          else if (pc !== cur) return;
           var pp = a['price-curr-parts'], per = pp ? +pp.priceWithDecimal : (a['price-curr'] / 100);
           if (!(per > 0)) return;
           row.m[ix] = per; sub[a['period-amount']] = a['sub-type'];
@@ -983,6 +989,8 @@
   // Відгуки як «Батьки говорять про нас» на головній: синя плашка рейтингу (T.rating) зліва + стрічка карток у темному контейнері.
   // Немає T.rating для мови — плашки немає, стрічка лишається.
   var FB_ICO = '<svg viewBox="0 0 41 41" width="40" height="40" aria-hidden="true"><path d="M17.34 39.24C8.39 37.66 1.55 29.87 1.55 20.5 1.55 10.08 10.08 1.55 20.5 1.55s18.95 8.53 18.95 18.95c0 9.37-6.84 17.16-15.79 18.74l-1.05-.84h-4.21z" fill="#fff"/><path d="M27.87 25.76l.84-5.26h-5.05v-3.68c0-1.48.52-2.64 2.84-2.64h2.42V9.34c-1.37-.21-2.84-.42-4.21-.42-4.32 0-7.37 2.63-7.37 7.37v4.21h-4.73v5.26h4.73v13.37c1.05.21 2.11.32 3.16.32s2.1-.11 3.16-.32V25.76z" fill="#027de5"/></svg>';
+  var TP_ICO = '<svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><path d="M20 3l4.9 11.9 12.8.9-9.8 8.3 3.1 12.5L20 29.8 9 36.6l3.1-12.5-9.8-8.3 12.8-.9z" fill="#00b67a"/><path d="M27.2 24.6l-.9-3.5L20 25.7z" fill="#005128"/></svg>';
+  var G_ICO = '<svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#fff"/><path d="M36.6 24.3c0-.9-.1-1.8-.2-2.6H24v4.9h7.1a6 6 0 0 1-2.6 4v3.3h4.2c2.5-2.3 3.9-5.6 3.9-9.6z" fill="#4285f4"/><path d="M24 37c3.5 0 6.5-1.2 8.7-3.2l-4.2-3.3c-1.2.8-2.7 1.3-4.5 1.3-3.4 0-6.3-2.3-7.4-5.4h-4.4V30A13 13 0 0 0 24 37z" fill="#34a853"/><path d="M16.6 26.4a7.8 7.8 0 0 1 0-4.9v-3.4h-4.4a13 13 0 0 0 0 11.7z" fill="#fbbc05"/><path d="M24 16.2c1.9 0 3.7.7 5 2l3.8-3.8A13 13 0 0 0 12.2 18.1l4.4 3.4c1.1-3 4-5.3 7.4-5.3z" fill="#ea4335"/></svg>';
   function setupReviews() {
     var slot = $('[data-rt-reviews]'); if (!slot || $('.rt_rv')) return;
     var box = doc.createElement('div'); box.className = 'rt_rv';
@@ -992,7 +1000,7 @@
       var base = (($('script[src*="rt26.js"]') || {}).src || '').replace(/rt26\.js.*$/, '');
       var b = doc.createElement('div'); b.className = 'rt_rv-badge';
       b.innerHTML = R.map(function (r) {
-        var ico = r.icon === 'facebook' ? FB_ICO : r.icon === 'otzyvua' ? '<img src="' + base + 'img/otzyvua.png" width="58" height="40" alt="" loading="lazy">' : '';
+        var ico = r.icon === 'facebook' ? FB_ICO : r.icon === 'otzyvua' ? '<img src="' + base + 'img/otzyvua.png" width="58" height="40" alt="" loading="lazy">' : r.icon === 'trustpilot' ? TP_ICO : r.icon === 'google' ? G_ICO : '';
         return '<div class="rt_rv-stat"><div class="rt_rv-num">' + ico + '<span>' + esc(r.value) + '</span></div><span class="rt_rv-src">' + esc(r.label) + '</span></div>';
       }).join('');
       box.appendChild(b);
@@ -1097,8 +1105,28 @@
     });
   }
 
+  // Абзаци з вкладеними живими значеннями (ціни, відповідь, пакет, посилання) у мовних копіях перекладаються шаблонами T.tpl,
+  // бо Webflow не дає змінити окремі String-вузли, а заміна тексту батька стирає вкладені <strong data-rt-…>.
+  // Токени: {inst12} {m1} {m12} → <strong data-rt-price>, {freqn}, {answer}, {pkg}; [[текст]] → посилання (href з наявного <a> в абзаці).
+  // uk без T.tpl — тексти з Webflow як є.
+  function applyTpl() {
+    var P = T.tpl || {};
+    var TOK = { inst12: '<strong data-rt-price="inst12"></strong>', m1: '<strong data-rt-price="m1"></strong>', m12: '<strong data-rt-price="m12"></strong>',
+      freqn: '<strong data-rt-freqn></strong>', answer: '<strong data-rt-answer-label>—</strong>', pkg: '<strong data-rt-pkg-label></strong>' };
+    function fill(el, t) {
+      var a = el.querySelector('a'), href = a ? a.getAttribute('href') : '#';
+      el.innerHTML = esc(t).replace(/\{(\w+)\}/g, function (m, k) { return TOK[k] || m; })
+        .replace(/\[\[(.+?)\]\]/g, function (m, x) { return '<a href="' + esc(href) + '" target="_blank" rel="noopener"' + (a && a.className ? ' class="' + esc(a.className) + '"' : '') + '>' + x + '</a>'; });
+    }
+    if (P.arg) $$('.rt_arg .rt_text').forEach(function (el) { if (el.querySelector('[data-rt-price]')) fill(el, P.arg); });
+    if (P.answer) $$('.rt_answer-text').forEach(function (el) { fill(el, P.answer); });
+    if (P.pkg) $$('.rt_repeat-pkg').forEach(function (el) { fill(el, P.pkg); });
+    if (P.legal) $$('form .rt_legal').forEach(function (el) { fill(el, P.legal); });
+  }
+
   function start() {
     html.lang = LOCALE;
+    applyTpl();
     anchorsToButtons();
     if ((CFG.rtl || []).indexOf(LOCALE) > -1) html.dir = 'rtl';
     syncVariant();
@@ -1131,7 +1159,7 @@
   }
 
   window.RT26 = {
-    version: '1.7.1', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.8.0', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
