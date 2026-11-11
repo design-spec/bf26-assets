@@ -179,12 +179,14 @@
   // ?prices=static — лише xlsx. PRICES_SRC: static | api | cache → html[data-rt-prices] і поле price_source у подіях цін.
   var PRICES_SRC = 'static';
   function loadLivePlans() {
-    var cur = ZONE && (CFG.zoneCurrency || {})[ZONE];
+    // ринки без зони в xlsx (RS, BG, HR, DE…): валюта з CFG.marketCurrency, ціни лише з API (без запасу — блок цін схований)
+    var cur = (CFG.marketCurrency || {})[MARKET] || (ZONE && (CFG.zoneCurrency || {})[ZONE]);
     if (!cur || !CFG.plansApi || !window.fetch || params.get('prices') === 'static') return;
     var key = 'rt26_pp2_' + [MARKET || '-', cur, LOCALE].join('_'), done = false;
     function apply(f, sub, src) {
       if (done) return; done = true;
-      PLAN = { cur: PLAN ? PLAN.cur : cur, curBefore: !!(PLAN && PLAN.curBefore), f: f };
+      var fm = (CFG.currencyFmt || {})[cur];
+      PLAN = { cur: fm ? fm[0] : PLAN ? PLAN.cur : cur, curBefore: fm ? !!fm[1] : !!(PLAN && PLAN.curBefore), f: f };
       CFG.planSubTypes = Object.assign({}, CFG.planSubTypes || {}, sub);
       PRICES_SRC = src; html.setAttribute('data-rt-prices', src);
       renderPrices(); log('prices', src, PLAN);
@@ -211,7 +213,7 @@
         var row = { m: terms.map(function () { return null; }), i: terms.slice(1).map(function () { return null; }) };
         (d.data || []).forEach(function (p) {
           var a = p.attributes || {}, ix = terms.indexOf(+a['period-amount']);
-          if (!/^months?$/.test(a['period-unit'] || '') || ix < 0 || a['is-show'] === false || a.currency !== cur) return;
+          if (!/^months?$/.test(a['period-unit'] || '') || ix < 0 || a['is-show'] === false || !a['price-curr-parts'] || a['price-curr-parts'].currency !== cur) return;
           var pp = a['price-curr-parts'], per = pp ? +pp.priceWithDecimal : (a['price-curr'] / 100);
           if (!(per > 0)) return;
           row.m[ix] = per; sub[a['period-amount']] = a['sub-type'];
@@ -1129,7 +1131,7 @@
   }
 
   window.RT26 = {
-    version: '1.7.0', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.7.1', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
