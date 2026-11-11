@@ -665,3 +665,23 @@ html[data-rt-prices="loading"] [data-rt-packages], html[data-rt-prices="loading"
   .rt_argfreq .rt_seg-opt { min-height: 44px; }
   .rt_clarify.is-freq { display: none !important; }
 }
+
+/* v1.8.2 RTL (he): дзеркалимо позиційовані елементи; flex/grid розвертаються самі */
+html[dir="rtl"] .rt_page .rt_facts li { padding-left: 0; padding-right: 32px; }
+html[dir="rtl"] .rt_page .rt_facts li::before { left: auto; right: 0; }
+html[dir="rtl"] .rt_dw-facts li { padding-left: 0; padding-right: 28px; }
+html[dir="rtl"] .rt_dw-facts li::before { left: auto; right: 0; }
+html[dir="rtl"] .rt_benefit::before { left: auto; right: 16px; }
+html[dir="rtl"] .rt_stepitem::before { left: auto; right: 0; }
+html[dir="rtl"] .rt_pkg, html[dir="rtl"] .rt_dw, html[dir="rtl"] .rt_modal-box { text-align: right; }
+html[dir="rtl"] .rt_modal-x { right: auto; left: 10px; }
+html[dir="rtl"] .rt_lang-menu { right: auto; left: 0; }
+html[dir="rtl"] .rt_opt[aria-pressed="true"]::after { margin-left: 0; margin-right: auto; }
+html[dir="rtl"] .rt_back-ico { transform: rotate(-135deg); margin-left: 0; margin-right: 2px; }
+html[dir="rtl"] .rt_seg-thumb { left: auto; right: 5px; }
+html[dir="rtl"] .rt_seg[data-on="3"] .rt_seg-thumb { translate: -100% 0; }
+html[dir="rtl"][data-rt-theme="main"] .rt_pkg-tag { right: auto; left: 20px; }
+html[dir="rtl"] .rt_dw-badge { right: auto; left: -10px; }
+html[dir="rtl"] .rt_bar-m { margin-right: 0; margin-left: auto; }
+html[dir="rtl"] .rt_page .rt_bar [data-rt-cta="bar"] { margin-left: 0; }
+@media (max-width: 767px) { html[dir="rtl"] .rt_dw-badge { left: -6px; } html[dir="rtl"] .rt_page .rt_bar-inner:has(.rt_bar-m) .rt_lang { margin-left: 0; margin-right: auto; } }

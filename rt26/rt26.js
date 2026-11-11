@@ -1014,6 +1014,8 @@
   var G_ICO = '<svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#fff"/><path d="M36.6 24.3c0-.9-.1-1.8-.2-2.6H24v4.9h7.1a6 6 0 0 1-2.6 4v3.3h4.2c2.5-2.3 3.9-5.6 3.9-9.6z" fill="#4285f4"/><path d="M24 37c3.5 0 6.5-1.2 8.7-3.2l-4.2-3.3c-1.2.8-2.7 1.3-4.5 1.3-3.4 0-6.3-2.3-7.4-5.4h-4.4V30A13 13 0 0 0 24 37z" fill="#34a853"/><path d="M16.6 26.4a7.8 7.8 0 0 1 0-4.9v-3.4h-4.4a13 13 0 0 0 0 11.7z" fill="#fbbc05"/><path d="M24 16.2c1.9 0 3.7.7 5 2l3.8-3.8A13 13 0 0 0 12.2 18.1l4.4 3.4c1.1-3 4-5.3 7.4-5.3z" fill="#ea4335"/></svg>';
   function setupReviews() {
     var slot = $('[data-rt-reviews]'); if (!slot || $('.rt_rv')) return;
+    // мовні копії: якщо для мови немає жодного відгуку в CMS — секцію відгуків ховаємо повністю
+    if (!$('.w-dyn-item', slot)) { var sec = slot.closest('section') || $('#rt-reviews'); if (sec) sec.style.display = 'none'; return; }
     var box = doc.createElement('div'); box.className = 'rt_rv';
     slot.parentNode.insertBefore(box, slot);
     var R = T.rating || [];
@@ -1181,7 +1183,7 @@
   }
 
   window.RT26 = {
-    version: '1.8.1', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
+    version: '1.8.2', state: function () { return { Q: Q, S: S, market: MARKET, zone: ZONE, eu: EU }; }, track: track,
     reset: function () { Object.keys(K).forEach(function (k) { store.del(K[k]); }); location.reload(); }
   };
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
