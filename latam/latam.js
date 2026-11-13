@@ -59,7 +59,7 @@ function setLinks(){
   $$('[data-go]').forEach(function(a){
     var age=a.getAttribute('data-age');
     a.setAttribute('href', age? u+'&child_age='+age : u); a.setAttribute('target','_blank'); a.setAttribute('rel','noopener');
-    a.addEventListener('click',function(){ track('lp_cta',{place:a.getAttribute('data-go'),child_age:age?+age:null}); });
+    if(!a.__bl){ a.__bl=1; a.addEventListener('click',function(){ track('lp_cta',{place:a.getAttribute('data-go'),child_age:age?+age:null}); }); }
   });
 }
 
@@ -138,7 +138,7 @@ function loadPrices(){
     });
     if(!np[2]||!np[3]) throw new Error('no plans');
     done=true; P=np; if(!params.get('disc')) S.disc=P[3].disc3||0; S.src='api';
-    render(); tapes(); track('lp_prices',{source:'api',disc3:S.disc});
+    render(); tapes(); howDeck(); setLinks(); track('lp_prices',{source:'api',disc3:S.disc});
   }).catch(function(e){ if(!done){ done=true; track('lp_prices',{source:'static',reason:String(e&&e.message||e).slice(0,60)}); } });
 }
 
@@ -181,6 +181,7 @@ function reveal(){
   if(reduce||!('IntersectionObserver' in window)) return;
   html.classList.add('bl-js');
   var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('is-in'); io.unobserve(e.target); } }); },{rootMargin:'0px 0px -10% 0px'});
+  els=els.filter(function(el){ return !el.classList.contains('bl-steps')&&!el.classList.contains('bl-deck'); });
   els.forEach(function(el,i){ el.classList.add('bl-rv'); el.style.setProperty('--bl-rd',(i%3)*0.08+'s'); io.observe(el); });
 }
 function fx(){
@@ -204,12 +205,8 @@ function illus(){
   var wc=$$('.bl-why-c'); [[IMG.ind,'Clase individual online con la profesora'],[IMG.mat,'Materiales según los intereses del niño'],[IMG.cls,'Clase en la plataforma de All Right',1],[IMG.kids,'Niños de distintos países']].forEach(function(x,k){ if(wc[k]) wc[k].insertBefore(ill(x[0],x[1],x[2]),wc[k].firstChild); });
   var g=document.querySelector('.bl-g28'); if(g){ var w=document.createElement('div'); w.className='bl-guar-ill'; var i=new Image(); i.src=IMG.fox; i.alt='Garantía de devolución: el zorrito de All Right con una moneda'; i.loading='lazy'; g.parentNode.insertBefore(w,g); w.appendChild(i); w.appendChild(g); }
   var fin=document.querySelector('.bl-final-in'); if(fin){ var c=new Image(); c.src=IMG.cta; c.alt='Niño en una clase de inglés online de All Right'; c.className='bl-final-img'; c.loading='lazy'; fin.insertBefore(c,fin.firstChild); }
-  var AV={'Oswaldo Medina':'6ae39092e77bcd9287524b92_user-id-61.jpeg','Carolina Marconi':'6ae39092e77bcd9287524b9e_user-id-64.jpeg','Leti Heras':'6ad269fd3b7a54d909c99960_user-id-63.jpeg'};
-  $$('.bl-who').forEach(function(w){ var t=w.querySelector('.bl-who-t'), a=w.querySelector('.bl-ava'); if(!t||!a) return; var n=(t.firstChild&&t.firstChild.textContent||'').trim(); if(AV[n]){ a.innerHTML='<img src="'+A2+AV[n]+'" alt="'+n+'" loading="lazy">'; a.classList.add('has-img'); } });
-  var rv=document.querySelector('.bl-revs .bl-wrap'), h=rv&&rv.querySelector('.bl-h2');
-  if(h){ var r=document.createElement('div'); r.className='bl-rating';
-    r.innerHTML='<div><div class="bl-rate-n">4.7</div><div class="bl-rate-l">valoración en Trustpilot</div></div><div><div class="bl-rate-n">100%</div><div class="bl-rate-l">lo recomiendan en Facebook</div></div><div><div class="bl-rate-n">800+</div><div class="bl-rate-l">profesores certificados de 67 países</div></div>';
-    h.parentNode.insertBefore(r,h.nextSibling);
+  var rv=document.querySelector('.bl-revs .bl-wrap');
+  if(rv){
     var AW=[['6ad1d6f4fffe6a658429a957_deloitte.DapqUt8R.png','Technology Fast 500 — 2022'],['6ad1d71c1da9794f69ef6018_forbes.Bq2Plsz6.png','Top 30 mejores startups'],['6ad1d71d1da9794f69ef601e_holoniq.BtBALW6d.png','Top 200 startups EdTech de Europa'],['6ad1d7732530eafa97c495b6_tracxn.D1Lc_o5g.png','Startup tecnológica líder'],['6ad1d7732530eafa97c495e0_edtechx.BV_dA2_H.png','Finalista en la categoría de aprendizaje de idiomas'],['6ad1d7742530eafa97c49607_digital_education_awards.CyoId8iL.png','Producto digital del año para aprender idiomas'],['6ad1d71c1da9794f69ef601b_edtech.BygLEFFc.png','Finalista de los EdTech Awards Cool Tool 2025'],['6ad1d71c1da9794f69ef6014_qs_reimagine_education.DRtPb4KD.png','QS Reimagine Education Awards — finalista 2025']];
     var items=AW.map(function(x){ return '<div class="bl-award"><img src="'+A2+x[0]+'" alt="'+x[1]+'" loading="lazy"><div class="bl-award-cap">'+x[1]+'</div></div>'; }).join('');
     var aw=document.createElement('div'); aw.className='bl-awards';
@@ -217,6 +214,89 @@ function illus(){
     rv.appendChild(aw);
   }
 }
-render(); setLinks(); tapes(); illus(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx();
+/* «Cómo funciona» як «Як працює резервування» у BF26: колода з трьох карток, роздаються при появі */
+function howDeck(){
+  var steps=document.querySelector('.bl-steps'); if(!steps) return;
+  var sec=steps.closest('section'); if(sec) sec.classList.add('bl-how');
+  var on=discOn(), d3t, star=null;
+  if(S.ended) d3t='Elige tu plan y págalo en tu área personal.';
+  else if(VARIANT==='A'){ d3t='Pago del plan anual con −60% hasta el 30 de noviembre.'; star='−60%'; }
+  else if(on){ d3t='Pago del plan de 3 meses con descuento hasta el 30 de noviembre.'; star='−'+Math.round(S.disc)+'%'; }
+  else d3t='Pago de 3 meses, sin pagar un año por adelantado.';
+  var cards=[
+    ['is-orange','Paso 1','Unas preguntas y tus datos.',IMG.quiz,'','Empezar ↗','go'],
+    ['is-violet','Paso 2','Clase de prueba gratuita a la hora que te convenga.',IMG.lesson,'','Elegir edad ↗','age'],
+    ['is-accent','Paso 3',d3t,IMG.trophy,' is-sm','Reservar ↗','go']
+  ];
+  var deck=document.createElement('div'); deck.className='bl-deck';
+  cards.forEach(function(c,k){
+    var el=document.createElement('div'); el.className='bl-deal '+c[0];
+    el.innerHTML=(k===2&&star?'<div class="bl-sticker" aria-hidden="true"><span></span></div>':'')+'<div class="bl-deal-tag"></div><div class="bl-deal-title"></div><div class="bl-deal-media"><img class="bl-deal-img'+c[4]+'" alt="" loading="lazy"></div><a class="bl-deal-link" href="#"></a>';
+    if(k===2&&star) el.querySelector('.bl-sticker span').textContent=star;
+    el.querySelector('.bl-deal-tag').textContent=c[1]; el.querySelector('.bl-deal-title').textContent=c[2];
+    el.querySelector('img').src=c[3]; var a=el.querySelector('.bl-deal-link'); a.textContent=c[5];
+    if(c[6]==='go'){ a.setAttribute('data-go','how'); }
+    else a.addEventListener('click',function(e){ e.preventDefault(); var t=document.querySelector('.bl-ages'); if(t){ scrollTo({top:t.getBoundingClientRect().top+scrollY-140,behavior:reduce?'auto':'smooth'}); } track('lp_cta',{place:'how-age'}); });
+    deck.appendChild(el);
+  });
+  steps.style.display='none';
+  var old=sec&&sec.querySelector('.bl-deck'); if(old) old.remove();
+  steps.parentNode.insertBefore(deck,steps.nextSibling);
+  if(reduce||!('IntersectionObserver' in window)){ deck.classList.add('is-in'); return; }
+  html.classList.add('bl-js');
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ deck.classList.add('is-in'); io.disconnect(); } }); },{threshold:0.2});
+  io.observe(deck);
+}
+/* Відгуки як на /uk/back (RT26 setupReviews): CMS-список «BF26 Reviews» (locale=es) у [data-bl-reviews];
+   немає жодного запису для мови — секцію ховаємо; плашка рейтингу (дані як у RT26 es) + стрічка Embla Carousel */
+var RATING=[{icon:'facebook',value:'100%',label:'Facebook'},{icon:'trustpilot',value:'4.7',label:'Trustpilot'}];
+var FB_ICO='<svg viewBox="0 0 41 41" width="40" height="40" aria-hidden="true"><path d="M17.34 39.24C8.39 37.66 1.55 29.87 1.55 20.5 1.55 10.08 10.08 1.55 20.5 1.55s18.95 8.53 18.95 18.95c0 9.37-6.84 17.16-15.79 18.74l-1.05-.84h-4.21z" fill="#fff"/><path d="M27.87 25.76l.84-5.26h-5.05v-3.68c0-1.48.52-2.64 2.84-2.64h2.42V9.34c-1.37-.21-2.84-.42-4.21-.42-4.32 0-7.37 2.63-7.37 7.37v4.21h-4.73v5.26h4.73v13.37c1.05.21 2.11.32 3.16.32s2.1-.11 3.16-.32V25.76z" fill="#027de5"/></svg>';
+var TP_ICO='<svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><path d="M20 3l4.9 11.9 12.8.9-9.8 8.3 3.1 12.5L20 29.8 9 36.6l3.1-12.5-9.8-8.3 12.8-.9z" fill="#00b67a"/><path d="M27.2 24.6l-.9-3.5L20 25.7z" fill="#005128"/></svg>';
+function setupReviews(){
+  var slot=document.querySelector('[data-bl-reviews]'); if(!slot||document.querySelector('.bl-rvbox')) return;
+  var sec=slot.closest('section');
+  if(!slot.querySelector('.w-dyn-item')){ if(sec) sec.style.display='none'; return; }
+  var box=document.createElement('div'); box.className='bl-rvbox';
+  slot.parentNode.insertBefore(box,slot);
+  var b=document.createElement('div'); b.className='bl-rv-badge';
+  b.innerHTML=RATING.map(function(r){ return '<div class="bl-rv-stat"><div class="bl-rv-num">'+(r.icon==='facebook'?FB_ICO:TP_ICO)+'<span>'+r.value+'</span></div><span class="bl-rv-src">'+r.label+'</span></div>'; }).join('');
+  box.appendChild(b); box.appendChild(slot);
+  var vp=slot.querySelector('.w-dyn-list'); if(!vp) return;
+  function init(){
+    if(!window.EmblaCarousel||box.classList.contains('is-embla')) return;
+    box.classList.add('is-embla');
+    var pl=window.EmblaCarouselWheelGestures?[window.EmblaCarouselWheelGestures()]:[];
+    try{ window.EmblaCarousel(vp,{align:'start',containScroll:'trimSnaps',dragFree:false,duration:30},pl); }catch(e){ box.classList.remove('is-embla'); }
+  }
+  function ld(src,cb){ var sc=document.createElement('script'); sc.src=src; sc.async=true; sc.onload=sc.onerror=cb; document.head.appendChild(sc); }
+  var CDN='https://cdn.jsdelivr.net/npm/';
+  ld(CDN+'embla-carousel@8.5.2/embla-carousel.umd.js',function(){ ld(CDN+'embla-carousel-wheel-gestures@8.0.2/dist/embla-carousel-wheel-gestures.umd.js',init); });
+}
+/* Футер як на /uk/back (RT26 setupFooter): лого + контакти (es), умови з підсвіткою ключових фраз, юр. посилання, © */
+function setupFooter(){
+  var fi=document.querySelector('.bl-foot-in'); if(!fi||fi.querySelector('[data-bl-ft]')) return;
+  var top=document.createElement('div'); top.setAttribute('data-bl-ft','top');
+  top.innerHTML='<div data-bl-ft="brand"><a aria-label="All Right" data-bl-logo href="https://allright.com/es" target="_blank" rel="noopener"></a><div data-bl-contacts="es"><a href="mailto:help@allright.com">help@allright.com</a><p data-bl-ft="hours">8:00 – 21:00</p><a href="https://wa.me/34672585377" target="_blank" rel="noopener">WhatsApp</a><a href="https://m.me/allrightES" target="_blank" rel="noopener">Messenger</a><a href="https://www.instagram.com/allright_spain/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/allrightES" target="_blank" rel="noopener">Facebook</a><a href="https://www.youtube.com/@allright_com" target="_blank" rel="noopener">YouTube</a></div></div><div data-bl-ft="main"></div>';
+  var main=top.querySelector('[data-bl-ft="main"]');
+  $$('.bl-foot-p',fi).forEach(function(p){ p.classList.add('bl-terms'); main.appendChild(p); });
+  var legal=document.createElement('div'); legal.className='bl-legal';
+  [['https://allright.com/legal/privacy-policy.html','Política de privacidad'],['https://allright.com/legal/cookie-policy.html','Política de cookies'],['https://allright.com/legal/terms-of-services-allright/es.pdf','Condiciones de uso de All Right'],['https://allright.com/legal/service-rules-and-code-of-conduct/es.pdf','Normas del servicio'],['https://allright.com/legal/payment-and-refund-policy/es.pdf','Pagos y reembolsos']].forEach(function(l){ var a=document.createElement('a'); a.className='bl-flink'; a.href=l[0]; a.target='_blank'; a.rel='noopener'; a.textContent=l[1]; legal.appendChild(a); });
+  var cp=document.createElement('p'); cp.className='bl-copy'; cp.textContent='© All Right';
+  fi.insertBefore(top,fi.firstChild); fi.appendChild(legal); fi.appendChild(cp);
+  // підсвітка ключових фраз умов (як termsHl у RT26)
+  var HL=['El descuento de Black Friday','primer pago','30 de noviembre de 2026 a las 23:59','ahorro mínimo','Precios según la página de precios'], i=0;
+  $$('.bl-terms',main).forEach(function(p){ HL.forEach(function(ph){
+    var w=document.createTreeWalker(p,NodeFilter.SHOW_TEXT,null), n;
+    while((n=w.nextNode())){ if(n.parentNode.classList&&n.parentNode.classList.contains('bl-hl')) continue;
+      var k=n.nodeValue.indexOf(ph); if(k<0) continue;
+      var mid=n.splitText(k); mid.splitText(ph.length); var sp=document.createElement('span'); sp.className='bl-hl'; sp.style.setProperty('--bl-i',i++);
+      mid.parentNode.replaceChild(sp,mid); sp.appendChild(mid); break; }
+  }); });
+  if(!window.IntersectionObserver||reduce){ main.classList.add('is-in'); return; }
+  html.classList.add('bl-js'); main.classList.add('bl-hl-ready');
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ main.classList.add('is-in'); io.disconnect(); } }); },{threshold:0.35});
+  io.observe(main);
+}
+setupReviews(); setupFooter(); render(); howDeck(); setLinks(); tapes(); illus(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx();
 track('lp_view',{});
 })();
