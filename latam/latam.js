@@ -84,16 +84,27 @@ function flipTo(el,str){
     clearTimeout(c._t); c._t=setTimeout(function(){ part('bottom').textContent=nv; c.classList.remove('is-flipping'); },620);
   });
 }
-/* шапка як у BF26: між логотипом і кнопкою — коротка акція + flip-таймер (перебудовується після render) */
+/* шапка як на /uk/back (RT26): лого · фіолетова плашка з акцією + рядок з датою · кнопка; на мобільному — два рядки без лого */
 function headerMid(){
-  var hi=document.querySelector('.bl-hdr-in'), cta=hi&&hi.querySelector('.bl-btn-sm'); if(!hi||!cta) return;
-  var old=hi.querySelector('.bl-hdr-mid'); if(old) old.remove();
-  if(S.ended) return;
-  var m=document.createElement('div'), on=discOn(); m.className='bl-hdr-mid';
-  var txt= VARIANT==='A' ? 'Black Friday: <span class="bl-badge">−60%</span>' : (on ? 'Black Friday: <span class="bl-badge">−'+Math.round(S.disc)+'%</span>' : 'Plan de 3 meses');
-  m.innerHTML='<span class="bl-hdr-txt">'+txt+'</span>';
-  hi.insertBefore(m,cta);
+  var hi=document.querySelector('.bl-hdr-in'), logo=hi&&hi.querySelector('.bl-logo'); if(!hi||!logo) return;
+  var old=hi.querySelector('.bl-hdr-m'); if(old) old.remove();
+  var on=discOn(), l1, l2;
+  if(S.ended){ l1='Black Friday terminó'; l2='La clase de prueba sigue siendo gratuita'; }
+  else if(VARIANT==='A'){ l1='Black Friday: −60% en el plan anual'; l2='válido hasta el '+dl(false); }
+  else if(on){ l1='Black Friday: −'+Math.round(S.disc)+'% en el plan de 3 meses'; l2='válido hasta el '+dl(false); }
+  else { l1='Inglés para niños: plan de 3 meses'; l2='sin pagar un año por adelantado'; }
+  var m=document.createElement('div'); m.className='bl-hdr-m';
+  m.innerHTML='<span class="bl-hdr-m1"></span><span class="bl-hdr-m2"></span>';
+  m.firstChild.textContent=l1; m.lastChild.textContent=l2;
+  logo.parentNode.insertBefore(m,logo.nextSibling);
 }
+/* кнопка в шапці: на вузьких екранах — коротко */
+(function(){
+  var b=document.querySelector('.bl-btn-sm'); if(!b||!window.matchMedia) return;
+  var full=b.textContent.trim(), mq=matchMedia('(max-width: 479px)');
+  function set(){ b.textContent= mq.matches ? 'Reservar' : full; }
+  set(); if(mq.addEventListener) mq.addEventListener('change',set); else if(mq.addListener) mq.addListener(set);
+})();
 function tick(){
   var left=Math.max(0,DEADLINE-Date.now());
   var v={d:Math.floor(left/864e5),h:Math.floor(left/36e5)%24,m:Math.floor(left/6e4)%60,s:Math.floor(left/1e3)%60};
