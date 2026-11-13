@@ -181,7 +181,7 @@ function reveal(){
   if(reduce||!('IntersectionObserver' in window)) return;
   html.classList.add('bl-js');
   var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('is-in'); io.unobserve(e.target); } }); },{rootMargin:'0px 0px -10% 0px'});
-  els=els.filter(function(el){ return !el.classList.contains('bl-steps')&&!el.classList.contains('bl-deck'); });
+  els=els.filter(function(el){ return !el.classList.contains('bl-steps')&&!el.classList.contains('bl-deck')&&!el.classList.contains('bl-why'); });
   els.forEach(function(el,i){ el.classList.add('bl-rv'); el.style.setProperty('--bl-rd',(i%3)*0.08+'s'); io.observe(el); });
 }
 function fx(){
@@ -297,6 +297,32 @@ function setupFooter(){
   var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ main.classList.add('is-in'); io.disconnect(); } }); },{threshold:0.35});
   io.observe(main);
 }
-setupReviews(); setupFooter(); render(); howDeck(); setLinks(); tapes(); illus(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx();
+/* «Por qué» як «Що входить у навчання» у BF26: картки-стопка (зображення + текст), попередні зменшуються (initStack) */
+function whyStack(){
+  var why=document.querySelector('.bl-why'); if(!why||why.classList.contains('is-stack')) return;
+  var sec=why.closest('section'); if(sec) sec.classList.add('bl-offer');
+  $$('.bl-why-c',why).forEach(function(c){
+    var body=document.createElement('div'); body.className='bl-feat-body';
+    [].slice.call(c.children).forEach(function(ch){ if(!ch.classList.contains('bl-ill')) body.appendChild(ch); });
+    c.appendChild(body);
+  });
+  why.classList.add('is-stack');
+  var cards=$$('.bl-why-c',why); if(cards.length<2||reduce) return;
+  var BASE=0.85, STEP=0.03, busy=false;
+  function update(){
+    busy=false;
+    cards.forEach(function(c,i){
+      var next=cards[i+1]; if(!next){ c.style.transform=''; return; }
+      var stick=parseFloat(getComputedStyle(next).top)||0, h=c.offsetHeight||1;
+      var p=Math.min(1,Math.max(0,1-(next.getBoundingClientRect().top-stick)/h)), target=BASE+i*STEP;
+      for(var j=i+2;j<cards.length;j++){ var n=cards[j], st=parseFloat(getComputedStyle(n).top)||0; p+=Math.min(1,Math.max(0,1-(n.getBoundingClientRect().top-st)/(n.offsetHeight||1)))*0.35; }
+      c.style.transform='scale('+Math.max(target-0.05,1-Math.min(p,1.35)*(1-target)).toFixed(4)+')';
+    });
+  }
+  addEventListener('scroll',function(){ if(!busy){ busy=true; requestAnimationFrame(update); } },{passive:true});
+  addEventListener('resize',update,{passive:true});
+  update();
+}
+setupReviews(); setupFooter(); render(); howDeck(); setLinks(); tapes(); illus(); whyStack(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx();
 track('lp_view',{});
 })();

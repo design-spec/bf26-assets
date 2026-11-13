@@ -329,3 +329,24 @@ html.bl-js [data-bl-ft="main"].bl-hl-ready:not(.is-in) .bl-terms { filter: blur(
 
 .bl-foot .bl-foot-in{padding-top:0;padding-bottom:0}
 .bl-foot .bl-foot-nav{display:none}
+/* ===== «Por qué los padres eligen» як «Що входить у навчання…» у BF26: Scroll Stack (картки липнуть одна на одну) ===== */
+.bl-offer{background:linear-gradient(#000,#2f0d68);padding-top:88px}
+.bl-offer .bl-h2{text-align:center}
+.bl-why.is-stack{display:flex!important;flex-direction:column;gap:14vh;width:80%;margin:40px auto 0;padding-bottom:4vh}
+.bl-why.is-stack .bl-why-c{position:sticky;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:center;min-height:360px;padding:0;overflow:hidden;border:0;border-radius:32px;background:#251c33;transform-origin:50% 0;will-change:transform;box-shadow:0 -12px 40px rgba(0,0,0,.4)}
+.bl-why.is-stack .bl-why-c:nth-child(1){top:16vh}.bl-why.is-stack .bl-why-c:nth-child(2){top:calc(16vh + 24px)}.bl-why.is-stack .bl-why-c:nth-child(3){top:calc(16vh + 48px)}.bl-why.is-stack .bl-why-c:nth-child(4){top:calc(16vh + 72px)}
+.bl-why.is-stack .bl-ill{margin:0;border-radius:0;aspect-ratio:auto;height:100%;min-height:360px;background:#2b2140}
+.bl-feat-body{margin:40px 48px}
+.bl-why.is-stack .bl-h3{font-size:34px;line-height:1.2}
+.bl-why.is-stack .bl-why-p{margin-top:12px!important;font-size:19px;line-height:1.5;color:rgba(254,254,254,.72)}
+@media (max-width:991px){
+  .bl-offer{padding-top:64px}
+  .bl-why.is-stack{width:100%;gap:24px}
+  .bl-why.is-stack .bl-why-c{display:flex;flex-direction:column;align-items:stretch;min-height:0;border-radius:20px}
+  .bl-why.is-stack .bl-why-c:nth-child(1){top:68px}.bl-why.is-stack .bl-why-c:nth-child(2){top:80px}.bl-why.is-stack .bl-why-c:nth-child(3){top:92px}.bl-why.is-stack .bl-why-c:nth-child(4){top:104px}
+  .bl-why.is-stack .bl-ill{aspect-ratio:16/10;height:auto;min-height:0}
+  .bl-feat-body{margin:14px 20px 22px}
+  .bl-why.is-stack .bl-h3{font-size:20px}
+  .bl-why.is-stack .bl-why-p{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){.bl-why.is-stack .bl-why-c{transition:none!important}}
