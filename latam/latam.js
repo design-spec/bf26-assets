@@ -373,7 +373,7 @@ function offerCard(){
     '<div class="bl-p12-price"><span class="bl-p12-big" data-p="heroPer"></span><span class="bl-p12-per">/ clase</span></div>'+
     '<div class="bl-p12-was"><s data-p="monthPer"></s> en el plan mensual · <b data-p="'+(A?'visShort':'saveVsMonth')+'"></b></div>'+
     '<div class="bl-p12-tot">Total <b data-p="heroTotal"></b> '+(A?'por 12 meses':'por 3 meses')+' en un solo pago, después de la clase de prueba.</div>'+
-    '<div class="bl-p12-cta"><a class="bl-btn-c" data-go="price">Reservar clase de prueba gratis</a><a class="bl-p12-sec" href="#">Elegir la edad ↑</a></div>'+
+    '<div class="bl-p12-cta"><a class="bl-btn-c" data-go="price">Reservar clase de prueba gratis</a></div>'+
     '<p class="bl-p12-fine">Renovación automática a precio completo: <span data-p="renewShort"></span>. La cancelas en tu área personal antes del cobro.</p>';
   var R=document.createElement('div'); R.className='bl-p12-r';
   R.innerHTML='<div class="bl-p12-eye">Todo el precio, sin letra pequeña</div>';
@@ -385,7 +385,6 @@ function offerCard(){
   tr.innerHTML='<span>'+ic.shield+'Reembolso garantizado 28 días</span><span>'+ic.gift+'Clase de prueba gratis</span><span>'+ic.cycle+'Cancelas en tu área personal</span>';
   cl.innerHTML=''; cl.appendChild(head); cl.appendChild(card); if(np) cl.appendChild(np); cl.appendChild(tr);
   [].slice.call(seg.querySelectorAll('[data-freq]')).forEach(function(b){ b.addEventListener('click',function(e){ e.preventDefault(); S.freq=+b.getAttribute('data-freq'); render(); track('lp_freq',{value:S.freq,place:'price'}); }); });
-  L.querySelector('.bl-p12-sec').addEventListener('click',function(e){ e.preventDefault(); var t=document.querySelector('.bl-ages'); if(t){ t.scrollIntoView({behavior:'smooth',block:'center'}); } });
 }
 
 function topH(){ var t=document.querySelector('.bl-top'); if(t) html.style.setProperty('--bl-top-h',t.offsetHeight+'px'); }
