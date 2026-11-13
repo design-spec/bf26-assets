@@ -435,3 +435,5 @@ body{overflow-x:clip}
 /* ===== «US$» біля великих цін: менший, світло-фіолетовий, угорі ===== */
 .bl-cur{display:inline-block;font-size:.46em;font-weight:800;letter-spacing:0;line-height:1;vertical-align:top;margin:.14em .08em 0 0;color:#c7b0ff;-webkit-text-fill-color:#c7b0ff}
 .bl-cur{font-size:.6em;margin-top:.08em}
+.bl-hdr{border-radius:999px}
+@media (max-width:767px){.bl-hdr-in{padding-left:24px!important}}
