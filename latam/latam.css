@@ -1,0 +1,142 @@
+/* BF26 латам A/B — стилі сторінки в темній темі BF26 (змінні _bf26-dark з проєкту kid.allright.com). Класи bl-* у Webflow — заглушки, вигляд тут. */
+html[data-v="A"] [data-s~="vb"],html[data-v="B"] [data-s~="va"],
+html[data-ended] [data-s~="pre"],html:not([data-ended]) [data-s~="post"],
+html[data-disc="0"] [data-s~="disc"],html:not([data-disc="0"]) [data-s~="nodisc"],
+html[data-zone="FAIL"] [data-s~="haspr"],html:not([data-zone="FAIL"]) [data-s~="noprice"]{display:none!important}
+html,body{background:#0f0a17}
+body{margin:0;color:#fefefe;font:16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:clip}
+.bl-h1,.bl-h2,.bl-h2-s,.bl-h2-c,.bl-h2-w,.bl-h3{font-family:Inter,system-ui,sans-serif;margin:0;text-wrap:balance;color:#fefefe}
+.bl-h1{font-size:clamp(34px,4.4vw,52px);font-weight:800;line-height:1.08}
+.bl-h2,.bl-h2-c,.bl-h2-w{font-size:clamp(28px,3.2vw,40px);font-weight:800;line-height:1.12}
+.bl-h2-c{text-align:center}
+.bl-h2-s{font-size:clamp(22px,2.6vw,30px);font-weight:800;line-height:1.15}
+.bl-h3{font-size:20px;font-weight:700;line-height:1.25}
+.bl-top p,.bl-hero p,.bl-sec p,.bl-sec-np p,.bl-revs p,.bl-final p,.bl-foot p,.bl-trust p{margin:0}
+.bl-wrap,.bl-hero-in,.bl-trust-in,.bl-hdr-in,.bl-bar-in,.bl-final-in,.bl-foot-in,.bl-guar{max-width:1440px;margin:0 auto;padding-left:max(80px,env(safe-area-inset-left,0px));padding-right:max(80px,env(safe-area-inset-right,0px));box-sizing:border-box}
+/* бар і шапка: плаваюча капсула, як у BF26 */
+.bl-top{position:sticky;top:0;z-index:30;padding:12px max(12px,env(safe-area-inset-left,0px)) 0;background:linear-gradient(#0f0a17 60%,rgba(15,10,23,0))}
+.bl-bar{max-width:1280px;margin:0 auto;background:#17111f;border:1px solid #ffffff24;border-bottom:0;border-radius:24px 24px 0 0;color:#fefefe;font-size:14px;font-weight:700}
+.bl-bar-in{padding-left:24px!important;padding-right:24px!important;display:flex;align-items:center;justify-content:center;min-height:38px;padding-top:6px;padding-bottom:4px;text-align:center}
+.bl-when{background:#9762fd;color:#fff;border-radius:6px;padding:1px 8px}
+.bl-hdr{max-width:1280px;margin:0 auto;background:#17111f;border:1px solid #ffffff24;border-top:0;border-radius:0 0 24px 24px}
+.bl-hdr-in{padding-left:24px!important;padding-right:12px!important;display:flex;align-items:center;justify-content:space-between;min-height:56px;gap:12px}
+.bl-logo{font:800 22px/1 Inter,sans-serif;color:#fefefe;text-decoration:none;letter-spacing:-.02em}
+.bl-btn,.bl-btn-sm,.bl-btn-c{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:#fe8b21;color:#180d25;font-weight:700;line-height:1.2;text-decoration:none;box-sizing:border-box;text-align:center;transition:transform .2s ease,box-shadow .2s ease}
+.bl-btn:hover,.bl-btn-sm:hover,.bl-btn-c:hover{transform:translateY(-1px);box-shadow:0 10px 30px -10px rgba(254,139,33,.8)}
+.bl-btn-sm{min-height:40px;padding:8px 18px;font-size:14px}
+.bl-btn{min-height:56px;padding:14px 28px;font-size:18px;width:100%;margin-top:16px}
+.bl-btn-c{min-height:56px;padding:14px 36px;font-size:18px}
+/* hero */
+.bl-hero{padding-top:56px;padding-bottom:80px;background:radial-gradient(60% 50% at 80% 20%,rgba(151,98,253,.18),transparent 70%),radial-gradient(40% 40% at 10% 90%,rgba(254,139,33,.10),transparent 70%)}
+.bl-hero-in{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.bl-hero-l{display:grid;gap:20px;min-width:0}
+.bl-chip{justify-self:start;background:#fe8b21;color:#180d25;font:900 20px/1 Inter,sans-serif;letter-spacing:.02em;text-transform:uppercase;padding:10px 16px;border-radius:4px;transform:rotate(-2deg);box-shadow:6px 6px 0 #9762fd}
+.bl-lead{font-size:20px;line-height:1.45;color:rgba(254,254,254,.72);max-width:56ch}
+.bl-age-q{font-weight:700;font-size:20px;margin-top:8px}
+.bl-ages{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;max-width:480px}
+.bl-age{display:flex;align-items:center;justify-content:center;min-height:52px;border:1px solid #ffffff24;background:#251c33;border-radius:14px;color:#fefefe;text-decoration:none;font:700 18px/1 Inter,sans-serif;transition:border-color .2s,background-color .2s}
+.bl-age:hover{border-color:#fe8b21;background:rgba(254,139,33,.16)}
+.bl-micro{font-size:14px;color:rgba(254,254,254,.72)}
+.bl-card{position:relative;background:#1b1426;border:1px solid #ffffff24;border-radius:24px;padding:28px;min-width:0;box-shadow:0 30px 80px -40px rgba(151,98,253,.6)}
+.bl-card::before{content:"";position:absolute;left:24px;right:24px;top:-1px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#9762fd,#ff5fa2,#fe8b21,transparent)}
+.bl-plan{color:#b69bff;font-weight:700;font-size:14px}
+.bl-freq{display:inline-flex;border:1px solid #ffffff24;border-radius:999px;padding:3px;gap:2px;margin-top:12px;background:#0f0a17}
+.bl-freq-b{border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;color:rgba(254,254,254,.72);text-decoration:none}
+.bl-freq-b[aria-pressed="true"]{background:#9762fd;color:#fff}
+.bl-prow{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-top:16px;font-variant-numeric:tabular-nums}
+.bl-old{font-size:20px;color:rgba(254,254,254,.6);text-decoration:line-through;text-decoration-color:#ff6b6b;text-decoration-thickness:2px}
+.bl-old-l{font-size:12px;color:rgba(254,254,254,.6)}
+.bl-new{font:800 56px/1 Inter,sans-serif;color:#fefefe;letter-spacing:-.02em}
+.bl-per{font-weight:600;margin-top:4px!important}
+.bl-total{margin-top:8px!important;font-variant-numeric:tabular-nums;color:rgba(254,254,254,.72)}
+.bl-total b{color:#fefefe}
+.bl-np-t{font-weight:700;margin-top:12px!important}
+.bl-timer{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0 0}
+.bl-tc{background:#251c33;border:1px solid #ffffff24;border-radius:12px;text-align:center;padding:10px 4px}
+.bl-tn{font:800 26px/1 Inter,sans-serif;font-variant-numeric:tabular-nums}
+.bl-tl{font-size:11px;color:rgba(254,254,254,.6)}
+.bl-fine{font-size:12.5px;color:rgba(254,254,254,.6);margin-top:14px!important}
+/* смуга умов */
+.bl-trust{background:#17111f;border-top:1px solid #ffffff24;border-bottom:1px solid #ffffff24}
+.bl-trust-in{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;padding-top:28px;padding-bottom:28px;font-size:15px;color:rgba(254,254,254,.72)}
+.bl-trust-p b{color:#fe8b21}
+/* секції */
+.bl-sec{padding-top:88px;padding-bottom:88px}
+.bl-sec-np{padding-bottom:88px}
+.bl-sub{color:rgba(254,254,254,.72);margin-top:10px!important;font-size:18px}
+.bl-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:32px}
+.bl-step{background:#1b1426;border:1px solid #ffffff24;border-radius:20px;padding:24px}
+.bl-num,.bl-num-o{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#9762fd;color:#fff;font:800 17px Inter,sans-serif;margin-bottom:16px}
+.bl-num-o{background:#fe8b21;color:#180d25}
+.bl-step-p{color:rgba(254,254,254,.72);margin-top:8px!important;font-size:16px}
+.bl-clear{border:1px solid #fe8b21;background:linear-gradient(135deg,rgba(254,139,33,.10),rgba(151,98,253,.08)) ,#1b1426;border-radius:24px;padding:32px;display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.bl-clear-l{display:grid;gap:14px;align-content:start}
+.bl-clear-p{color:rgba(254,254,254,.72);font-size:17px}
+.bl-ptab{font-size:16px;font-variant-numeric:tabular-nums}
+.bl-pr,.bl-pr-hl{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #fefefe33}
+.bl-pr-hl{color:#fe8b21}
+.bl-pv{font-weight:700;white-space:nowrap}
+.bl-ps{color:rgba(254,254,254,.6);font-size:12.5px}
+.bl-why{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:32px}
+.bl-why-c{background:#1b1426;border:1px solid #ffffff24;border-radius:20px;padding:24px}
+.bl-why-p{color:rgba(254,254,254,.72);font-size:16px;margin-top:8px!important}
+.bl-revs{background:#14001a;padding-top:88px;padding-bottom:88px}
+.bl-rgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:32px}
+.bl-rev{background:#1b1426;border:1px solid #ffffff24;border-radius:20px;padding:24px;display:grid;gap:14px;align-content:start}
+.bl-stars{color:#fe8b21;letter-spacing:2px}
+.bl-rev-q{font-size:16px;color:rgba(254,254,254,.86)}
+.bl-who{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.bl-ava{width:38px;height:38px;flex:none;border-radius:50%;background:#9762fd;color:#fff;display:grid;place-items:center;font-weight:800}
+.bl-src{font-weight:400;color:rgba(254,254,254,.6);font-size:12px}
+.bl-guar{display:flex;gap:24px;align-items:center}
+.bl-g28{flex:none;width:84px;height:84px;border-radius:50%;background:#fe8b21;color:#180d25;display:grid;place-items:center;font:900 32px Inter,sans-serif;box-shadow:6px 6px 0 #9762fd}
+.bl-guar-t{display:grid;gap:8px}
+.bl-guar-p{color:rgba(254,254,254,.72);font-size:17px}
+.bl-link{color:#b69bff}
+.bl-faq{max-width:860px;margin:32px auto 0;border-bottom:1px solid #fefefe33}
+.bl-fi{border-top:1px solid #fefefe33}
+.bl-fq{cursor:pointer;display:flex;justify-content:space-between;gap:16px;padding:20px 0;font-size:20px;font-weight:700;line-height:1.25}
+.bl-fq::after{content:"+";color:#fe8b21;font-size:26px;line-height:1;font-weight:400}
+.bl-fi.is-open .bl-fq::after{content:"−"}
+.bl-fa{display:none;padding:0 0 20px;color:rgba(254,254,254,.72);font-size:16px}
+.bl-fi.is-open .bl-fa{display:block}
+.bl-final{text-align:center;padding-top:96px;padding-bottom:96px;background:radial-gradient(50% 70% at 50% 100%,rgba(151,98,253,.35),transparent 70%),#0f0a17}
+.bl-final-p{margin:14px 0 26px!important;color:rgba(254,254,254,.72);font-size:18px}
+.bl-foot{background:#14001a;color:rgba(254,254,254,.72);font-size:14px;line-height:1.5}
+.bl-foot-in{padding-top:40px;padding-bottom:40px;display:grid;gap:12px}
+.bl-foot-nav{display:flex;flex-wrap:wrap;gap:6px 18px}
+.bl-foot-a{color:#fefefe}
+:focus-visible{outline:2px solid #fe8b21;outline-offset:2px}
+@media (max-width:991px){.bl-wrap,.bl-hero-in,.bl-trust-in,.bl-hdr-in,.bl-bar-in,.bl-final-in,.bl-foot-in,.bl-guar{padding-left:32px;padding-right:32px}.bl-hero-in{grid-template-columns:1fr}.bl-why{grid-template-columns:repeat(2,minmax(0,1fr))}.bl-sec{padding-top:64px;padding-bottom:64px}.bl-sec-np{padding-bottom:64px}.bl-revs{padding-top:64px;padding-bottom:64px}}
+@media (max-width:767px){.bl-wrap,.bl-hero-in,.bl-trust-in,.bl-hdr-in,.bl-bar-in,.bl-final-in,.bl-foot-in,.bl-guar{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}.bl-trust-in,.bl-steps,.bl-rgrid,.bl-clear{grid-template-columns:1fr}.bl-bar-in{font-size:12.5px}.bl-hdr-in{min-height:52px}.bl-btn-sm{padding:8px 12px;font-size:13px}.bl-hero{padding-top:28px;padding-bottom:48px}.bl-lead{font-size:17px}.bl-clear{padding:22px}.bl-fq{font-size:17px}}
+@media (max-width:479px){.bl-why{grid-template-columns:1fr}.bl-new{font-size:46px}.bl-guar{flex-direction:column;align-items:flex-start}.bl-chip{font-size:16px}.bl-ages{gap:8px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ===== BF26: логотип, стрічки BLACK / FRIDAY, анімації ===== */
+.bl-logo img{display:block;height:26px;width:auto}
+.bl-hero{position:relative;isolation:isolate;overflow:hidden}
+.bf_bloom{position:absolute;inset:0;z-index:-1;display:block;width:100%;height:100%;pointer-events:none}
+/* стрічки скотчу замість плашки (initTapes, як у BF26) */
+.bl-chip.is-tapes{display:flex;flex-direction:column;align-items:flex-start;gap:0;width:max-content;max-width:100%;padding:0;margin-bottom:12px;background:none;box-shadow:none;transform:none;border-radius:0;color:#fefefe;font:900 clamp(28px,3.1vw,44px)/1 Inter,sans-serif;letter-spacing:-.01em;text-transform:uppercase}
+.bl-tapes-row{display:flex;align-items:center;gap:.35em}
+.bl-tapes-row.is-2{margin-top:-.08em}
+.bl-tape{display:block;padding:.16em .42em .12em;background:#fe8b21;color:#fefefe;white-space:nowrap;clip-path:polygon(2% 0,98% 0,96.5% 18%,100% 34%,97.5% 52%,99.5% 70%,96.5% 86%,98.5% 100%,1.5% 100%,3.5% 84%,0 66%,2.5% 50%,.5% 32%,3% 16%);animation:bl-tape .5s cubic-bezier(.2,1.4,.4,1) both}
+.bl-tape.is-1{transform:rotate(-3deg);margin-left:.1em;animation-delay:.15s}
+.bl-tape.is-2{background:#9762fd;font-size:1.6em;transform:rotate(2deg);animation-delay:.35s}
+@keyframes bl-tape{from{opacity:0;scale:1.25}to{opacity:1;scale:1}}
+.bl-brand{display:flex;align-items:center;gap:.25em;color:#fefefe;text-transform:none;white-space:nowrap;animation:bl-tape .5s .55s cubic-bezier(.2,1.4,.4,1) both}
+.bl-brand-pre{font-size:.85em;font-weight:800}
+.bl-brand img{display:block;height:1.15em;width:auto}
+.bl-tag{position:relative;display:flex;align-items:center;justify-content:center;width:2.9em;height:2.9em;margin:.15em 0 0 -.05em;background:url('https://cdn.prod.website-files.com/64997bee22af293e5156648a/6ae318dacd60ec7b0e02553f_Star%20134.svg') center/contain no-repeat;color:#fefefe;font-size:1em;animation:bl-tag-in .6s .8s cubic-bezier(.2,1.4,.4,1) both}
+.bl-tag span{font-size:.82em;letter-spacing:-.02em}
+@keyframes bl-tag-in{from{opacity:0;transform:translateY(-.5em) rotate(-20deg)}to{opacity:1;transform:none}}
+@media (max-width:991px){.bl-chip.is-tapes{font-size:34px}}
+@media (max-width:479px){.bl-chip.is-tapes{font-size:24px}}
+/* «промінь» по рамці картки ціни, як рамка квізу BF26 */
+@property --bl-beam-a{syntax:"<angle>";initial-value:0deg;inherits:false}
+.bl-card{isolation:isolate}
+.bl-card::before{left:0;right:0;top:0;bottom:0;height:auto;border-radius:inherit;z-index:1;padding:1.5px;pointer-events:none;background:conic-gradient(from var(--bl-beam-a),transparent 0 62%,#9762fd 72%,#ff5fa2 80%,#fe8b21 87%,#ffd166 92%,transparent 98%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:bl-beam 5s linear infinite}
+@keyframes bl-beam{to{--bl-beam-a:360deg}}
+/* поява блоків під час прокрутки (як initReveal у BF26) */
+.bl-js .bl-rv{opacity:0;transform:translateY(80px);transition:opacity .8s cubic-bezier(.215,.61,.355,1) var(--bl-rd,0s),transform .8s cubic-bezier(.215,.61,.355,1) var(--bl-rd,0s)}
+.bl-js .bl-rv.is-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.bl-tape,.bl-brand,.bl-tag,.bl-card::before{animation:none}.bl-js .bl-rv{opacity:1;transform:none;transition:none}}
