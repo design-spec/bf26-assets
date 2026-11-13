@@ -425,3 +425,6 @@ html[data-v="A"] .bl-p12-r [data-s~="vb"],html[data-v="B"] .bl-p12-r [data-s~="v
 .bl-p12-card{grid-template-columns:1.1fr 1fr}.bl-p12-big{font-size:clamp(56px,5.4vw,80px)}
 @media (max-width:991px){.bl-p12-card{grid-template-columns:1fr}}
 @media (max-width:479px){.bl-p12-big{font-size:clamp(48px,14vw,60px)}}
+@media (max-width:767px){.bl-sticker{right:-8px}}
+@media (max-width:479px){.bl-sticker{right:-6px}}
+body{overflow-x:clip}
