@@ -393,8 +393,16 @@ function offerCard(){
   [].slice.call(seg.querySelectorAll('[data-freq]')).forEach(function(b){ b.addEventListener('click',function(e){ e.preventDefault(); S.freq=+b.getAttribute('data-freq'); render(); track('lp_freq',{value:S.freq,place:'price'}); }); });
 }
 
+/* «All Right» завжди з нерозривним пробілом (правило 13.11): текстові вузли, alt/aria-label, title */
+function nbspBrand(){
+  var re=/All Right/g, NB='All Right';
+  var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null), n;
+  while((n=w.nextNode())){ if(n.nodeValue.indexOf('All Right')>-1) n.nodeValue=n.nodeValue.replace(re,NB); }
+  $$('[alt*="All Right"],[aria-label*="All Right"]').forEach(function(el){ ['alt','aria-label'].forEach(function(a){ var v=el.getAttribute(a); if(v) el.setAttribute(a,v.replace(re,NB)); }); });
+  if(document.title.indexOf('All Right')>-1) document.title=document.title.replace(re,NB);
+}
 function topH(){ var t=document.querySelector('.bl-top'); if(t) html.style.setProperty('--bl-top-h',t.offsetHeight+'px'); }
 topH(); window.addEventListener('resize',topH); if(window.ResizeObserver){ var tt=document.querySelector('.bl-top'); if(tt) new ResizeObserver(topH).observe(tt); }
-promoStrip(); offerCard(); setupReviews(); setupFooter(); render(); howDeck(); setLinks(); tapes(); illus(); whyStack(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx();
+promoStrip(); offerCard(); setupReviews(); setupFooter(); render(); howDeck(); setLinks(); tapes(); illus(); whyStack(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx(); nbspBrand();
 track('lp_view',{});
 })();
