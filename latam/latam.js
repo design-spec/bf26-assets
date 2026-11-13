@@ -323,6 +323,28 @@ function whyStack(){
   addEventListener('resize',update,{passive:true});
   update();
 }
-setupReviews(); setupFooter(); render(); howDeck(); setLinks(); tapes(); illus(); whyStack(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx();
+/* Смуга умов як зелений блок на allright.com: три темні картки з ілюстраціями (з allright.com, копії в latam/img) */
+function promoStrip(){
+  var ti=document.querySelector('.bl-trust-in'); if(!ti||ti.querySelector('.bl-promo')) return;
+  var I='https://cdn.jsdelivr.net/gh/design-spec/bf26-assets@latam-v1.0.10/latam/img/';
+  var CHEV='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" fill="currentColor"/></svg>';
+  var cards=[
+    {img:'gift.png',sm:1,t:'La clase de prueba es gratuita',s:'Reservar clase'+CHEV,go:1},
+    {img:'coin.webp',t:'Paga con tarjeta, Apple Pay o Google Pay',s:'Visa o Mastercard. Tenlo a mano para la conversación después de la clase.'},
+    VARIANT==='A' ? {img:'folder.png',sm:1,t:'Sin sorpresas',s:'Precio, renovación y reembolso explicados antes de pagar.'}
+                  : {img:'charlie-hi.webp',t:'Sin pagar un año por adelantado',s:'Empiezas con 3 meses y decides después.'}
+  ];
+  var box=document.createElement('div'); box.className='bl-promo';
+  cards.forEach(function(c){
+    var el=document.createElement(c.go?'a':'div'); el.className='bl-promo-card';
+    if(c.go){ el.setAttribute('data-go','trust'); el.href=FUNNEL; }
+    el.innerHTML='<img class="bl-promo-img'+(c.sm?' is-sm':'')+'" src="'+I+c.img+'" alt="" loading="lazy"><div class="bl-promo-txt"><h3 class="bl-promo-t"></h3><span class="bl-promo-s">'+c.s+'</span></div>';
+    el.querySelector('.bl-promo-t').textContent=c.t;
+    box.appendChild(el);
+  });
+  $$('.bl-trust-p',ti).forEach(function(p){ p.style.display='none'; });
+  ti.appendChild(box);
+}
+promoStrip(); setupReviews(); setupFooter(); render(); howDeck(); setLinks(); tapes(); illus(); whyStack(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx();
 track('lp_view',{});
 })();

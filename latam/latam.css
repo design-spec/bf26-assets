@@ -350,3 +350,24 @@ html.bl-js [data-bl-ft="main"].bl-hl-ready:not(.is-in) .bl-terms { filter: blur(
   .bl-why.is-stack .bl-why-p{font-size:16px}
 }
 @media (prefers-reduced-motion:reduce){.bl-why.is-stack .bl-why-c{transition:none!important}}
+
+/* ===== Переходи фонів між блоками як у BF26: кожна секція починається кольором, яким закінчилась попередня ===== */
+.bl-hero{background-color:#000}
+.bl-trust{background:linear-gradient(#000,#2f0d68);border:0}
+.bl-offer{background:linear-gradient(#0f0a17,#2f0d68)}
+.bl-revs{background:linear-gradient(#2f0d68,#0f0a17)}
+.bl-final{background:radial-gradient(60% 60% at 50% 100%,rgba(255,255,255,.14),transparent 70%),linear-gradient(180deg,#0f0a17 0%,#3a1a8a 22%,#7a45f0 62%,#9762fd 100%)}
+/* ===== Смуга умов як зелений блок на allright.com (refund-gradient + темні картки з ілюстраціями) ===== */
+.bl-trust .bl-trust-in{display:block;padding-top:56px;padding-bottom:56px}
+.bl-promo{position:relative;display:flex;gap:24px;padding:40px;border-radius:40px;background:#11112c;isolation:isolate}
+.bl-promo::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:linear-gradient(299deg,rgba(87,205,107,.4) 0%,rgba(87,205,107,.4) .01%,#57cd6b 100%)}
+.bl-promo-card{position:relative;z-index:1;flex:1 1 0;min-width:0;display:flex;align-items:center;gap:24px;padding:0 32px;border-radius:8px;background:rgba(17,17,44,.7);color:#fefefe;text-decoration:none;overflow:hidden}
+.bl-promo-img{flex:none;width:96px;height:96px;object-fit:contain;-webkit-user-drag:none;user-select:none}
+.bl-promo-img.is-sm{width:72px;height:72px;margin:12px}
+.bl-promo-txt{display:flex;flex-direction:column;gap:8px;padding:24px 0}
+.bl-promo-t{margin:0;font:700 20px/1.25 Inter,sans-serif;color:#fefefe}
+.bl-promo-s{font:700 15px/1.4 Inter,sans-serif;color:#fefefe;opacity:.7;display:flex;align-items:center;gap:2px;transition:opacity .2s}
+a.bl-promo-card:hover .bl-promo-s{opacity:1}
+.bl-promo-s svg{flex:none;width:22px;height:22px}
+@media (max-width:991px){.bl-promo{flex-direction:column;padding:32px}.bl-promo-card{padding:0 24px}}
+@media (max-width:479px){.bl-promo{padding:24px;border-radius:24px}.bl-promo-card{flex-direction:column-reverse;align-items:center;gap:12px;padding:24px;border-radius:12px;text-align:center}.bl-promo-txt{padding:0;align-items:center}}
