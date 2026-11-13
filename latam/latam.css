@@ -439,3 +439,5 @@ body{overflow-x:clip}
 @media (max-width:767px){.bl-hdr-in{padding-left:24px!important}}
 /* ===== Контраст (Lighthouse a11y, 13.11): стрічку лишаємо білою (рішення користувача); футер до появи — opacity .55 замість .3 ===== */
 html.bl-js [data-bl-ft="main"].bl-hl-ready:not(.is-in) .bl-terms{opacity:.55}
+/* ===== Бренд (13.11): на помаранчевому #fe8b21 — завжди білий текст (кнопки, бейджі, плашки) ===== */
+.bl-btn,.bl-btn-sm,.bl-btn-c,.bl-chip,.bl-num-o,.bl-g28,.is-orange .bl-deal-tag,.bl-p12-badge,.bl-pr-hl .bl-p12-chk{color:#fefefe}
