@@ -437,3 +437,5 @@ body{overflow-x:clip}
 .bl-cur{font-size:.6em;margin-top:.08em}
 .bl-hdr{border-radius:999px}
 @media (max-width:767px){.bl-hdr-in{padding-left:24px!important}}
+/* ===== Контраст (Lighthouse a11y, 13.11): стрічку лишаємо білою (рішення користувача); футер до появи — opacity .55 замість .3 ===== */
+html.bl-js [data-bl-ft="main"].bl-hl-ready:not(.is-in) .bl-terms{opacity:.55}
