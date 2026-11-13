@@ -215,3 +215,5 @@ body{margin:0;color:#fefefe;font:16px/1.5 Inter,system-ui,-apple-system,"Segoe U
 @media (max-width:991px){.bl-hdr-txt{display:none}}
 @media (max-width:767px){.bl-hdr-in{min-height:54px;padding:6px 6px 6px 16px!important;gap:10px}.bl-logo img{height:22px}.bl-btn-sm{min-height:40px;padding:8px 14px;font-size:13px}.bl-hdr-mid{gap:8px;font-size:13px}}
 @media (max-width:479px){.bl-logo img{height:18px}.bl-hdr-mid .bl-cd-item.is-m,.bl-hdr-mid .bl-cd-item.is-s{display:none}.bl-btn-sm{padding:8px 12px;font-size:12.5px}.bl-hdr-in{gap:8px}}
+/* без таймера в шапці (рішення 13.11): на мобільному — лого і кнопка */
+@media (max-width:479px){.bl-btn-sm{padding:8px 14px;font-size:13px}}

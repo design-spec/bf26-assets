@@ -92,13 +92,7 @@ function headerMid(){
   var m=document.createElement('div'), on=discOn(); m.className='bl-hdr-mid';
   var txt= VARIANT==='A' ? 'Black Friday: <span class="bl-badge">−60%</span>' : (on ? 'Black Friday: <span class="bl-badge">−'+Math.round(S.disc)+'%</span>' : 'Plan de 3 meses');
   m.innerHTML='<span class="bl-hdr-txt">'+txt+'</span>';
-  if(on){
-    var cd=document.createElement('span'); cd.className='bl-cd'; cd.setAttribute('aria-label','Tiempo restante');
-    [['d','días'],['h','h'],['m','min'],['s','s']].forEach(function(u){ cd.insertAdjacentHTML('beforeend','<span class="bl-cd-item is-'+u[0]+'"><span class="bl-cd-num" data-t="'+u[0]+'"></span><span class="bl-cd-unit">'+u[1]+'</span></span>'); });
-    m.appendChild(cd);
-  }
   hi.insertBefore(m,cta);
-  if(typeof tick==='function') tick();
 }
 function tick(){
   var left=Math.max(0,DEADLINE-Date.now());
@@ -212,13 +206,6 @@ function illus(){
     rv.appendChild(aw);
   }
 }
-/* кнопка в шапці: на вузьких екранах — коротко */
-(function(){
-  var b=document.querySelector('.bl-btn-sm'); if(!b||!window.matchMedia) return;
-  var full=b.textContent.trim(), mq=matchMedia('(max-width: 479px)');
-  function set(){ b.textContent= mq.matches ? 'Reservar' : full; }
-  set(); if(mq.addEventListener) mq.addEventListener('change',set); else if(mq.addListener) mq.addListener(set);
-})();
 render(); setLinks(); tapes(); illus(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx();
 track('lp_view',{});
 })();
