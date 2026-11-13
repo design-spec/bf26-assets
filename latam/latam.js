@@ -44,6 +44,8 @@ function render(){
   }
   V.monthSpec=(S.freq*4)+' clases al mes'; if(VARIANT==='A') V.visShort=S.ended?'−'+Math.floor((1-f.y.nom/f.month)*100)+'%':'más del 60% menos'; V.deadline=dl(false); V.deadlineShort=dl(true);
   $$('[data-p]').forEach(function(el){ var k=el.getAttribute('data-p'); if(k in V) el.textContent=V[k]; });
+  /* великі ціни: «US$» окремим меншим знаком */
+  $$('.bl-new[data-p],.bl-p12-big[data-p]').forEach(function(el){ var m=/^US\$(.*)$/.exec(el.textContent); if(m) el.innerHTML='<span class="bl-cur">US$</span>'+m[1]; });
   $$('[data-freq]').forEach(function(b){ b.setAttribute('aria-pressed',String(+b.getAttribute('data-freq')===S.freq)); });
   headerMid();
 }

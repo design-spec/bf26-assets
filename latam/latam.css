@@ -432,3 +432,6 @@ body{overflow-x:clip}
 .bl-top{background:none;pointer-events:none}.bl-top>*{pointer-events:auto}
 .bl-hero{margin-top:calc(var(--bl-top-h,88px) * -1);padding-top:calc(var(--bl-top-h,88px) + 56px)}
 @media (max-width:767px){.bl-hero{padding-top:calc(var(--bl-top-h,72px) + 28px)}}
+/* ===== «US$» біля великих цін: менший, світло-фіолетовий, угорі ===== */
+.bl-cur{display:inline-block;font-size:.46em;font-weight:800;letter-spacing:0;line-height:1;vertical-align:top;margin:.14em .08em 0 0;color:#c7b0ff;-webkit-text-fill-color:#c7b0ff}
+.bl-cur{font-size:.6em;margin-top:.08em}
