@@ -195,3 +195,9 @@ body{margin:0;color:#fefefe;font:16px/1.5 Inter,system-ui,-apple-system,"Segoe U
 .bl-bar-in{flex-wrap:wrap;row-gap:4px}
 @media (max-width:767px){.bl-cd{margin-left:0;gap:5px}.bl-cd-item{gap:3px}.bl-tn{font-size:28px}.bl-timer{gap:10px}}
 @media (prefers-reduced-motion:reduce){.bl-flip.is-flipping .bl-flip-front,.bl-flip.is-flipping .bl-flip-back{animation:none}}
+/* фінальний CTA — на фіолетовому фоні (запит 13.11) */
+.bl-final{background:radial-gradient(60% 80% at 50% 0%,rgba(255,255,255,.18),transparent 70%),linear-gradient(160deg,#9762fd 0%,#7a45f0 60%,#5f2fd6 100%)}
+.bl-final .bl-h2-w{color:#fff}
+.bl-final-p{color:rgba(255,255,255,.88)}
+.bl-final .bl-btn-c{box-shadow:0 12px 30px -10px rgba(20,0,26,.6)}
+.bl-final-img{box-shadow:0 30px 60px -30px rgba(20,0,26,.7)}
