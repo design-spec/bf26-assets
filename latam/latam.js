@@ -388,6 +388,8 @@ function offerCard(){
   L.querySelector('.bl-p12-sec').addEventListener('click',function(e){ e.preventDefault(); var t=document.querySelector('.bl-ages'); if(t){ t.scrollIntoView({behavior:'smooth',block:'center'}); } });
 }
 
+function topH(){ var t=document.querySelector('.bl-top'); if(t) html.style.setProperty('--bl-top-h',t.offsetHeight+'px'); }
+topH(); window.addEventListener('resize',topH); if(window.ResizeObserver){ var tt=document.querySelector('.bl-top'); if(tt) new ResizeObserver(topH).observe(tt); }
 promoStrip(); offerCard(); setupReviews(); setupFooter(); render(); howDeck(); setLinks(); tapes(); illus(); whyStack(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx();
 track('lp_view',{});
 })();

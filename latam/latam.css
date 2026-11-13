@@ -428,3 +428,7 @@ html[data-v="A"] .bl-p12-r [data-s~="vb"],html[data-v="B"] .bl-p12-r [data-s~="v
 @media (max-width:767px){.bl-sticker{right:-8px}}
 @media (max-width:479px){.bl-sticker{right:-6px}}
 body{overflow-x:clip}
+/* ===== Фон hero під шапкою: шапка прозора, hero підтягується вгору на її висоту (--bl-top-h з JS) ===== */
+.bl-top{background:none;pointer-events:none}.bl-top>*{pointer-events:auto}
+.bl-hero{margin-top:calc(var(--bl-top-h,88px) * -1);padding-top:calc(var(--bl-top-h,88px) + 56px)}
+@media (max-width:767px){.bl-hero{padding-top:calc(var(--bl-top-h,72px) + 28px)}}
