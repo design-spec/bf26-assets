@@ -330,7 +330,7 @@ function promoStrip(){
   var CHEV='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" fill="currentColor"/></svg>';
   var cards=[
     {img:'gift.png',sm:1,t:'La clase de prueba es gratuita',s:'Reservar clase'+CHEV,go:1},
-    {img:'coin.webp',t:'Paga con tarjeta, Apple Pay o Google Pay',s:'Visa o Mastercard. Tenlo a mano para la conversación después de la clase.'},
+    {img:'coin.webp',t:'Paga con tarjeta, Apple Pay o Google Pay',s:'Visa o Mastercard. Tenlo a mano para después de la clase.'},
     VARIANT==='A' ? {img:'folder.png',sm:1,t:'Sin sorpresas',s:'Precio, renovación y reembolso explicados antes de pagar.'}
                   : {img:'charlie-hi.webp',t:'Sin pagar un año por adelantado',s:'Empiezas con 3 meses y decides después.'}
   ];
