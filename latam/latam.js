@@ -42,7 +42,7 @@ function render(){
        renew:money(nom*f.q3)+' por los siguientes 3 meses',renewShort:money(nom*f.q3)+' / 3 meses',
        longPer:money(lp),longTotal:money(lp*f.y.qty)};
   }
-  V.monthSpec=(S.freq*4)+' clases al mes'; V.deadline=dl(false); V.deadlineShort=dl(true);
+  V.monthSpec=(S.freq*4)+' clases al mes'; if(VARIANT==='A') V.visShort=S.ended?'−'+Math.floor((1-f.y.nom/f.month)*100)+'%':'más del 60% menos'; V.deadline=dl(false); V.deadlineShort=dl(true);
   $$('[data-p]').forEach(function(el){ var k=el.getAttribute('data-p'); if(k in V) el.textContent=V[k]; });
   $$('[data-freq]').forEach(function(b){ b.setAttribute('aria-pressed',String(+b.getAttribute('data-freq')===S.freq)); });
   headerMid();
@@ -345,6 +345,49 @@ function promoStrip(){
   $$('.bl-trust-p',ti).forEach(function(p){ p.style.display='none'; });
   ti.appendChild(box);
 }
-promoStrip(); setupReviews(); setupFooter(); render(); howDeck(); setLinks(); tapes(); illus(); whyStack(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx();
+/* Блок «Precio claro» як React Bits Pricing 12, яскравіше: заголовок по центру + перемикач частоти + картка (ліво — ціна і кнопка, право — розбивка) + рядок гарантій */
+function offerCard(){
+  var cl=document.querySelector('.bl-clear'); if(!cl||cl.classList.contains('is-p12')) return;
+  var left=cl.querySelector('.bl-clear-l'), tab=cl.querySelector('.bl-ptab'), np=cl.querySelector('.bl-noprice');
+  var CHK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" fill="currentColor"/></svg>';
+  var ic={
+    shield:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3zm-1.2 14.2-3.5-3.5 1.4-1.4 2.1 2.1 4.9-4.9 1.4 1.4-6.3 6.3z" fill="currentColor"/></svg>',
+    gift:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7h-2.2A3 3 0 0 0 12 4.2 3 3 0 0 0 6.2 7H4a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8h1a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm-5-1a1 1 0 1 1 0 2h-2V7a1 1 0 0 1 2-1zM9 6a1 1 0 0 1 2 1v1H9a1 1 0 0 1 0-2zm2 14H7v-8h4v8zm0-10H5V9h6v1zm6 10h-4v-8h4v8zm2-10h-6V9h6v1z" fill="currentColor"/></svg>',
+    cycle:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6V3L8 7l4 4V8a4 4 0 0 1 4 4 4 4 0 0 1-.5 1.9l1.5 1.5A6 6 0 0 0 12 6zm0 10a4 4 0 0 1-4-4c0-.7.2-1.3.5-1.9L7 8.6A6 6 0 0 0 12 18v3l4-4-4-4v3z" fill="currentColor"/></svg>'
+  };
+  var A=VARIANT==='A';
+  cl.classList.add('is-p12');
+  /* шапка */
+  var head=document.createElement('div'); head.className='bl-p12-head';
+  var h2=left.querySelector('.bl-h2'); head.appendChild(h2);
+  [].slice.call(left.querySelectorAll('.bl-clear-p')).forEach(function(p){ head.appendChild(p);
+    [].slice.call(p.querySelectorAll('span[data-s]')).forEach(function(sp){ if(sp.firstChild&&sp.firstChild.nodeType===3&&!/^\s/.test(sp.firstChild.nodeValue)) sp.firstChild.nodeValue=' '+sp.firstChild.nodeValue; }); });
+  var seg=document.createElement('div'); seg.className='bl-p12-seg'; seg.setAttribute('role','group');
+  seg.innerHTML='<a href="#" data-freq="2">2 clases por semana</a><a href="#" data-freq="3">3 clases por semana</a>';
+  head.appendChild(seg);
+  /* картка */
+  var card=document.createElement('div'); card.className='bl-p12-card'; card.setAttribute('data-s','haspr');
+  var L=document.createElement('div'); L.className='bl-p12-l';
+  L.innerHTML=
+    '<span class="bl-p12-badge'+(A?'':' is-v')+'">'+(A?'<span data-s="pre">Black Friday · </span>':'')+'<span data-p="planHead"></span></span>'+
+    '<div class="bl-p12-price"><span class="bl-p12-big" data-p="heroPer"></span><span class="bl-p12-per">/ clase</span></div>'+
+    '<div class="bl-p12-was"><s data-p="monthPer"></s> en el plan mensual · <b data-p="'+(A?'visShort':'saveVsMonth')+'"></b></div>'+
+    '<div class="bl-p12-tot">Total <b data-p="heroTotal"></b> '+(A?'por 12 meses':'por 3 meses')+' en un solo pago, después de la clase de prueba.</div>'+
+    '<div class="bl-p12-cta"><a class="bl-btn-c" data-go="price">Reservar clase de prueba gratis</a><a class="bl-p12-sec" href="#">Elegir la edad ↑</a></div>'+
+    '<p class="bl-p12-fine">Renovación automática a precio completo: <span data-p="renewShort"></span>. La cancelas en tu área personal antes del cobro.</p>';
+  var R=document.createElement('div'); R.className='bl-p12-r';
+  R.innerHTML='<div class="bl-p12-eye">Todo el precio, sin letra pequeña</div>';
+  R.appendChild(tab); tab.removeAttribute('data-s');
+  [].slice.call(tab.querySelectorAll('.bl-pr,.bl-pr-hl')).forEach(function(r){ var k=r.querySelector('.bl-pk'); if(k&&!k.querySelector('.bl-p12-chk')){ var s=document.createElement('span'); s.className='bl-p12-chk'; s.innerHTML=CHK; r.insertBefore(s,k); } });
+  card.appendChild(L); card.appendChild(R);
+  /* гарантії */
+  var tr=document.createElement('div'); tr.className='bl-p12-trust';
+  tr.innerHTML='<span>'+ic.shield+'Reembolso garantizado 28 días</span><span>'+ic.gift+'Clase de prueba gratis</span><span>'+ic.cycle+'Cancelas en tu área personal</span>';
+  cl.innerHTML=''; cl.appendChild(head); cl.appendChild(card); if(np) cl.appendChild(np); cl.appendChild(tr);
+  [].slice.call(seg.querySelectorAll('[data-freq]')).forEach(function(b){ b.addEventListener('click',function(e){ e.preventDefault(); S.freq=+b.getAttribute('data-freq'); render(); track('lp_freq',{value:S.freq,place:'price'}); }); });
+  L.querySelector('.bl-p12-sec').addEventListener('click',function(e){ e.preventDefault(); var t=document.querySelector('.bl-ages'); if(t){ t.scrollIntoView({behavior:'smooth',block:'center'}); } });
+}
+
+promoStrip(); offerCard(); setupReviews(); setupFooter(); render(); howDeck(); setLinks(); tapes(); illus(); whyStack(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx();
 track('lp_view',{});
 })();
