@@ -8,6 +8,7 @@ var params=new URLSearchParams(location.search);
 // Знімок API 13.11.2026 (locale=es, general-usd) — запас, якщо API не відповів
 var P={2:{month:20,m3:11,q3:24,y:{nom:8.5,bf:7.14,qty:96}},3:{month:17,m3:10,q3:36,y:{nom:7.5,bf:6.3,qty:144}}};
 var S={freq:3,ended:Date.now()>DEADLINE||params.get('ended')==='1',disc:+(params.get('disc')||0),src:'static'};
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 var TZ; try{TZ=Intl.DateTimeFormat().resolvedOptions().timeZone;}catch(e){}
 
 window.dataLayer=window.dataLayer||[];
@@ -61,11 +62,40 @@ function setLinks(){
   });
 }
 
+/* Таймер як у BF26: кожна цифра — flip-картка, при зміні верхня половина перекидається вниз */
+function flipCard(d){
+  var c=document.createElement('span'); c.className='bl-flip'; c.setAttribute('aria-hidden','true');
+  ['top','bottom','front','back'].forEach(function(k){ var h=document.createElement('span'), i=document.createElement('span'); h.className='bl-flip-'+k; i.textContent=d; h.appendChild(i); c.appendChild(h); });
+  c.setAttribute('data-v',d); return c;
+}
+function flipTo(el,str){
+  if(el.getAttribute('aria-label')===str) return;
+  el.setAttribute('aria-label',str);
+  var cards=[].slice.call(el.querySelectorAll('.bl-flip'));
+  if(cards.length!==str.length){ el.textContent=''; str.split('').forEach(function(d){ el.appendChild(flipCard(d)); }); return; }
+  cards.forEach(function(c,i){
+    var nv=str[i], ov=c.getAttribute('data-v'); if(nv===ov) return;
+    var part=function(k){ return c.querySelector('.bl-flip-'+k+' > span'); };
+    part('top').textContent=nv; part('back').textContent=nv; part('bottom').textContent=ov; part('front').textContent=ov;
+    c.setAttribute('data-v',nv);
+    if(reduce){ part('bottom').textContent=nv; return; }
+    c.classList.remove('is-flipping'); void c.offsetWidth; c.classList.add('is-flipping');
+    clearTimeout(c._t); c._t=setTimeout(function(){ part('bottom').textContent=nv; c.classList.remove('is-flipping'); },620);
+  });
+}
+/* таймер у барі: дописуємо поруч із текстом акції */
+function barTimer(){
+  $$('.bl-bar-txt[data-s~="pre"]').forEach(function(t){
+    if(t.querySelector('.bl-cd')) return;
+    var cd=document.createElement('span'); cd.className='bl-cd'; cd.setAttribute('aria-label','Tiempo restante');
+    [['d','días'],['h','h'],['m','min'],['s','s']].forEach(function(u){ cd.insertAdjacentHTML('beforeend','<span class="bl-cd-item"><span class="bl-cd-num" data-t="'+u[0]+'"></span><span class="bl-cd-unit">'+u[1]+'</span></span>'); });
+    t.appendChild(cd);
+  });
+}
 function tick(){
   var left=Math.max(0,DEADLINE-Date.now());
-  function p(n){return String(n).padStart(2,'0');}
-  var v={d:Math.floor(left/864e5),h:p(Math.floor(left/36e5)%24),m:p(Math.floor(left/6e4)%60),s:p(Math.floor(left/1e3)%60)};
-  $$('[data-t]').forEach(function(el){ el.textContent=v[el.getAttribute('data-t')]; });
+  var v={d:Math.floor(left/864e5),h:Math.floor(left/36e5)%24,m:Math.floor(left/6e4)%60,s:Math.floor(left/1e3)%60};
+  $$('[data-t]').forEach(function(el){ flipTo(el,String(v[el.getAttribute('data-t')]).padStart(2,'0')); });
   if(left===0 && !S.ended){ S.ended=true; render(); }
 }
 
@@ -119,7 +149,6 @@ $$('.bl-fi').forEach(function(it){ var q=it.querySelector('.bl-fq'); if(!q) retu
 /* ===== BF26: логотип, стрічки, фон Light Bloom, кульки, поява блоків ===== */
 var LOGO='<img src="https://cdn.prod.website-files.com/64997bee22af293e5156648a/69a6f4aacf26fb8379def5e1_Al%20Right.svg" width="176" height="32" alt="All Right">';
 var BF26='https://cdn.jsdelivr.net/gh/design-spec/bf26-assets@v1.0.64/';
-var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 function load(f){ var s=document.createElement('script'); s.src=BF26+f; s.async=true; document.head.appendChild(s); }
 $$('.bl-logo').forEach(function(a){ a.innerHTML=LOGO; });
 function tapes(){
@@ -146,6 +175,35 @@ function fx(){
   if(hero && !reduce && matchMedia('(min-width: 992px)').matches){ hero.classList.add('bf_hero'); load('bf26-bloom.js'); }
   if(!reduce && discOn()) load('bf26-balloons.js');
 }
-render(); setLinks(); tapes(); reveal(); tick(); setInterval(tick,1000); loadPrices(); fx();
+/* ===== Ілюстрації з BF26 / RT26 (Webflow Assets) і блоки відгуків/нагород ===== */
+var A='https://cdn.prod.website-files.com/64997bee22af293e5156648a/', A2='https://cdn.prod.website-files.com/65c9f35f8714a83ce2973aef/';
+var IMG={
+  quiz:A+'6adb99b350014ad9744e4ec7_bf26-how-quiz.webp', lesson:A+'6adb99b505ecc8a857d970b5_bf26-how-lesson.webp', trophy:A+'6adb99b61eff88918319ff30_bf26-how-trophy.webp',
+  ind:A+'6ae0bab933a4021eaf0658ee_49bdb421c0f34b8d42774202d1744b33_1_%D0%86%D0%BD%D0%B4%D0%B8%D0%B2%D1%96%D0%B4%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D1%96%20%D1%83%D1%80%D0%BE%D0%BA%D0%B8.avif',
+  mat:A+'6ae0babadf84cfa99c9d9a85_4d5ed9ead5dece14ee84e1d322b227a9_2_%D0%9C%D0%B0%D1%82%D0%B5%D1%80%D1%96%D0%B0%D0%BB%D0%B8%20%D0%BF%D1%96%D0%B4%20%D1%96%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%B8.avif',
+  kids:A+'6ae0babac8913492d1c71c3e_5088c14bdd55c546167542720c790d4c_3_%D0%9C%D1%96%D1%81%D1%8F%D1%86%D1%8C%20%D1%80%D0%BE%D0%B7%D0%BC%D0%BE%D0%B2%D0%BD%D0%B8%D1%85%20%D0%BA%D0%BB%D1%83%D0%B1%D1%96%D0%B2.avif',
+  fox:A+'6ae0babaa207c4e25b741c0a_12ffc344872d3c96042a4b3aa2c38cc2_4_%D0%93%D0%B0%D1%80%D0%B0%D0%BD%D1%82%D1%96%D1%8F%20%D0%BF%D0%BE%D0%B2%D0%B5%D1%80%D0%BD%D0%B5%D0%BD%D0%BD%D1%8F%20%D0%B3%D1%80%D0%BE%D1%88%D0%B5%D0%B8%CC%86.avif',
+  cls:A+'6af35231a45b522339711ebb_Hero_pic_RT26.avif', cta:A+'69cfda4076b862ff651a4a22_pic_card_forwho3.avif', cup:A+'6ad1d87e8f10766b0f4fc542_image-x7AMcdc77bLjrT7fLhP52TPpyoaLvY.avif'
+};
+function ill(src,alt,contain){ var d=document.createElement('div'); d.className='bl-ill'+(contain?' is-contain':''); var i=new Image(); i.src=src; i.alt=alt||''; i.loading='lazy'; d.appendChild(i); return d; }
+function illus(){
+  var st=$$('.bl-step'); [[IMG.quiz,'Preguntas sobre el niño',1],[IMG.lesson,'Clase de prueba con la profesora',1],[IMG.trophy,'Resultado',1]].forEach(function(x,k){ if(st[k]) st[k].insertBefore(ill(x[0],x[1],x[2]),st[k].firstChild); });
+  var wc=$$('.bl-why-c'); [[IMG.ind,'Clase individual online con la profesora'],[IMG.mat,'Materiales según los intereses del niño'],[IMG.cls,'Clase en la plataforma de All Right',1],[IMG.kids,'Niños de distintos países']].forEach(function(x,k){ if(wc[k]) wc[k].insertBefore(ill(x[0],x[1],x[2]),wc[k].firstChild); });
+  var g=document.querySelector('.bl-g28'); if(g){ var w=document.createElement('div'); w.className='bl-guar-ill'; var i=new Image(); i.src=IMG.fox; i.alt='Garantía de devolución: el zorrito de All Right con una moneda'; i.loading='lazy'; g.parentNode.insertBefore(w,g); w.appendChild(i); w.appendChild(g); }
+  var fin=document.querySelector('.bl-final-in'); if(fin){ var c=new Image(); c.src=IMG.cta; c.alt='Niño en una clase de inglés online de All Right'; c.className='bl-final-img'; c.loading='lazy'; fin.insertBefore(c,fin.firstChild); }
+  var AV={'Oswaldo Medina':'6ae39092e77bcd9287524b92_user-id-61.jpeg','Carolina Marconi':'6ae39092e77bcd9287524b9e_user-id-64.jpeg','Leti Heras':'6ad269fd3b7a54d909c99960_user-id-63.jpeg'};
+  $$('.bl-who').forEach(function(w){ var t=w.querySelector('.bl-who-t'), a=w.querySelector('.bl-ava'); if(!t||!a) return; var n=(t.firstChild&&t.firstChild.textContent||'').trim(); if(AV[n]){ a.innerHTML='<img src="'+A2+AV[n]+'" alt="'+n+'" loading="lazy">'; a.classList.add('has-img'); } });
+  var rv=document.querySelector('.bl-revs .bl-wrap'), h=rv&&rv.querySelector('.bl-h2');
+  if(h){ var r=document.createElement('div'); r.className='bl-rating';
+    r.innerHTML='<div><div class="bl-rate-n">4.7</div><div class="bl-rate-l">valoración en Trustpilot</div></div><div><div class="bl-rate-n">100%</div><div class="bl-rate-l">lo recomiendan en Facebook</div></div><div><div class="bl-rate-n">800+</div><div class="bl-rate-l">profesores certificados de 67 países</div></div>';
+    h.parentNode.insertBefore(r,h.nextSibling);
+    var AW=[['6ad1d6f4fffe6a658429a957_deloitte.DapqUt8R.png','Technology Fast 500 — 2022'],['6ad1d71c1da9794f69ef6018_forbes.Bq2Plsz6.png','Top 30 mejores startups'],['6ad1d71d1da9794f69ef601e_holoniq.BtBALW6d.png','Top 200 startups EdTech de Europa'],['6ad1d7732530eafa97c495b6_tracxn.D1Lc_o5g.png','Startup tecnológica líder'],['6ad1d7732530eafa97c495e0_edtechx.BV_dA2_H.png','Finalista en la categoría de aprendizaje de idiomas'],['6ad1d7742530eafa97c49607_digital_education_awards.CyoId8iL.png','Producto digital del año para aprender idiomas'],['6ad1d71c1da9794f69ef601b_edtech.BygLEFFc.png','Finalista de los EdTech Awards Cool Tool 2025'],['6ad1d71c1da9794f69ef6014_qs_reimagine_education.DRtPb4KD.png','QS Reimagine Education Awards — finalista 2025']];
+    var items=AW.map(function(x){ return '<div class="bl-award"><img src="'+A2+x[0]+'" alt="'+x[1]+'" loading="lazy"><div class="bl-award-cap">'+x[1]+'</div></div>'; }).join('');
+    var aw=document.createElement('div'); aw.className='bl-awards';
+    aw.innerHTML='<img class="bl-awards-trophy" src="'+IMG.cup+'" alt="" aria-hidden="true"><div class="bl-awards-panel"><h3 class="bl-awards-title">Nuestros premios</h3><div class="bl-award-track">'+items+items.replace(/class="bl-award"/g,'class="bl-award is-dup" aria-hidden="true"')+'</div></div>';
+    rv.appendChild(aw);
+  }
+}
+render(); setLinks(); tapes(); illus(); reveal(); barTimer(); tick(); setInterval(tick,1000); loadPrices(); fx();
 track('lp_view',{});
 })();

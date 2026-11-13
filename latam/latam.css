@@ -140,3 +140,58 @@ body{margin:0;color:#fefefe;font:16px/1.5 Inter,system-ui,-apple-system,"Segoe U
 .bl-js .bl-rv{opacity:0;transform:translateY(80px);transition:opacity .8s cubic-bezier(.215,.61,.355,1) var(--bl-rd,0s),transform .8s cubic-bezier(.215,.61,.355,1) var(--bl-rd,0s)}
 .bl-js .bl-rv.is-in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.bl-tape,.bl-brand,.bl-tag,.bl-card::before{animation:none}.bl-js .bl-rv{opacity:1;transform:none;transition:none}}
+/* ===== Ілюстрації та блоки з BF26 / RT26 ===== */
+.bl-ill{display:block;width:100%;aspect-ratio:16/10;border-radius:14px;background:#251c33;overflow:hidden;margin-bottom:18px}
+.bl-ill img{display:block;width:100%;height:100%;object-fit:cover}
+.bl-ill.is-contain img{object-fit:contain;padding:8px;box-sizing:border-box}
+.bl-step,.bl-why-c{display:flex;flex-direction:column}
+.bl-why-c .bl-ill{aspect-ratio:16/10}
+.bl-guar-ill{position:relative;flex:none;width:220px}
+.bl-guar-ill img{display:block;width:100%;height:auto;border-radius:20px}
+.bl-guar-ill .bl-g28{position:absolute;right:-14px;top:-14px;width:64px;height:64px;font-size:24px}
+.bl-final-img{display:block;width:min(420px,100%);height:auto;margin:0 auto 28px;border-radius:24px}
+.bl-ava img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.bl-ava.has-img{background:none}
+.bl-rating{display:flex;flex-wrap:wrap;gap:16px 40px;margin-top:20px}
+.bl-rate-n{font:800 40px/1.1 Inter,sans-serif;color:#9762fd}
+.bl-rate-l{color:rgba(254,254,254,.72);font-size:15px}
+.bl-awards{position:relative;margin-top:64px}
+.bl-awards-trophy{position:absolute;z-index:2;width:110px;top:-44px;left:-10px;pointer-events:none}
+.bl-awards-panel{border:2px solid #ffffff24;background:#1b1426;border-radius:24px;padding:36px 0 32px;overflow:hidden}
+.bl-awards-title{margin:0 0 24px;padding:0 32px 0 120px;font:800 26px/1.2 Inter,sans-serif;color:#fefefe}
+.bl-award-track{display:flex;gap:48px;width:max-content;animation:bl-marquee 40s linear infinite}
+.bl-awards-panel:hover .bl-award-track{animation-play-state:paused}
+.bl-award{display:flex;flex-direction:column;align-items:center;gap:12px;width:200px;flex:none;text-align:center}
+.bl-award img{height:64px;width:auto;max-width:180px;object-fit:contain}
+.bl-award-cap{color:rgba(254,254,254,.72);font-size:14px;line-height:1.35}
+@keyframes bl-marquee{to{transform:translateX(-50%)}}
+@media (max-width:767px){.bl-guar{flex-direction:column;align-items:flex-start}.bl-guar-ill{width:180px}.bl-awards-title{padding-left:24px;font-size:22px;margin-top:40px}.bl-awards-trophy{width:84px;top:-36px}}
+@media (prefers-reduced-motion:reduce){.bl-award-track{animation:none;flex-wrap:wrap;width:auto;justify-content:center}.bl-award.is-dup{display:none}}
+/* ===== Таймер BF26: flip-годинник (картка цифри з двох половин) ===== */
+.bl-flip{position:relative;display:block;width:.9em;height:1.3em;perspective:4em;font-variant-numeric:tabular-nums;text-align:center}
+.bl-flip>span{position:absolute;left:0;right:0;height:50%;overflow:hidden;background:#2b2635;color:#fefefe;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.bl-flip>span>span{display:block;height:200%;line-height:1.3em;font-size:.92em}
+.bl-flip-top,.bl-flip-front{top:0;border-radius:.14em .14em 0 0}
+.bl-flip-bottom,.bl-flip-back{bottom:0;border-radius:0 0 .14em .14em;background:#352f41!important}
+.bl-flip-bottom>span,.bl-flip-back>span{transform:translateY(-50%)}
+.bl-flip-front{z-index:2;transform-origin:50% 100%}
+.bl-flip-back{z-index:2;transform-origin:50% 0;transform:rotateX(90deg)}
+.bl-flip::after{content:"";position:absolute;z-index:3;left:0;right:0;top:50%;height:1px;margin-top:-.5px;background:rgba(0,0,0,.55)}
+.bl-flip.is-flipping .bl-flip-front{animation:bl-flip-a .3s ease-in forwards}
+.bl-flip.is-flipping .bl-flip-back{animation:bl-flip-b .3s .3s ease-out forwards}
+.bl-flip:not(.is-flipping) .bl-flip-front,.bl-flip:not(.is-flipping) .bl-flip-back{visibility:hidden}
+@keyframes bl-flip-a{from{transform:rotateX(0)}to{transform:rotateX(-90deg)}}
+@keyframes bl-flip-b{from{transform:rotateX(90deg)}to{transform:rotateX(0)}}
+/* великий таймер у картці ціни (як bf_cd-lg) */
+.bl-timer{display:flex;justify-content:flex-start;gap:14px;margin-top:20px}
+.bl-tc{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0}
+.bl-tn{display:flex;gap:3px;font:800 34px/1 Inter,sans-serif}
+.bl-tl{color:#fefefe;font-size:13px;opacity:.8}
+/* таймер у барі (як bf_cd у смузі BF26) */
+.bl-cd{display:inline-flex;align-items:center;gap:8px;margin-left:14px;font-size:15px;vertical-align:middle}
+.bl-cd-item{display:flex;align-items:center;gap:4px}
+.bl-cd-num{display:flex;gap:2px;line-height:1}
+.bl-cd-unit{opacity:.8;font-weight:600;font-size:12px}
+.bl-bar-in{flex-wrap:wrap;row-gap:4px}
+@media (max-width:767px){.bl-cd{margin-left:0;gap:5px}.bl-cd-item{gap:3px}.bl-tn{font-size:28px}.bl-timer{gap:10px}}
+@media (prefers-reduced-motion:reduce){.bl-flip.is-flipping .bl-flip-front,.bl-flip.is-flipping .bl-flip-back{animation:none}}
