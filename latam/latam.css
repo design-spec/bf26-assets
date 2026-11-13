@@ -201,3 +201,17 @@ body{margin:0;color:#fefefe;font:16px/1.5 Inter,system-ui,-apple-system,"Segoe U
 .bl-final-p{color:rgba(255,255,255,.88)}
 .bl-final .bl-btn-c{box-shadow:0 12px 30px -10px rgba(20,0,26,.6)}
 .bl-final-img{box-shadow:0 30px 60px -30px rgba(20,0,26,.7)}
+/* ===== Шапка як у BF26: одна плаваюча «таблетка» в один рядок (лого · акція + таймер · кнопка) ===== */
+.bl-top{padding:12px max(12px,env(safe-area-inset-right,0px)) 0 max(12px,env(safe-area-inset-left,0px))}
+.bl-bar{display:none}
+.bl-hdr{max-width:1280px;border:1px solid #ffffff24;border-radius:999px;background:rgba(23,17,31,.88);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.bl-hdr-in{min-height:60px;padding:8px 8px 8px 22px!important;gap:16px;flex-wrap:nowrap}
+.bl-logo{flex:none}
+.bl-hdr-mid{display:flex;align-items:center;gap:14px;margin-left:auto;min-width:0;font-weight:700;font-size:15px;white-space:nowrap;color:#fefefe}
+.bl-hdr-txt{display:flex;align-items:center;gap:6px}
+.bl-badge{background:#9762fd;color:#fff;border-radius:6px;padding:2px 8px}
+.bl-hdr-mid .bl-cd{margin-left:0}
+.bl-btn-sm{flex:none;white-space:nowrap;min-height:44px;padding:10px 20px;font-size:15px}
+@media (max-width:991px){.bl-hdr-txt{display:none}}
+@media (max-width:767px){.bl-hdr-in{min-height:54px;padding:6px 6px 6px 16px!important;gap:10px}.bl-logo img{height:22px}.bl-btn-sm{min-height:40px;padding:8px 14px;font-size:13px}.bl-hdr-mid{gap:8px;font-size:13px}}
+@media (max-width:479px){.bl-logo img{height:18px}.bl-hdr-mid .bl-cd-item.is-m,.bl-hdr-mid .bl-cd-item.is-s{display:none}.bl-btn-sm{padding:8px 12px;font-size:12.5px}.bl-hdr-in{gap:8px}}
