@@ -373,3 +373,4 @@ a.bl-promo-card:hover .bl-promo-s{opacity:1}
 @media (max-width:479px){.bl-promo{padding:24px;border-radius:24px}.bl-promo-card{flex-direction:column-reverse;align-items:center;gap:12px;padding:24px;border-radius:12px;text-align:center}.bl-promo-txt{padding:0;align-items:center}}
 .bl-promo-card{gap:16px;padding:0 24px}.bl-promo-t{font-size:19px}
 @media (max-width:479px){.bl-promo-card{padding:24px}}
+@media (max-width:991px){.bl-promo-card{flex:none}}
