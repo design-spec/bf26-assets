@@ -1272,13 +1272,7 @@
   // first-payment-bonus.amount > 0). «До −35%» у заголовках — статика. API не відповів за 3 с — лишається перелік цінності.
   // CORS API дозволяє лише https://kid.allright.com: на staging *.webflow.io блок порожній; ?ny_plans=sample — знімок для QA.
   var PLANS_API = 'https://allright.com/api/v1/payment-plans';
-  var PLANS_SAMPLE = { data: [   // UA, 23.11.2026 (ще Black Friday): для перевірки верстки на staging
-    { attributes: { 'is-show': true, 'period-amount': 1, qty: 8, 'is-popular': null, 'price-curr-parts': { priceFormatted: '574,38\u00a0₴', wholeNumber: '574', fractionalPart: ',38', priceWithDecimal: 574.38, currencySymbol: '₴', currency: 'UAH' }, 'first-payment-bonus': { amount: 0 } } },
-    { attributes: { 'is-show': true, 'period-amount': 6, qty: 48, 'is-popular': false, 'price-curr-parts': { priceFormatted: '337,87\u00a0₴', wholeNumber: '337', fractionalPart: ',87', priceWithDecimal: 337.87, currencySymbol: '₴', currency: 'UAH' }, 'first-payment-bonus': { amount: 0 } } },
-    { attributes: { 'is-show': true, 'period-amount': 12, qty: 96, 'is-popular': false, 'price-curr-parts': { priceFormatted: '287,19\u00a0₴', wholeNumber: '287', fractionalPart: ',19', priceWithDecimal: 287.19, currencySymbol: '₴', currency: 'UAH' }, 'first-payment-bonus': { amount: 0 } } },
-    { attributes: { 'is-show': true, 'period-amount': 18, qty: 144, 'is-popular': false, 'price-curr-parts': { priceFormatted: '229,75\u00a0₴', wholeNumber: '229', fractionalPart: ',75', priceWithDecimal: 229.75, currencySymbol: '₴', currency: 'UAH' },
-      'old-price-curr-parts': { priceFormatted: '270,29\u00a0₴', wholeNumber: '270', fractionalPart: ',29', priceWithDecimal: 270.29, currencySymbol: '₴', currency: 'UAH' }, 'first-payment-bonus': { amount: 14.998, is_real_discount: true, banner_title: 'Чорна пʼятниця' } } }
-  ] };
+  var PLANS_SAMPLE = { data: [{"attributes": {"is-show": true, "period-amount": 1, "qty": 12, "price-curr-parts": {"priceFormatted": "506,80 ₴", "wholeNumber": "506", "priceWithDecimal": 506.8, "currencySymbol": "₴", "currency": "UAH"}, "first-payment-bonus": {"amount": 0, "is_real_discount": false, "banner_title": "Чорна п'ятниця"}}}, {"attributes": {"is-show": true, "period-amount": 6, "qty": 72, "is-popular": false, "price-curr-parts": {"priceFormatted": "287,19 ₴", "wholeNumber": "287", "priceWithDecimal": 287.19, "currencySymbol": "₴", "currency": "UAH"}, "cost-saving-percents": {"value": 43, "label": "Економія 43%"}, "first-payment-bonus": {"amount": 0, "is_real_discount": false, "banner_title": "Чорна п'ятниця"}}}, {"attributes": {"is-show": true, "period-amount": 12, "qty": 144, "is-popular": false, "price-curr-parts": {"priceFormatted": "253,40 ₴", "wholeNumber": "253", "priceWithDecimal": 253.4, "currencySymbol": "₴", "currency": "UAH"}, "cost-saving-percents": {"value": 50, "label": "Економія 50%"}, "first-payment-bonus": {"amount": 0, "is_real_discount": false, "banner_title": "Чорна п'ятниця"}}}, {"attributes": {"is-show": true, "period-amount": 18, "qty": 216, "is-popular": false, "price-curr-parts": {"priceFormatted": "202,72 ₴", "wholeNumber": "202", "priceWithDecimal": 202.72, "currencySymbol": "₴", "currency": "UAH"}, "old-price-curr-parts": {"priceFormatted": "236,51 ₴", "wholeNumber": "236", "priceWithDecimal": 236.51, "currencySymbol": "₴", "currency": "UAH"}, "cost-saving-percents": {"value": 60, "label": "Економія 60%"}, "first-payment-bonus": {"amount": 14.2869, "is_real_discount": true, "banner_title": "Чорна п'ятниця"}}}] };   // UA, 23.11.2026: locale uk, 3/тиждень, UAH/UA — як на allright.com/uk; для перевірки верстки на staging
   function plural(forms, n) {
     if (!forms) return String(n);
     if (typeof forms === 'string') return tpl(forms, { n: n });
@@ -1289,7 +1283,7 @@
     var box = $('[data-ny-plans]');
     if (!box) return;
     box.classList.add('ny_plans');
-    var sample = params.get('ny_plans') === 'sample', done = false, perWeek = CFG.plansPerWeek || 2;
+    var sample = params.get('ny_plans') === 'sample', done = false, perWeek = CFG.plansPerWeek || 3;
     function render(json, source) {
       if (done) return; done = true;
       var rows = ((json && json.data) || []).map(function (p) { return p.attributes || {}; }).filter(function (a) {
@@ -1297,19 +1291,20 @@
       }).sort(function (a, b) { return (+a['period-amount'] || 0) - (+b['period-amount'] || 0); });
       if (!rows.length) { track('ny_prices_loaded', { plans: 0, source: source }); return; }
       var maxAmount = 0, currency = '', bonusTitle = '';
-      // «Краща ціна» — пакет з найнижчою ціною за урок (без знижки), як бейдж на allright.com
-      var unit = function (a) { var fb = a['first-payment-bonus'] || {}, b = (+fb.amount > 0 && a['old-price-curr-parts']) || a['price-curr-parts'];
+      // «Краща ціна» — пакет з найнижчою поточною ціною за урок, як бейдж на allright.com
+      var unit = function (a) { var b = a['price-curr-parts'];
         return +b.priceWithDecimal || parseFloat(String(b.priceFormatted || '').replace(/[^\d,.]/g, '').replace(',', '.')) || Infinity; };
       var best = rows.reduce(function (m, a) { return unit(a) < unit(m) ? a : m; }, rows[0]);
       box.innerHTML = '';
       rows.forEach(function (a) {
         var fb = a['first-payment-bonus'] || {}, amount = +fb.amount || 0;
-        // ціна без знижки: при реальній знижці API віддає стару ціну в old-price-curr-parts
-        var base = amount > 0 && a['old-price-curr-parts'] ? a['old-price-curr-parts'] : a['price-curr-parts'];
+        // як на allright.com (23.11): поточна ціна за урок (price-curr-parts, вже зі знижкою першої оплати), округлена до цілого,
+        // і мітка економії відносно місячного з API (cost-saving-percents.label — API вже перекладає її мовою locale)
+        var base = a['price-curr-parts'], save = a['cost-saving-percents'] || null;
         currency = currency || base.currency || ''; bonusTitle = bonusTitle || fb.banner_title || '';
         maxAmount = Math.max(maxAmount, amount);
         var n = +a['period-amount'] || 1, qty = +a.qty || 0, isBest = a === best && rows.length > 1;
-        var whole = base.wholeNumber || String(base.priceFormatted || base.priceWithDecimal || '').replace(/[,.]\d+.*$/, '').replace(/[^\d\s\u00a0]/g, '').trim();
+        var whole = isFinite(unit(a)) ? String(Math.round(unit(a))) : (base.wholeNumber || '');
         var sym = base.currencySymbol || String(base.priceFormatted || '').replace(/[\d\s\u00a0,.]/g, '') || base.currency || '';
         var card = doc.createElement('div');
         card.className = 'ny_plan' + (isBest ? ' is-best' : '') + (amount > 0 ? ' has-discount' : '');
@@ -1320,7 +1315,7 @@
         card.innerHTML = (isBest ? '<span class="ny_plan-badge"></span>' : '') +
           '<div class="ny_plan-top"><div class="ny_plan-title"></div><div class="ny_plan-sub"></div>' +
           '<div class="ny_plan-price"><span class="ny_plan-num"></span><span class="ny_plan-cur"><span class="ny_plan-sym"></span><span class="ny_plan-per"></span></span></div>' +
-          (amount > 0 ? '<div class="ny_plan-disc" data-bf-show="before"></div>' : '') + '</div>' +
+          (save && save.value > 0 ? '<div class="ny_plan-disc"></div>' : '') + '</div>' +
           '<ul class="ny_plan-feats"></ul>' +
           '<a href="#bf-quiz" class="ny_plan-cta" data-bf-cta="plans"><span></span><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>';
         if (isBest) $('.ny_plan-badge', card).textContent = T.planBest || '';
@@ -1330,8 +1325,7 @@
         $('.ny_plan-num', card).textContent = whole;
         $('.ny_plan-sym', card).textContent = sym;
         $('.ny_plan-per', card).textContent = T.planPerLesson || '';
-        // ціле число без завищення: 14.998 → 15, 16.19 → 16
-        if (amount > 0) $('.ny_plan-disc', card).textContent = tpl(T.planDiscount || '−{n}%', { n: Math.floor(amount + 0.01) });
+        if (save && save.value > 0) $('.ny_plan-disc', card).textContent = save.label || tpl(T.planSaving || '−{n}%', { n: save.value });
         var ul = $('.ny_plan-feats', card);
         feats.forEach(function (f) { var li = doc.createElement('li'); li.textContent = tpl(f, { n: n }); ul.appendChild(li); });
         if (!feats.length) ul.remove();
@@ -1346,7 +1340,11 @@
     if (sample) return render(PLANS_SAMPLE, 'sample');
     if (!window.fetch) return;
     setTimeout(function () { if (!done) { done = true; track('ny_prices_loaded', { plans: 0, source: 'timeout' }); } }, CFG.plansTimeoutMs || 3000);
-    var q = { locale: CFG.plansLocale || LOCALE, tutor_type_alias: 'standard', qty_per_week: perWeek };
+    // як на allright.com/<мова> (перевірено 23.11 на 10 мовах): без tutor_type_alias, 3 уроки на тиждень,
+    // валюта й країна — за мовою сторінки (CFG.plansMarket), а не за IP відвідувача
+    var q = { locale: CFG.plansLocale || LOCALE, qty_per_week: perWeek };
+    var mk = (CFG.plansMarket || {})[LOCALE];
+    if (mk) { q.currency = mk[0]; q.country_code = mk[1]; }
     if (params.get('cc')) q.country_code = params.get('cc').toUpperCase();
     fetch(PLANS_API + '?' + Object.keys(q).map(function (k) { return 'filter%5B' + k + '%5D=' + encodeURIComponent(q[k]); }).join('&'), { credentials: 'omit' })
       .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
