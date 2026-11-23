@@ -1315,7 +1315,12 @@
     fetch(PLANS_API + '?' + Object.keys(q).map(function (k) { return 'filter%5B' + k + '%5D=' + encodeURIComponent(q[k]); }).join('&'), { credentials: 'omit' })
       .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
       .then(function (j) { render(j, 'api'); })
-      .catch(function (e) { if (!done) { done = true; track('ny_prices_loaded', { plans: 0, source: 'error', reason: String(e && e.message || e).slice(0, 60) }); } });
+      .catch(function (e) {
+        // staging (*.webflow.io): API дозволяє CORS лише для kid.allright.com — показуємо знімок цін з позначкою «зразок», щоб блок можна було перевірити.
+        // На проді правило ТЗ без змін: API не відповів — лише перелік цінності
+        if (!done && !IS_PROD) { box.setAttribute('data-ny-sample', T.planSampleNote || 'Зразок цін для перевірки на staging'); return render(PLANS_SAMPLE, 'sample-staging'); }
+        if (!done) { done = true; track('ny_prices_loaded', { plans: 0, source: 'error', reason: String(e && e.message || e).slice(0, 60) }); }
+      });
   }
 
   // квіз як подарункова коробка: бант угорі картки (лише різдвяна тема; зимова — нейтральна коробка без банта)

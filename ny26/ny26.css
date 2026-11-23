@@ -553,3 +553,7 @@ html[data-ny-theme="christmas"] .bf_hero::before{top:80px}
   html[data-ny-theme] .bf_bar{margin-bottom:-64px}
   html[data-ny-theme="christmas"] .bf_hero::before{top:68px}}
 @media (max-width:479px){html[data-ny-theme] .bf_bar-inner.has-nav > .bf_btn-bar{display:none}}
+
+/* staging: знімок цін замість API (CORS) — підпис над картками, на проді не з'являється */
+.ny_plans[data-ny-sample]{position:relative;margin-top:56px}
+.ny_plans[data-ny-sample]::before{content:attr(data-ny-sample);position:absolute;left:0;right:0;top:-30px;text-align:center;color:#b5530a;font-size:13px;font-weight:600}
