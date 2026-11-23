@@ -756,8 +756,9 @@
 
   var reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function initCtas() {
-    $$('[data-bf-cta]').forEach(function (el) {
+  function initCtas(rootEl) {
+    $$('[data-bf-cta]', rootEl).forEach(function (el) {
+      if (el._nyCta) return; el._nyCta = true;
       el.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();   // інакше webflow.js ще й прокручує до #bf-quiz (уся hero-секція) — картка опинялась унизу екрана
@@ -1256,11 +1257,11 @@
   // CORS API дозволяє лише https://kid.allright.com: на staging *.webflow.io блок порожній; ?ny_plans=sample — знімок для QA.
   var PLANS_API = 'https://allright.com/api/v1/payment-plans';
   var PLANS_SAMPLE = { data: [   // UA, 23.11.2026 (ще Black Friday): для перевірки верстки на staging
-    { attributes: { 'is-show': true, 'period-amount': 1, qty: 8, 'is-popular': null, 'price-curr-parts': { priceFormatted: '574,38 ₴', currency: 'UAH' }, 'first-payment-bonus': { amount: 0 } } },
-    { attributes: { 'is-show': true, 'period-amount': 6, qty: 48, 'is-popular': false, 'price-curr-parts': { priceFormatted: '337,87 ₴', currency: 'UAH' }, 'first-payment-bonus': { amount: 0 } } },
-    { attributes: { 'is-show': true, 'period-amount': 12, qty: 96, 'is-popular': true, 'price-curr-parts': { priceFormatted: '287,19 ₴', currency: 'UAH' }, 'first-payment-bonus': { amount: 0 } } },
-    { attributes: { 'is-show': true, 'period-amount': 18, qty: 144, 'is-popular': false, 'price-curr-parts': { priceFormatted: '229,75 ₴', currency: 'UAH' },
-      'old-price-curr-parts': { priceFormatted: '270,29 ₴', currency: 'UAH' }, 'first-payment-bonus': { amount: 14.998, is_real_discount: true, banner_title: 'Чорна пʼятниця' } } }
+    { attributes: { 'is-show': true, 'period-amount': 1, qty: 8, 'is-popular': null, 'price-curr-parts': { priceFormatted: '574,38\u00a0₴', wholeNumber: '574', fractionalPart: ',38', priceWithDecimal: 574.38, currencySymbol: '₴', currency: 'UAH' }, 'first-payment-bonus': { amount: 0 } } },
+    { attributes: { 'is-show': true, 'period-amount': 6, qty: 48, 'is-popular': false, 'price-curr-parts': { priceFormatted: '337,87\u00a0₴', wholeNumber: '337', fractionalPart: ',87', priceWithDecimal: 337.87, currencySymbol: '₴', currency: 'UAH' }, 'first-payment-bonus': { amount: 0 } } },
+    { attributes: { 'is-show': true, 'period-amount': 12, qty: 96, 'is-popular': false, 'price-curr-parts': { priceFormatted: '287,19\u00a0₴', wholeNumber: '287', fractionalPart: ',19', priceWithDecimal: 287.19, currencySymbol: '₴', currency: 'UAH' }, 'first-payment-bonus': { amount: 0 } } },
+    { attributes: { 'is-show': true, 'period-amount': 18, qty: 144, 'is-popular': false, 'price-curr-parts': { priceFormatted: '229,75\u00a0₴', wholeNumber: '229', fractionalPart: ',75', priceWithDecimal: 229.75, currencySymbol: '₴', currency: 'UAH' },
+      'old-price-curr-parts': { priceFormatted: '270,29\u00a0₴', wholeNumber: '270', fractionalPart: ',29', priceWithDecimal: 270.29, currencySymbol: '₴', currency: 'UAH' }, 'first-payment-bonus': { amount: 14.998, is_real_discount: true, banner_title: 'Чорна пʼятниця' } } }
   ] };
   function plural(forms, n) {
     if (!forms) return String(n);
@@ -1280,6 +1281,10 @@
       }).sort(function (a, b) { return (+a['period-amount'] || 0) - (+b['period-amount'] || 0); });
       if (!rows.length) { track('ny_prices_loaded', { plans: 0, source: source }); return; }
       var maxAmount = 0, currency = '', bonusTitle = '';
+      // «Краща ціна» — пакет з найнижчою ціною за урок (без знижки), як бейдж на allright.com
+      var unit = function (a) { var fb = a['first-payment-bonus'] || {}, b = (+fb.amount > 0 && a['old-price-curr-parts']) || a['price-curr-parts'];
+        return +b.priceWithDecimal || parseFloat(String(b.priceFormatted || '').replace(/[^\d,.]/g, '').replace(',', '.')) || Infinity; };
+      var best = rows.reduce(function (m, a) { return unit(a) < unit(m) ? a : m; }, rows[0]);
       box.innerHTML = '';
       rows.forEach(function (a) {
         var fb = a['first-payment-bonus'] || {}, amount = +fb.amount || 0;
@@ -1287,22 +1292,36 @@
         var base = amount > 0 && a['old-price-curr-parts'] ? a['old-price-curr-parts'] : a['price-curr-parts'];
         currency = currency || base.currency || ''; bonusTitle = bonusTitle || fb.banner_title || '';
         maxAmount = Math.max(maxAmount, amount);
-        var n = +a['period-amount'] || 1, card = doc.createElement('div');
-        card.className = 'ny_plan' + (a['is-popular'] ? ' is-popular' : '') + (amount > 0 ? ' has-discount' : '');
+        var n = +a['period-amount'] || 1, qty = +a.qty || 0, isBest = a === best && rows.length > 1;
+        var whole = base.wholeNumber || String(base.priceFormatted || base.priceWithDecimal || '').replace(/[,.]\d+.*$/, '').replace(/[^\d\s\u00a0]/g, '').trim();
+        var sym = base.currencySymbol || String(base.priceFormatted || '').replace(/[\d\s\u00a0,.]/g, '') || base.currency || '';
+        var card = doc.createElement('div');
+        card.className = 'ny_plan' + (isBest ? ' is-best' : '') + (amount > 0 ? ' has-discount' : '');
         card.setAttribute('role', 'listitem');
-        var html = '<div class="ny_plan-head"><div class="ny_plan-title"></div>' + (a['is-popular'] ? '<span class="ny_plan-badge"></span>' : '') + '</div>' +
-          '<div class="ny_plan-meta"></div><div class="ny_plan-price"><span class="ny_plan-num"></span> <span class="ny_plan-per"></span></div>';
-        if (amount > 0) html += '<div class="ny_plan-disc" data-bf-show="before"></div>';
-        card.innerHTML = html;
-        $('.ny_plan-title', card).textContent = plural(T.planPeriod, n);
-        if (a['is-popular']) $('.ny_plan-badge', card).textContent = T.planPopular || '';
-        $('.ny_plan-meta', card).textContent = tpl(T.planMeta || '{lessons}', { lessons: plural(T.planLessons, +a.qty || 0), perWeek: perWeek });
-        $('.ny_plan-num', card).textContent = base.priceFormatted || base.priceWithDecimal;
+        card.style.order = String(n); card.style.setProperty('--o', String(n));
+        var feats = ((T.planFeatures || {})[n] || (T.planFeatures || {}).other || []);
+        card.innerHTML = (isBest ? '<span class="ny_plan-badge"></span>' : '') +
+          '<div class="ny_plan-top"><div class="ny_plan-title"></div><div class="ny_plan-sub"></div>' +
+          '<div class="ny_plan-price"><span class="ny_plan-num"></span><span class="ny_plan-cur"><span class="ny_plan-sym"></span><span class="ny_plan-per"></span></span></div>' +
+          (amount > 0 ? '<div class="ny_plan-disc" data-bf-show="before"></div>' : '') + '</div>' +
+          '<ul class="ny_plan-feats"></ul>' +
+          '<a href="#bf-quiz" class="ny_plan-cta" data-bf-cta="plans"><span></span><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>';
+        if (isBest) $('.ny_plan-badge', card).textContent = T.planBest || '';
+        $('.ny_plan-title', card).textContent = n === 1 ? (T.planTitleMonth || plural(T.planPeriod, n)) : tpl(T.planTitle || '{period}', { period: plural(T.planPeriodGen || T.planPeriod, n) });
+        var span = n === 1 ? (T.planSpanMonth || '') : n === 12 && T.planSpanYear ? T.planSpanYear : plural(T.planPeriodGen || T.planPeriod, n);
+        $('.ny_plan-sub', card).textContent = tpl(T.planSub || '{lessons}', { lessons: plural(T.planLessons, qty), span: span, perWeek: perWeek });
+        $('.ny_plan-num', card).textContent = whole;
+        $('.ny_plan-sym', card).textContent = sym;
         $('.ny_plan-per', card).textContent = T.planPerLesson || '';
         // ціле число без завищення: 14.998 → 15, 16.19 → 16
         if (amount > 0) $('.ny_plan-disc', card).textContent = tpl(T.planDiscount || '−{n}%', { n: Math.floor(amount + 0.01) });
+        var ul = $('.ny_plan-feats', card);
+        feats.forEach(function (f) { var li = doc.createElement('li'); li.textContent = tpl(f, { n: n }); ul.appendChild(li); });
+        if (!feats.length) ul.remove();
+        $('.ny_plan-cta span', card).textContent = T.planCta || '';
         box.appendChild(card);
       });
+      initCtas(box);
       box.setAttribute('role', 'list');
       var wrap = box.closest('[data-ny-plans-wrap]') || box; wrap.classList.add('is-loaded');
       track('ny_prices_loaded', { plans: rows.length, currency: currency, bonus_title: bonusTitle, max_amount: Math.round(maxAmount * 100) / 100, source: source });
