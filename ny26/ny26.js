@@ -1269,7 +1269,7 @@
 
   // Картки пакетів (ТЗ v1.1, розділ 5.1): той самий запит, що робить сторінка цін allright.com, без currency і country_code —
   // ринок і валюта за IP відвідувача. На картці — ціна за урок без знижки і розмір знижки саме цього пакета (лише коли
-  // first-payment-bonus.amount > 0). «До −40%» у заголовках — статика. API не відповів за 3 с — лишається перелік цінності.
+  // first-payment-bonus.amount > 0). «До −35%» у заголовках — статика. API не відповів за 3 с — лишається перелік цінності.
   // CORS API дозволяє лише https://kid.allright.com: на staging *.webflow.io блок порожній; ?ny_plans=sample — знімок для QA.
   var PLANS_API = 'https://allright.com/api/v1/payment-plans';
   var PLANS_SAMPLE = { data: [   // UA, 23.11.2026 (ще Black Friday): для перевірки верстки на staging
@@ -1541,7 +1541,7 @@
     var t; addEventListener('resize', function () { clearTimeout(t); t = setTimeout(build, 300); }, { passive: true });
   }
 
-  // заголовок hero: «до -40%» (слово перед відсотком + відсоток) — стікер, як плашки «-60%» на BF26
+  // заголовок hero: «до -35%» (слово перед відсотком + відсоток) — стікер, як плашки «-60%» на BF26
   function initHeroPill() {
     $$('.bf_hero .bf_h1').forEach(function (h) {
       if ($('.ny_h1-pill', h)) return;

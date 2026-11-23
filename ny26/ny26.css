@@ -720,4 +720,7 @@ html[data-ny-theme] .bf_bar-inner.has-nav{overflow:visible}
 .ny_speech{opacity:0;transform:translateY(8px) scale(.85);transform-origin:0 70%;visibility:hidden;
   transition:opacity .35s ease,transform .45s cubic-bezier(.2,1.4,.4,1),visibility 0s linear .45s}
 .ny_speech.is-in{opacity:1;transform:none;visibility:visible;transition:opacity .35s ease,transform .45s cubic-bezier(.2,1.4,.4,1),visibility 0s}
+/* після вибору віку (крок 2+) спіч ховається; повернення на крок 1 показує його знову */
+.bf_quiz[data-quiz-step]:not([data-quiz-step="1"]) .ny_speech.is-in{opacity:0;transform:translateY(8px) scale(.85);visibility:hidden;
+  transition:opacity .25s ease,transform .25s ease,visibility 0s linear .25s}
 @media (prefers-reduced-motion:reduce){.ny_speech,.ny_speech.is-in{transition:none;transform:none}}
