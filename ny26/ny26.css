@@ -557,3 +557,15 @@ html[data-ny-theme="christmas"] .bf_hero::before{top:80px}
 /* staging: знімок цін замість API (CORS) — підпис над картками, на проді не з'являється */
 .ny_plans[data-ny-sample]{position:relative;margin-top:56px}
 .ny_plans[data-ny-sample]::before{content:attr(data-ny-sample);position:absolute;left:0;right:0;top:-30px;text-align:center;color:#b5530a;font-size:13px;font-weight:600}
+
+/* hero різдвяної теми: фон «зимова ніч» (Webflow assets, AVIF; десктоп 1672×941, мобільний 1086×1448). Небо темне —
+   заголовок і підзаголовок білі; гірлянда на цьому фоні не потрібна; знизу hero тане в колір сторінки. Зимова тема (Ізраїль) — без фону: на ньому ялинка */
+html[data-ny-theme="christmas"] .bf_hero{
+  background:linear-gradient(90deg,rgba(13,18,66,.62) 0,rgba(13,18,66,.42) 34%,rgba(13,18,66,0) 58%) 0 0/100% 100% no-repeat,#f1ecf6 url("https://cdn.prod.website-files.com/64997bee22af293e5156648a/6b042b6374aa554f7913fd03_hero_new-year_desktop.avif") 50% 100%/cover no-repeat}
+html[data-ny-theme="christmas"] .bf_hero::before{top:auto;bottom:0;height:120px;background:linear-gradient(rgba(255,242,230,0),var(--ny-bg))}
+html[data-ny-theme="christmas"] .bf_hero .bf_h1{color:#fff;text-shadow:0 2px 18px rgba(12,18,60,.45)}
+html[data-ny-theme="christmas"] .bf_hero .bf_lead{color:rgba(255,255,255,.9);text-shadow:0 1px 10px rgba(12,18,60,.5)}
+html[data-ny-theme="christmas"] .bf_hero .bf_lead .bf_hl{color:#fff}
+@media (max-width:767px){
+  html[data-ny-theme="christmas"] .bf_hero{background:linear-gradient(rgba(13,18,66,.5) 0,rgba(13,18,66,.32) 300px,rgba(13,18,66,0) 440px) 0 0/100% 100% no-repeat,#f1ecf6 url("https://cdn.prod.website-files.com/64997bee22af293e5156648a/6b042b63c50ced7c08ddc7fa_hero_new-year_mobile.avif") 50% 0/100% auto no-repeat}
+  html[data-ny-theme="christmas"] .bf_hero::before{top:auto;height:90px;background:linear-gradient(rgba(255,242,230,0),var(--ny-bg))}}
