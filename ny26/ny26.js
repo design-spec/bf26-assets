@@ -1348,7 +1348,32 @@
       img.sizes = '(max-width: 767px) 170px, 260px';
       if (placeOf(q) !== 'hero') img.loading = 'lazy';
       q.appendChild(img); q.classList.add('has-charlie');
+      // hero: підзаголовок (Webflow-елементи .bf_lead до/після дедлайну) переїжджає в «спіч» Чарлі над карткою
+      if (placeOf(q) === 'hero' && !$('.ny_speech', q)) {
+        var leads = $$('.bf_hero .bf_hero-text .bf_lead');
+        if (leads.length) {
+          var sp = doc.createElement('div'); sp.className = 'ny_speech';
+          leads.forEach(function (l) { sp.appendChild(l); });
+          q.appendChild(sp); q.classList.add('has-speech');
+        }
+      }
       var slot = q.closest('[data-bf-quiz]'); if (slot) slot.classList.add('has-charlie');
+    });
+  }
+
+  // заголовок hero: «до -40%» (слово перед відсотком + відсоток) — стікер, як плашки «-60%» на BF26
+  function initHeroPill() {
+    $$('.bf_hero .bf_h1').forEach(function (h) {
+      if ($('.ny_h1-pill', h)) return;
+      var w = doc.createTreeWalker(h, NodeFilter.SHOW_TEXT), n;
+      while ((n = w.nextNode())) {
+        var m = n.nodeValue.match(/([^\s:;,.!?]{1,6}[\s\u00a0])?[−-]\s?\d{1,2}\s?%/);
+        if (!m) continue;
+        var hit = n.splitText(m.index); hit.splitText(m[0].length);
+        var sp = doc.createElement('span'); sp.className = 'ny_h1-pill';
+        hit.parentNode.replaceChild(sp, hit); sp.appendChild(hit);
+        return;
+      }
     });
   }
 
@@ -1428,6 +1453,7 @@
     initPlans();
     initBow();
     initCharlie();
+    initHeroPill();
     initFeat();
     initStack();
     initScroll();

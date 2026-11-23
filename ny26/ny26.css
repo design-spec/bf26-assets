@@ -584,3 +584,24 @@ html[data-ny-theme] .bf_hero [data-bf-quiz].has-charlie{margin-top:208px}
   html[data-ny-theme] .bf_hero [data-bf-quiz]{min-height:0}}
 /* без «резерву» висоти під квізом: інакше блок центрується разом із порожнім місцем під карткою і візуально зсувається вгору */
 html[data-ny-theme] .bf_hero [data-bf-quiz]{min-height:0}
+
+/* «спіч» Чарлі над карткою hero: біла хмаринка праворуч від Чарлі, хвостик — до його мордочки. Текст — Webflow .bf_lead (JS переносить).
+   До роботи JS підзаголовок під h1 не показуємо, щоб не стрибав (якщо JS не завантажився — html без .bf-js, текст на місці) */
+html.bf-js[data-ny-theme] .bf_hero .bf_hero-text .bf_lead{display:none}
+.ny_speech{position:absolute;z-index:5;left:236px;right:0;bottom:calc(100% + 18px);padding:16px 18px;border-radius:20px;background:#fff;
+  box-shadow:0 14px 34px -14px rgba(13,18,66,.55);color:var(--ny-ink,#160330)}
+.ny_speech::before{content:"";position:absolute;left:-12px;bottom:34px;width:26px;height:22px;background:#fff;
+  clip-path:polygon(100% 0,0 70%,100% 100%)}
+html[data-ny-theme] .bf_hero .ny_speech .bf_lead{margin:0;color:var(--ny-ink,#160330);text-shadow:none;font-size:16px;line-height:1.45;font-weight:500}
+html.bf-js .bf_hero .ny_speech .bf_lead{opacity:1;filter:none}
+@media (max-width:767px){
+  .ny_speech{left:150px;bottom:calc(100% + 10px);padding:11px 12px;border-radius:16px}
+  .ny_speech::before{left:-10px;bottom:24px;width:20px;height:18px}
+  html[data-ny-theme] .bf_hero .ny_speech .bf_lead{font-size:13.5px;line-height:1.4}}
+
+/* стікер «до -40%» у заголовку hero */
+.ny_h1-pill{display:inline-block;padding:.02em .26em .1em;margin:0 .04em;border-radius:.2em;background:#fe8b21;color:#fff;white-space:nowrap;
+  transform:rotate(-3deg);box-shadow:0 .07em 0 #d4650a,0 .3em .7em -.2em rgba(0,0,0,.35);text-shadow:none}
+html[data-ny-theme="christmas"] .bf_hero .bf_h1 .ny_h1-pill{color:#fff;text-shadow:none}
+@media (prefers-reduced-motion:no-preference){.ny_h1-pill{animation:ny-pill-in .5s .3s cubic-bezier(.2,1.4,.4,1) both}}
+@keyframes ny-pill-in{from{transform:rotate(-3deg) scale(.6);opacity:0}to{transform:rotate(-3deg) scale(1);opacity:1}}
