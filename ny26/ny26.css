@@ -520,3 +520,17 @@ html[data-ny-theme] .bf_faq-item{border-color:var(--ny-line)}
 html[data-ny-theme] .bf_footer{background-color:var(--ny-ink);box-shadow:0 0 0 100vmax var(--ny-ink)}
 
 @media (prefers-reduced-motion:reduce){html[data-ny-theme] *{animation-duration:.001ms !important}}
+
+/* Чарлі над формою (як на RRobot): визирає з-за верхнього лівого краю картки, светр — на рівні краю, лапи (~20% висоти) лежать на картці.
+   Місце над карткою резервує слот (margin-top), щоб Чарлі не наїжджав на підзаголовок; верх картки трохи вищий, щоб лапи не закривали «Крок N з 8» */
+.ny_charlie{position:absolute;z-index:4;left:-18px;bottom:calc(100% - 52px);width:260px;height:auto;max-width:none;pointer-events:none;user-select:none;
+  filter:drop-shadow(0 10px 14px rgba(22,3,48,.18))}
+html[data-ny-theme] .bf_quiz.has-charlie{padding-top:48px}
+html[data-ny-theme] [data-bf-quiz].has-charlie{margin-top:156px}
+@media (min-width:992px){html[data-ny-theme] .bf_hero [data-bf-quiz].has-charlie{margin-top:150px}}
+@media (max-width:767px){
+  .ny_charlie{left:-8px;width:170px;bottom:calc(100% - 34px)}
+  html[data-ny-theme] .bf_quiz.has-charlie{padding-top:40px}
+  html[data-ny-theme] [data-bf-quiz].has-charlie{margin-top:118px}}
+/* з Чарлі картка без банта і стрічки (як на референсі): один акцент над формою */
+html[data-ny-theme] .bf_quiz.has-charlie .bf_quiz-bow,html[data-ny-theme] .bf_quiz.has-charlie::before{display:none}

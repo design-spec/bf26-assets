@@ -1327,6 +1327,26 @@
     });
   }
 
+  // Чарлі в зимовому светрі визирає з-за верхнього краю картки квізу (лапи лежать на картці). Файл — поруч з ny26.js на CDN (img/),
+  // WebP 360/520 px; вимкнути — window.NY26_CHARLIE = false
+  function initCharlie() {
+    if (window.NY26_CHARLIE === false) return;
+    var me = $('script[src*="ny26.js"]'), base = me ? me.src.replace(/ny26\.js.*$/, '') : '';
+    if (!base) return;
+    $$('[data-bf-quiz] .bf_quiz').forEach(function (q) {
+      if ($('.ny_charlie', q)) return;
+      var img = doc.createElement('img');
+      img.className = 'ny_charlie'; img.alt = ''; img.setAttribute('aria-hidden', 'true'); img.decoding = 'async';
+      img.width = 260; img.height = 260;
+      img.src = base + 'img/ny26-charlie-520.webp';
+      img.srcset = base + 'img/ny26-charlie-360.webp 360w, ' + base + 'img/ny26-charlie-520.webp 520w';
+      img.sizes = '(max-width: 767px) 170px, 260px';
+      if (placeOf(q) !== 'hero') img.loading = 'lazy';
+      q.appendChild(img); q.classList.add('has-charlie');
+      var slot = q.closest('[data-bf-quiz]'); if (slot) slot.classList.add('has-charlie');
+    });
+  }
+
   // «−60%» — окрема плашка (span навколо фрази, текст у Designer не міняється): заголовок «Що входить» — помаранчева, смуга вгорі — фіолетова
   function initPill() {
     [['#bf-offer .bf_h2', ''], ['.bf_bar-text', ' is-violet']].forEach(function (cfg) {
@@ -1402,6 +1422,7 @@
     initReveal();
     initPlans();
     initBow();
+    initCharlie();
     initFeat();
     initStack();
     initScroll();
