@@ -534,3 +534,22 @@ html[data-ny-theme] [data-bf-quiz].has-charlie{margin-top:156px}
   html[data-ny-theme] [data-bf-quiz].has-charlie{margin-top:118px}}
 /* з Чарлі картка без банта і стрічки (як на референсі): один акцент над формою */
 html[data-ny-theme] .bf_quiz.has-charlie .bf_quiz-bow,html[data-ny-theme] .bf_quiz.has-charlie::before{display:none}
+
+/* шапка NY26 (23.11): біла «таблетка» — [лого All Right] | «До -40% на популярні пакети» ······ [мова] [Зарезервувати знижку] [меню].
+   Відліку немає, тому праворуч усе відштовхує мова (у BF це робив таймер). ≤991 — без напису; ≤479 — лого, мова, меню (CTA — у меню) */
+html[data-ny-theme] .bf_nav-logo{display:flex !important;align-items:center;order:-1;flex:none;margin:0;line-height:0}
+html[data-ny-theme] .bf_nav-logo img{display:block;height:26px;width:auto}
+html[data-ny-theme] .bf_bar-inner.has-nav{gap:12px;padding:0 8px 0 24px;height:60px}
+html[data-ny-theme] .bf_bar-inner.has-nav .bf_bar-text{display:flex;align-items:center;gap:6px;margin:0 !important;padding-left:16px;border-left:1px solid var(--ny-line);
+  font-size:15px;font-weight:600;white-space:nowrap}
+html[data-ny-theme] .bf_bar-inner.has-nav .bf_lang{margin-left:auto}
+html[data-ny-theme] .bf_bar-inner.has-nav > .bf_btn-bar{min-height:44px;padding:10px 20px;font-weight:700}
+html[data-ny-theme] .bf_bar{margin-bottom:-72px}
+html[data-ny-theme="christmas"] .bf_hero::before{top:80px}
+@media (max-width:991px){html[data-ny-theme] .bf_bar-inner.has-nav .bf_bar-text{display:none}}
+@media (max-width:767px){
+  html[data-ny-theme] .bf_bar-inner.has-nav{height:56px;padding:0 6px 0 16px;gap:6px}
+  html[data-ny-theme] .bf_nav-logo img{height:22px}
+  html[data-ny-theme] .bf_bar{margin-bottom:-64px}
+  html[data-ny-theme="christmas"] .bf_hero::before{top:68px}}
+@media (max-width:479px){html[data-ny-theme] .bf_bar-inner.has-nav > .bf_btn-bar{display:none}}
