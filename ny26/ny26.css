@@ -663,9 +663,9 @@ section:has(.ny_plans){overflow-x:clip}
 @media (max-width:767px){
   .ny_plan.is-best::after{content:none}
   .ny_plan.is-best .ny_plan-top{padding-right:0}
-  .ny_plan[data-ny-months="1"]{--ny-hat-w:112px}
+  .ny_plan[data-ny-months="1"]{--ny-hat-w:108px}
   .ny_plan[data-ny-months="1"]::after{content:"";position:absolute;z-index:3;pointer-events:none;
-    width:var(--ny-hat-w);aspect-ratio:804/883;top:calc(var(--ny-hat-w) * 883 / 804 * -.36);right:calc(var(--ny-hat-w) * -.19);
+    width:var(--ny-hat-w);aspect-ratio:804/883;top:calc(var(--ny-hat-w) * 883 / 804 * -.36);right:calc(var(--ny-hat-w) * -.15);   /* -.19 ставить кінець краю рівно на бік картки, але помпон упирається в край екрана */
     background:url("https://cdn.prod.website-files.com/64997bee22af293e5156648a/6b045b74a4b5616fd73a371a_bc850cfa-ae27-4e77-a5c3-b8b8e63cb232.avif") 97.16% 9.22%/143.78% auto no-repeat;
     filter:drop-shadow(0 8px 12px rgba(22,3,48,.18))}
   .ny_plan[data-ny-months="1"] .ny_plan-title{padding-right:calc(var(--ny-hat-w) * .55)}}
