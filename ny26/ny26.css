@@ -645,7 +645,7 @@ html[data-ny-theme="christmas"] .bf_hero::before{height:300px;background:linear-
    тож ::after має розмір видимої частини, фон масштабовано 141.78% і зсунуто 51.25% / 50%.
    Вертикальний зріз тіла — на 11% ширини від лівого краю видимої частини: він стає на край картки.
    ≥992px — зовні картки (збоку від картки 80px поля; секція з цінами ще й обрізає по осі X від горизонтального скролу);
-   768–991 збоку 32px — сніговик усередині картки праворуч, верхньому блоку тексту віддано відступ; <768 — усередині, нижче заголовка. */
+   768–991 збоку 32px — сніговик усередині картки праворуч, верхньому блоку тексту віддано відступ; <768 — шапочка (нижче). */
 .ny_plan.is-best{--ny-snow-h:150px;--ny-snow-w:calc(var(--ny-snow-h) * 766 / 1358)}
 .ny_plan.is-best::after{content:"";position:absolute;z-index:1;pointer-events:none;top:34px;right:calc(var(--ny-snow-w) * -.89);
   height:var(--ny-snow-h);aspect-ratio:766/1358;
@@ -656,8 +656,16 @@ section:has(.ny_plans){overflow-x:clip}
   .ny_plan.is-best{--ny-snow-h:140px}
   .ny_plan.is-best::after{top:20px;right:8px}
   .ny_plan.is-best .ny_plan-top{padding-right:calc(var(--ny-snow-w) + 4px)}}
-@media (max-width:767px){.ny_plan.is-best{--ny-snow-h:170px}.ny_plan.is-best::after{top:62px;right:4px}
-  .ny_plan.is-best .ny_plan-top{padding-right:0}.ny_plan.is-best .ny_plan-sub{padding-right:0}}
+/* <768 — замість сніговика новорічна шапочка на правому верхньому куті картки, бейдж ліворуч.
+   Шапочка — Webflow-асет 1156×1360, видима частина x 342–1146, y 44–927 (804×883): фон 143.78%, зсув 97.16% / 9.22%. */
+@media (max-width:767px){
+  .ny_plan.is-best{--ny-hat-w:150px}
+  .ny_plan.is-best::after{height:auto;width:var(--ny-hat-w);aspect-ratio:804/883;top:calc(var(--ny-hat-w) * -.4);right:-12px;
+    background-image:url("https://cdn.prod.website-files.com/64997bee22af293e5156648a/6b045b74a4b5616fd73a371a_bc850cfa-ae27-4e77-a5c3-b8b8e63cb232.avif");
+    background-position:97.16% 9.22%;background-size:143.78% auto;z-index:3;filter:drop-shadow(0 10px 14px rgba(22,3,48,.18))}
+  .ny_plan.is-best .ny_plan-top{padding-right:0}
+  .ny_plan.is-best .ny_plan-title{padding-right:calc(var(--ny-hat-w) * .42)}
+  .ny_plan.is-best .ny_plan-badge{left:24px;right:auto;transform:rotate(-3deg)}}
 @media (max-width:1199px){.ny_plan-num{font-size:46px}.ny_plan{padding:28px 22px 20px}}
 @media (max-width:991px){.ny_plans{grid-template-columns:repeat(2,minmax(0,1fr))}}
 /* мобільний: одна колонка, довші пакети вище (як на allright.com), кнопка — одразу помаранчева в першій картці */
