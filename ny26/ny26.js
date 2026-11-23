@@ -1271,6 +1271,7 @@
   function initPlans() {
     var box = $('[data-ny-plans]');
     if (!box) return;
+    box.classList.add('ny_plans');
     var sample = params.get('ny_plans') === 'sample', done = false, perWeek = CFG.plansPerWeek || 2;
     function render(json, source) {
       if (done) return; done = true;
