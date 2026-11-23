@@ -1380,6 +1380,60 @@
     });
   }
 
+  // Відгуки як на /uk/back (RT26): заголовок по центру; контейнер — синя плашка рейтингу (Facebook, Otzyvua) + стрічка карток (Embla Carousel 8.5.2,
+  // перетягування з інерцією, свайп на тачпаді). Картки — ті самі CMS-записи BF26 Reviews (.bf_tr-wall), JS лише переставляє їх. Світла тема — у CSS
+  var NY_FB_ICO = '<svg viewBox="0 0 41 41" width="40" height="40" aria-hidden="true"><path d="M17.34 39.24C8.39 37.66 1.55 29.87 1.55 20.5 1.55 10.08 10.08 1.55 20.5 1.55s18.95 8.53 18.95 18.95c0 9.37-6.84 17.16-15.79 18.74l-1.05-.84h-4.21z" fill="#fff"/><path d="M27.87 25.76l.84-5.26h-5.05v-3.68c0-1.48.52-2.64 2.84-2.64h2.42V9.34c-1.37-.21-2.84-.42-4.21-.42-4.32 0-7.37 2.63-7.37 7.37v4.21h-4.73v5.26h4.73v13.37c1.05.21 2.11.32 3.16.32s2.1-.11 3.16-.32V25.76z" fill="#027de5"/></svg>';
+  function initReviews() {
+    var sec = $('[data-bf-block="reviews-text"]'); if (!sec || $('.ny_rv', sec)) return;
+    var list = $('.bf_tr-wall .w-dyn-list', sec), track = list && $('.bf_ttrack', list);
+    if (!track || !$('.w-dyn-item', track)) return;
+    var layout = $('.bf_tr-layout', sec), h2 = $('.bf_tr-intro .bf_h2', sec);
+    var head = doc.createElement('div'); head.className = 'ny_rv-head';
+    if (h2) head.appendChild(h2);
+    var box = doc.createElement('div'); box.className = 'ny_rv';
+    var R = T.rating || [{ icon: 'facebook', value: STATS.fbRating, label: 'Facebook' }, { icon: 'otzyvua', value: STATS.otzyvRating, label: 'otzyvua.net' }];
+    R = R.filter(function (r) { return r && r.value; });
+    if (R.length) {
+      var b = doc.createElement('div'); b.className = 'ny_rv-badge';
+      R.forEach(function (r) {
+        var st = doc.createElement('div'); st.className = 'ny_rv-stat';
+        var ico = r.icon === 'facebook' ? NY_FB_ICO : r.icon === 'otzyvua' ? '<img src="' + (CFG.otzyvuaIcon || 'https://cdn.jsdelivr.net/gh/design-spec/bf26-assets@rt26-v1.8.4/rt26/img/otzyvua.png') + '" width="58" height="40" alt="" loading="lazy">' : '';
+        st.innerHTML = '<div class="ny_rv-num">' + ico + '<span></span></div><span class="ny_rv-src"></span>';
+        $('.ny_rv-num span', st).textContent = r.value; $('.ny_rv-src', st).textContent = r.label;
+        b.appendChild(st);
+      });
+      box.appendChild(b);
+    }
+    var rail = doc.createElement('div'); rail.className = 'ny_rv-rail';
+    rail.appendChild(list); box.appendChild(rail);
+    (layout || sec.firstElementChild).parentNode.insertBefore(head, layout);
+    head.parentNode.insertBefore(box, layout);
+    sec.classList.add('ny-rv-ready');
+    $$('.bf_tcard-name', track).forEach(function (n) {
+      if ($('.ny_stars', n.parentNode)) return;
+      var st = doc.createElement('div'); st.className = 'ny_stars'; st.setAttribute('aria-label', '5/5'); st.textContent = '★★★★★';
+      n.parentNode.insertBefore(st, n.nextSibling);
+    });
+    function init() {
+      if (!window.EmblaCarousel || box.classList.contains('is-embla')) return;
+      box.classList.add('is-embla');
+      var plugins = window.EmblaCarouselWheelGestures ? [window.EmblaCarouselWheelGestures()] : [];
+      try { window.EmblaCarousel(list, { align: 'start', containScroll: 'trimSnaps', dragFree: false, duration: 30, direction: root.dir === 'rtl' ? 'rtl' : 'ltr' }, plugins); }
+      catch (e) { box.classList.remove('is-embla'); }
+    }
+    function load(src, cb) { var sc = doc.createElement('script'); sc.src = src; sc.async = true; sc.onload = sc.onerror = cb; doc.head.appendChild(sc); }
+    var start = function () {
+      load('https://cdn.jsdelivr.net/npm/embla-carousel@8.5.2/embla-carousel.umd.js', function () {
+        load('https://cdn.jsdelivr.net/npm/embla-carousel-wheel-gestures@8.0.2/dist/embla-carousel-wheel-gestures.umd.js', init);
+      });
+    };
+    // бібліотеку вантажимо, коли відгуки за 800 px від екрана (не гальмує перший екран)
+    if (window.IntersectionObserver) {
+      var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { io.disconnect(); start(); } }, { rootMargin: '800px 0px' });
+      io.observe(box);
+    } else start();
+  }
+
   // заголовок hero: «до -40%» (слово перед відсотком + відсоток) — стікер, як плашки «-60%» на BF26
   function initHeroPill() {
     $$('.bf_hero .bf_h1').forEach(function (h) {
@@ -1473,6 +1527,7 @@
     initBow();
     initCharlie();
     initHeroPill();
+    initReviews();
     initFeat();
     initStack();
     initScroll();

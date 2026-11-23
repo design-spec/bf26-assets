@@ -655,3 +655,43 @@ html[data-ny-theme="christmas"] .bf_hero::before{height:300px;background:linear-
 html[data-ny-theme] .bf_page :is(h1,h2,h3,h4,.bf_h1,.bf_h2,.bf_lead,.bf_note,.bf_feat-title,.bf_feat-text,.bf_deal-title,.bf_tstep-title,.bf_trust-label,
   .bf_qlegend,.bf_qtitle,.bf_qperk,.bf_qmicro,.bf_qcontact-title,.bf_tile-label,.bf_tr-note,.bf_awards-title,[data-bf-faq-q],.ny_plan-title,.ny_plan-sub,.ny_speech .bf_lead){text-wrap:balance}
 html[data-ny-theme] .bf_page :is(p,.bf_tstep-desc,.bf_tr-lead,[data-bf-faq-a],.bf_terms .w-richtext p){text-wrap:pretty}
+
+/* відгуки як на /uk/back (RT26), світла тема: заголовок по центру; лавандовий контейнер (радіус 40) — синя плашка рейтингу 288 px зліва
+   і стрічка білих карток 288 px (Embla); на картці — текст, лінія, аватар, ім'я і ★★★★★. Мобільний: стрічка зверху, плашка рядком знизу */
+.ny-rv-ready .bf_tr-layout{display:none !important}
+.ny_rv-head{display:flex;justify-content:center;margin:0 auto 32px;text-align:center}
+.ny_rv-head .bf_h2{margin:0;text-align:center}
+.ny_rv{display:flex;align-items:stretch;max-width:1280px;margin:0 auto;border:1px solid rgba(130,60,220,.22);border-radius:40px;
+  background:linear-gradient(180deg,#f6f0fd,#efe6fb);box-shadow:0 30px 60px -40px rgba(22,3,48,.35);overflow:hidden}
+.ny_rv-badge{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:space-around;gap:48px;width:288px;margin:32px 0 32px 32px;
+  padding:48px 0;border-radius:16px;background:#027de5;color:#fff}
+.ny_rv-stat{display:flex;flex-direction:column;align-items:center;gap:8px}
+.ny_rv-num{display:flex;align-items:center;gap:8px;font-size:36px;font-weight:500;line-height:1.22}
+.ny_rv-num svg,.ny_rv-num img{flex:none;display:block}
+.ny_rv-src{font-size:24px;font-weight:500;line-height:1.16}
+.ny_rv-rail{flex:1 1 auto;min-width:0}
+.ny_rv .w-dyn-list{overflow-x:auto;padding:32px;scroll-snap-type:x mandatory;scroll-padding-inline:32px;scrollbar-width:none}
+.ny_rv .w-dyn-list::-webkit-scrollbar{display:none}
+.ny_rv .bf_ttrack{display:flex !important;gap:24px;column-gap:24px;animation:none !important;transform:none}
+.ny_rv.is-embla .w-dyn-list{overflow:hidden;scroll-snap-type:none}
+.ny_rv.is-embla .bf_ttrack{touch-action:pan-y pinch-zoom;user-select:none;-webkit-user-select:none;cursor:grab}
+.ny_rv.is-embla .bf_ttrack:active{cursor:grabbing}
+.ny_rv .bf_tcard img{-webkit-user-drag:none;pointer-events:none}
+html[data-ny-theme] .ny_rv .bf_tcard{flex:0 0 288px;width:288px;display:flex;flex-direction:column;gap:24px;min-height:312px;margin:0;padding:24px;
+  border:0;border-radius:16px;background:#fff;box-shadow:0 10px 24px -18px rgba(22,3,48,.3);scroll-snap-align:start}
+html[data-ny-theme] .ny_rv .bf_tcard-text{flex:1 1 auto;margin:0;color:var(--ny-ink-2);font-size:16px;font-weight:500;line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:9;-webkit-box-orient:vertical;overflow:hidden}
+html[data-ny-theme] .ny_rv .bf_tcard-foot{padding-top:24px;border-top:1px solid rgba(130,60,220,.18)}
+html[data-ny-theme] .ny_rv .bf_tcard-name{color:var(--ny-ink);font-size:14px;font-weight:700}
+html[data-ny-theme] .ny_rv .bf_tcard-src{display:none}
+.ny_stars{margin-top:2px;color:#feb634;font-size:13px;letter-spacing:2px;line-height:1}
+@media (max-width:991px){.ny_rv-badge{width:240px;gap:32px}.ny_rv-num{font-size:30px}.ny_rv-src{font-size:20px}}
+@media (max-width:767px){
+  .ny_rv{flex-direction:column-reverse;gap:16px;margin:0 -20px;border:0;border-radius:0;background:none;box-shadow:none;overflow:visible}
+  .ny_rv-badge{flex-direction:row;width:auto;margin:0 20px;padding:24px 12px;gap:12px}
+  .ny_rv-num{font-size:28px}.ny_rv-num svg{width:32px;height:32px}.ny_rv-num img{width:46px;height:auto}
+  .ny_rv-src{font-size:18px}
+  .ny_rv .w-dyn-list{padding:4px 20px 12px;scroll-padding-inline:20px}
+  .ny_rv .bf_ttrack{gap:12px;column-gap:12px}
+  html[data-ny-theme] .ny_rv .bf_tcard{flex-basis:78%;width:78%;min-height:0}}
+html[data-ny-theme] .ny_rv .ny_stars{color:#feb634}
