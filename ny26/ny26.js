@@ -1374,6 +1374,9 @@
           var sp = doc.createElement('div'); sp.className = 'ny_speech';
           leads.forEach(function (l) { sp.appendChild(l); });
           q.appendChild(sp); q.classList.add('has-speech');
+          // спіч з'являється через 2 с від початку завантаження сторінки (не від запуску скрипта)
+          var wait = Math.max(0, (CFG.speechDelayMs || 2000) - (window.performance && performance.now ? performance.now() : 0));
+          setTimeout(function () { sp.classList.add('is-in'); }, wait);
         }
       }
       var slot = q.closest('[data-bf-quiz]'); if (slot) slot.classList.add('has-charlie');

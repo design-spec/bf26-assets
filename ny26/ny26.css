@@ -715,3 +715,9 @@ html[data-ny-theme] .bf_bar-inner.has-nav{overflow:visible}
 @media (max-width:767px){
   html[data-ny-theme] .bf_hero .bf_hero-grid{row-gap:0;gap:0}
   html[data-ny-theme] .bf_hero [data-bf-quiz].has-charlie{margin-top:132px}}
+
+/* спіч Чарлі: з'являється через 2 с після старту сторінки (клас .is-in ставить JS) — «вискакує» з боку Чарлі */
+.ny_speech{opacity:0;transform:translateY(8px) scale(.85);transform-origin:0 70%;visibility:hidden;
+  transition:opacity .35s ease,transform .45s cubic-bezier(.2,1.4,.4,1),visibility 0s linear .45s}
+.ny_speech.is-in{opacity:1;transform:none;visibility:visible;transition:opacity .35s ease,transform .45s cubic-bezier(.2,1.4,.4,1),visibility 0s}
+@media (prefers-reduced-motion:reduce){.ny_speech,.ny_speech.is-in{transition:none;transform:none}}
