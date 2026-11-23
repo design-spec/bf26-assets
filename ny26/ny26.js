@@ -1489,33 +1489,34 @@
   // Лише різдвяна тема; ширина міняється — перебудовуємо. Файли фігур — img/cs/*.svg поруч з ny26.js. Вимкнути — window.NY26_GARLAND = false
   var GARLAND_SHAPES = ['flower-14', 'flower-8', 'flower-13', 'flower-9', 'flower-15'];
   function initGarland() {
-    var hero = $('.bf_hero');
-    if (!hero || window.NY26_GARLAND === false || THEME !== 'christmas') return;
+    var pill = $('.bf_bar-inner');
+    if (!pill || window.NY26_GARLAND === false || THEME !== 'christmas') return;
     var me = $('script[src*="ny26.js"]'), base = me ? me.src.replace(/ny26\.js.*$/, '') + 'img/cs/' : '';
     if (!base) return;
     var box = null, lastW = 0;
+    // гірлянда висить з нижнього краю шапки-«таблетки» і рухається разом із нею (шапка sticky)
     function build() {
-      var w = hero.clientWidth; if (box && Math.abs(w - lastW) < 40) return; lastW = w;
+      var w = pill.clientWidth; if (!w || (box && Math.abs(w - lastW) < 30)) return; lastW = w;
       if (box) box.remove();
-      var mob = w < 768, H = mob ? 40 : 56, sag = mob ? 14 : 20, size = mob ? [16, 22] : [22, 30];
-      var n = Math.max(2, Math.round(w / (mob ? 200 : 360))), sw = w / n, k = 0;
+      var mob = w < 600, pad = mob ? 22 : 30, span = w - pad * 2, H = mob ? 26 : 30, sag = mob ? 6 : 8, size = mob ? [11, 15] : [13, 18];
+      var n = Math.max(2, Math.round(span / (mob ? 170 : 300))), sw = span / n, k = 0, i;
       box = doc.createElement('div'); box.className = 'ny_garland'; box.setAttribute('aria-hidden', 'true');
-      var d = '';
-      for (var i = 0; i < n; i++) d += (i ? ' ' : 'M0 2') + ' Q' + (i * sw + sw / 2).toFixed(1) + ' ' + (2 + sag * 2) + ' ' + ((i + 1) * sw).toFixed(1) + ' 2';
-      box.innerHTML = '<svg class="ny_garland-cord" width="' + w + '" height="' + H + '" viewBox="0 0 ' + w + ' ' + H + '"><path d="' + d + '" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.5" stroke-linecap="round"/></svg>';
+      var d = 'M' + pad + ' 0';
+      for (i = 0; i < n; i++) d += ' Q' + (pad + i * sw + sw / 2).toFixed(1) + ' ' + sag * 2 + ' ' + (pad + (i + 1) * sw).toFixed(1) + ' 0';
+      box.innerHTML = '<svg class="ny_garland-cord" width="' + w + '" height="' + H + '" viewBox="0 0 ' + w + ' ' + H + '"><path d="' + d + '" fill="none" stroke="#c9b6ef" stroke-width="1.25" stroke-linecap="round"/></svg>';
       for (i = 0; i < n; i++) {
-        [0.22, 0.5, 0.78].forEach(function (t) {
-          var x = i * sw + t * sw, y = 2 + sag * 4 * t * (1 - t) * 1, s = size[0] + Math.round(Math.random() * (size[1] - size[0]));
+        [0.25, 0.5, 0.75].forEach(function (t) {
+          var x = pad + i * sw + t * sw, y = sag * 4 * t * (1 - t), s = size[0] + Math.round(Math.random() * (size[1] - size[0]));
           var o = doc.createElement('span'); o.className = 'ny_garland-o';
           o.style.left = x.toFixed(1) + 'px'; o.style.top = y.toFixed(1) + 'px';
-          o.style.setProperty('--len', (mob ? 4 : 6) + Math.round(Math.random() * (mob ? 6 : 10)) + 'px');
+          o.style.setProperty('--len', (mob ? 2 : 3) + Math.round(Math.random() * 4) + 'px');
           o.style.setProperty('--d', (2.6 + Math.random() * 2).toFixed(2) + 's');
           o.style.setProperty('--del', (-Math.random() * 3).toFixed(2) + 's');
           o.innerHTML = '<i></i><img alt="" width="' + s + '" height="' + s + '" decoding="async" src="' + base + GARLAND_SHAPES[k++ % GARLAND_SHAPES.length] + '.svg">';
           box.appendChild(o);
         });
       }
-      hero.appendChild(box);
+      pill.appendChild(box);
     }
     build();
     var t; addEventListener('resize', function () { clearTimeout(t); t = setTimeout(build, 300); }, { passive: true });

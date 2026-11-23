@@ -701,13 +701,17 @@ html[data-ny-theme] .ny_rv .ny_stars{color:#feb634}
   -webkit-mask-image:linear-gradient(#000 0,#000 65%,transparent 92%);mask-image:linear-gradient(#000 0,#000 65%,transparent 92%)}
 @media (max-width:991px),(prefers-reduced-motion:reduce){.ny_snow{display:none}}
 
-/* гірлянди під шапкою (initGarland): шнур + фігури Coolshapes на нитках, легке гойдання; під контентом hero */
-.ny_garland{position:absolute;z-index:0;left:0;right:0;top:78px;height:90px;pointer-events:none;overflow:visible}
+/* гірлянди під шапкою (initGarland): висять з нижнього краю «таблетки» і рухаються з нею; невисокі (≈30 px), легке гойдання */
+html[data-ny-theme] .bf_bar-inner.has-nav{overflow:visible}
+.ny_garland{position:absolute;z-index:-1;left:0;right:0;top:calc(100% - 1px);height:30px;pointer-events:none;overflow:visible}
 .ny_garland-cord{position:absolute;left:0;top:0;display:block;overflow:visible}
 .ny_garland-o{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%);transform-origin:50% 0;
   animation:ny-sway var(--d,3s) ease-in-out var(--del,0s) infinite alternate}
-.ny_garland-o i{display:block;width:1px;height:var(--len,8px);background:rgba(255,255,255,.55)}
-.ny_garland-o img{display:block;margin-top:-1px;filter:drop-shadow(0 3px 6px rgba(8,10,40,.35))}
-@keyframes ny-sway{from{transform:translateX(-50%) rotate(-6deg)}to{transform:translateX(-50%) rotate(6deg)}}
-@media (max-width:767px){.ny_garland{top:68px}}
+.ny_garland-o i{display:block;width:1px;height:var(--len,4px);background:#c9b6ef}
+.ny_garland-o img{display:block;margin-top:-1px;filter:drop-shadow(0 2px 4px rgba(8,10,40,.3))}
+@keyframes ny-sway{from{transform:translateX(-50%) rotate(-7deg)}to{transform:translateX(-50%) rotate(7deg)}}
 @media (prefers-reduced-motion:reduce){.ny_garland-o{animation:none}}
+/* мобільний hero: менший відступ між заголовком і Чарлі */
+@media (max-width:767px){
+  html[data-ny-theme] .bf_hero .bf_hero-grid{row-gap:0;gap:0}
+  html[data-ny-theme] .bf_hero [data-bf-quiz].has-charlie{margin-top:132px}}
