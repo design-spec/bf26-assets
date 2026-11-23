@@ -561,7 +561,7 @@ html[data-ny-theme="christmas"] .bf_hero::before{top:80px}
 /* hero різдвяної теми: фон «зимова ніч» (Webflow assets, AVIF; десктоп 1672×941, мобільний 1086×1448). Небо темне —
    заголовок і підзаголовок білі; гірлянда на цьому фоні не потрібна; знизу hero тане в колір сторінки. Зимова тема (Ізраїль) — без фону: на ньому ялинка */
 html[data-ny-theme="christmas"] .bf_hero{
-  background:linear-gradient(90deg,rgba(13,18,66,.62) 0,rgba(13,18,66,.42) 34%,rgba(13,18,66,0) 58%) 0 0/100% 100% no-repeat,#f1ecf6 url("https://cdn.prod.website-files.com/64997bee22af293e5156648a/6b042b6374aa554f7913fd03_hero_new-year_desktop.avif") 50% 100%/cover no-repeat}
+  background:linear-gradient(90deg,rgba(13,18,66,.62) 0,rgba(13,18,66,.42) 34%,rgba(13,18,66,0) 58%) 0 0/100% 100% no-repeat,#f1ecf6 url("https://cdn.prod.website-files.com/64997bee22af293e5156648a/6b042b6374aa554f7913fd03_775e2013894b0cb74399c45a8afadfd2_hero_new-year_desktop.avif") 50% 100%/cover no-repeat}
 html[data-ny-theme="christmas"] .bf_hero::before{top:auto;bottom:0;height:120px;background:linear-gradient(rgba(255,242,230,0),var(--ny-bg))}
 html[data-ny-theme="christmas"] .bf_hero .bf_h1{color:#fff;text-shadow:0 2px 18px rgba(12,18,60,.45)}
 html[data-ny-theme="christmas"] .bf_hero .bf_lead{color:rgba(255,255,255,.9);text-shadow:0 1px 10px rgba(12,18,60,.5)}
