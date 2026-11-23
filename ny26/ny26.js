@@ -1314,6 +1314,7 @@
         var card = doc.createElement('div');
         card.className = 'ny_plan' + (isBest ? ' is-best' : '') + (amount > 0 ? ' has-discount' : '');
         card.setAttribute('role', 'listitem');
+        card.setAttribute('data-ny-months', String(n));   // для оформлення конкретного пакета в CSS (шапочка на місячному на мобільному)
         card.style.order = String(n); card.style.setProperty('--o', String(n));
         var feats = ((T.planFeatures || {})[n] || (T.planFeatures || {}).other || []);
         card.innerHTML = (isBest ? '<span class="ny_plan-badge"></span>' : '') +
