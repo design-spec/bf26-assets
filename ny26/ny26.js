@@ -458,11 +458,27 @@
     });
   }
 
-  function focusStep(card) {
+  // нижня межа шапки разом із гірляндою, що висить під нею (гірлянда absolute — у висоту .bf_bar не входить)
+  function barBottom() {
+    var bar = $('.bf_bar'), b = bar ? Math.max(0, bar.getBoundingClientRect().bottom) : 0, g = $('.ny_garland');
+    if (g && g.offsetParent) b = Math.max(b, g.getBoundingClientRect().bottom);
+    return b;
+  }
+  var magnetMq = window.matchMedia ? matchMedia('(max-width: 767px)') : { matches: false };
+  function focusStep(card, magnet) {
     var lg = S.lead_id ? $('[data-bf-done] .bf_qtitle:not([hidden])', card) : $('[data-step].is-active legend', card);
     if (lg) try { lg.focus({ preventScroll: true }); } catch (e) {}
+    // «магніт» як на /uk/back (RT26): на мобільному при зміні кроку рядок «Крок N з 8» з прогрес-баром стає одразу під шапку
+    if (magnet && magnetMq.matches) {
+      var head = $('.bf_quiz-head', card) || card;
+      setTimeout(function () {
+        var y = head.getBoundingClientRect().top + pageYOffset - barBottom() - 8;
+        window.scrollTo({ top: Math.max(0, y), behavior: reduceMotion ? 'auto' : 'smooth' });
+      }, 60);
+      return;
+    }
     // верх картки сховався під фіксовану смугу — прокручуємо рівно під неї, без smooth (щоб не «їздило»)
-    var bar = $('.bf_bar'), off = (bar ? Math.max(0, bar.getBoundingClientRect().bottom) : 0) + 12, top = card.getBoundingClientRect().top;
+    var off = barBottom() + 12, top = card.getBoundingClientRect().top;
     if (top < off) window.scrollBy(0, top - off);
   }
 
@@ -473,7 +489,7 @@
     renderAll();
     if (step >= 2) track('ny_quiz_step_view', { step: step, place: place });
     if (step === LAST) track('ny_quiz_result_view', { lead_temp: leadTemp(), place: place });
-    focusStep(card);
+    focusStep(card, true);
   }
 
   /* ---------------------------------------------------------------- events */
