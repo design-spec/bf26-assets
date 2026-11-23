@@ -1,0 +1,1 @@
+Shapes from Coolshapes (https://coolshap.es, github.com/realvjy/coolshapes-react) — MIT License, Copyright (c) 2024 Coolshapes.

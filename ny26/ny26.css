@@ -700,3 +700,14 @@ html[data-ny-theme] .ny_rv .ny_stars{color:#feb634}
 .ny_snow{position:absolute;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;
   -webkit-mask-image:linear-gradient(#000 0,#000 65%,transparent 92%);mask-image:linear-gradient(#000 0,#000 65%,transparent 92%)}
 @media (max-width:991px),(prefers-reduced-motion:reduce){.ny_snow{display:none}}
+
+/* гірлянди під шапкою (initGarland): шнур + фігури Coolshapes на нитках, легке гойдання; під контентом hero */
+.ny_garland{position:absolute;z-index:0;left:0;right:0;top:78px;height:90px;pointer-events:none;overflow:visible}
+.ny_garland-cord{position:absolute;left:0;top:0;display:block;overflow:visible}
+.ny_garland-o{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%);transform-origin:50% 0;
+  animation:ny-sway var(--d,3s) ease-in-out var(--del,0s) infinite alternate}
+.ny_garland-o i{display:block;width:1px;height:var(--len,8px);background:rgba(255,255,255,.55)}
+.ny_garland-o img{display:block;margin-top:-1px;filter:drop-shadow(0 3px 6px rgba(8,10,40,.35))}
+@keyframes ny-sway{from{transform:translateX(-50%) rotate(-6deg)}to{transform:translateX(-50%) rotate(6deg)}}
+@media (max-width:767px){.ny_garland{top:68px}}
+@media (prefers-reduced-motion:reduce){.ny_garland-o{animation:none}}

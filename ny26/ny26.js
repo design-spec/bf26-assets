@@ -1485,6 +1485,42 @@
     var t; addEventListener('resize', function () { clearTimeout(t); t = setTimeout(build, 400); }, { passive: true });
   }
 
+  // Гірлянди під шапкою: тонкий шнур провисає дугами (≈360 px кожна), на коротких нитках висять фігури Coolshapes (MIT, coolshap.es) і ледь гойдаються.
+  // Лише різдвяна тема; ширина міняється — перебудовуємо. Файли фігур — img/cs/*.svg поруч з ny26.js. Вимкнути — window.NY26_GARLAND = false
+  var GARLAND_SHAPES = ['flower-14', 'flower-8', 'flower-13', 'flower-9', 'flower-15'];
+  function initGarland() {
+    var hero = $('.bf_hero');
+    if (!hero || window.NY26_GARLAND === false || THEME !== 'christmas') return;
+    var me = $('script[src*="ny26.js"]'), base = me ? me.src.replace(/ny26\.js.*$/, '') + 'img/cs/' : '';
+    if (!base) return;
+    var box = null, lastW = 0;
+    function build() {
+      var w = hero.clientWidth; if (box && Math.abs(w - lastW) < 40) return; lastW = w;
+      if (box) box.remove();
+      var mob = w < 768, H = mob ? 40 : 56, sag = mob ? 14 : 20, size = mob ? [16, 22] : [22, 30];
+      var n = Math.max(2, Math.round(w / (mob ? 200 : 360))), sw = w / n, k = 0;
+      box = doc.createElement('div'); box.className = 'ny_garland'; box.setAttribute('aria-hidden', 'true');
+      var d = '';
+      for (var i = 0; i < n; i++) d += (i ? ' ' : 'M0 2') + ' Q' + (i * sw + sw / 2).toFixed(1) + ' ' + (2 + sag * 2) + ' ' + ((i + 1) * sw).toFixed(1) + ' 2';
+      box.innerHTML = '<svg class="ny_garland-cord" width="' + w + '" height="' + H + '" viewBox="0 0 ' + w + ' ' + H + '"><path d="' + d + '" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.5" stroke-linecap="round"/></svg>';
+      for (i = 0; i < n; i++) {
+        [0.22, 0.5, 0.78].forEach(function (t) {
+          var x = i * sw + t * sw, y = 2 + sag * 4 * t * (1 - t) * 1, s = size[0] + Math.round(Math.random() * (size[1] - size[0]));
+          var o = doc.createElement('span'); o.className = 'ny_garland-o';
+          o.style.left = x.toFixed(1) + 'px'; o.style.top = y.toFixed(1) + 'px';
+          o.style.setProperty('--len', (mob ? 4 : 6) + Math.round(Math.random() * (mob ? 6 : 10)) + 'px');
+          o.style.setProperty('--d', (2.6 + Math.random() * 2).toFixed(2) + 's');
+          o.style.setProperty('--del', (-Math.random() * 3).toFixed(2) + 's');
+          o.innerHTML = '<i></i><img alt="" width="' + s + '" height="' + s + '" decoding="async" src="' + base + GARLAND_SHAPES[k++ % GARLAND_SHAPES.length] + '.svg">';
+          box.appendChild(o);
+        });
+      }
+      hero.appendChild(box);
+    }
+    build();
+    var t; addEventListener('resize', function () { clearTimeout(t); t = setTimeout(build, 300); }, { passive: true });
+  }
+
   // заголовок hero: «до -40%» (слово перед відсотком + відсоток) — стікер, як плашки «-60%» на BF26
   function initHeroPill() {
     $$('.bf_hero .bf_h1').forEach(function (h) {
@@ -1580,6 +1616,7 @@
     initHeroPill();
     initReviews();
     initSnow();
+    initGarland();
     initFeat();
     initStack();
     initScroll();
