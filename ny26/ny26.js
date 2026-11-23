@@ -1403,6 +1403,9 @@
   // Відгуки як на /uk/back (RT26): заголовок по центру; контейнер — синя плашка рейтингу (Facebook, Otzyvua) + стрічка карток (Embla Carousel 8.5.2,
   // перетягування з інерцією, свайп на тачпаді). Картки — ті самі CMS-записи BF26 Reviews (.bf_tr-wall), JS лише переставляє їх. Світла тема — у CSS
   var NY_FB_ICO = '<svg viewBox="0 0 41 41" width="40" height="40" aria-hidden="true"><path d="M17.34 39.24C8.39 37.66 1.55 29.87 1.55 20.5 1.55 10.08 10.08 1.55 20.5 1.55s18.95 8.53 18.95 18.95c0 9.37-6.84 17.16-15.79 18.74l-1.05-.84h-4.21z" fill="#fff"/><path d="M27.87 25.76l.84-5.26h-5.05v-3.68c0-1.48.52-2.64 2.84-2.64h2.42V9.34c-1.37-.21-2.84-.42-4.21-.42-4.32 0-7.37 2.63-7.37 7.37v4.21h-4.73v5.26h4.73v13.37c1.05.21 2.11.32 3.16.32s2.1-.11 3.16-.32V25.76z" fill="#027de5"/></svg>';
+  // іконки рейтингів інших ринків (T.rating: icon trustpilot | google) — з rt26.js
+  var NY_TP_ICO = '<svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><path d="M20 3l4.9 11.9 12.8.9-9.8 8.3 3.1 12.5L20 29.8 9 36.6l3.1-12.5-9.8-8.3 12.8-.9z" fill="#00b67a"/><path d="M27.2 24.6l-.9-3.5L20 25.7z" fill="#005128"/></svg>';
+  var NY_G_ICO = '<svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#fff"/><path d="M36.6 24.3c0-.9-.1-1.8-.2-2.6H24v4.9h7.1a6 6 0 0 1-2.6 4v3.3h4.2c2.5-2.3 3.9-5.6 3.9-9.6z" fill="#4285f4"/><path d="M24 37c3.5 0 6.5-1.2 8.7-3.2l-4.2-3.3c-1.2.8-2.7 1.3-4.5 1.3-3.4 0-6.3-2.3-7.4-5.4h-4.4V30A13 13 0 0 0 24 37z" fill="#34a853"/><path d="M16.6 26.4a7.8 7.8 0 0 1 0-4.9v-3.4h-4.4a13 13 0 0 0 0 11.7z" fill="#fbbc05"/><path d="M24 16.2c1.9 0 3.7.7 5 2l3.8-3.8A13 13 0 0 0 12.2 18.1l4.4 3.4c1.1-3 4-5.3 7.4-5.3z" fill="#ea4335"/></svg>';
   function initReviews() {
     var sec = $('[data-bf-block="reviews-text"]'); if (!sec || $('.ny_rv', sec)) return;
     var list = $('.bf_tr-wall .w-dyn-list', sec), track = list && $('.bf_ttrack', list);
@@ -1417,7 +1420,7 @@
       var b = doc.createElement('div'); b.className = 'ny_rv-badge';
       R.forEach(function (r) {
         var st = doc.createElement('div'); st.className = 'ny_rv-stat';
-        var ico = r.icon === 'facebook' ? NY_FB_ICO : r.icon === 'otzyvua' ? '<img src="' + (CFG.otzyvuaIcon || 'https://cdn.jsdelivr.net/gh/design-spec/bf26-assets@rt26-v1.8.4/rt26/img/otzyvua.png') + '" width="58" height="40" alt="" loading="lazy">' : '';
+        var ico = r.icon === 'facebook' ? NY_FB_ICO : r.icon === 'otzyvua' ? '<img src="' + (CFG.otzyvuaIcon || 'https://cdn.jsdelivr.net/gh/design-spec/bf26-assets@rt26-v1.8.4/rt26/img/otzyvua.png') + '" width="58" height="40" alt="" loading="lazy">' : r.icon === 'trustpilot' ? NY_TP_ICO : r.icon === 'google' ? NY_G_ICO : '';
         st.innerHTML = '<div class="ny_rv-num">' + ico + '<span></span></div><span class="ny_rv-src"></span>';
         $('.ny_rv-num span', st).textContent = r.value; $('.ny_rv-src', st).textContent = r.label;
         b.appendChild(st);
