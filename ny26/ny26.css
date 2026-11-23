@@ -695,3 +695,8 @@ html[data-ny-theme] .ny_rv .bf_tcard-src{display:none}
   .ny_rv .bf_ttrack{gap:12px;column-gap:12px}
   html[data-ny-theme] .ny_rv .bf_tcard{flex-basis:78%;width:78%;min-height:0}}
 html[data-ny-theme] .ny_rv .ny_stars{color:#feb634}
+
+/* сніг у hero (initSnow, лише десктоп): шар над фоном, під текстом і квізом; знизу тане разом із фоном */
+.ny_snow{position:absolute;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;
+  -webkit-mask-image:linear-gradient(#000 0,#000 65%,transparent 92%);mask-image:linear-gradient(#000 0,#000 65%,transparent 92%)}
+@media (max-width:991px),(prefers-reduced-motion:reduce){.ny_snow{display:none}}
