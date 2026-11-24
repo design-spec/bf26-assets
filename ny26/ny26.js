@@ -1075,6 +1075,7 @@
 
   // компактний вибір мови в шапці зліва від CTA. Список — CFG.langs [код, підпис, назва];
   // мова без готової сторінки (немає в CFG.langsLive) показується неактивною з підказкою «Незабаром»
+  var LANG_PATHS = Object.assign({ he: '/he/self-winter' }, CFG.langPaths || {});
   function initLang(bar, cta) {
     var list = CFG.langs || [], live = CFG.langsLive || [LOCALE];
     if (list.length < 2 || $('.bf_lang', bar)) return;
@@ -1090,7 +1091,9 @@
       a.className = 'bf_lang-item' + (l[0] === LOCALE ? ' is-current' : '');
       a.setAttribute('lang', l[0]); a.textContent = l[2];
       if (l[0] === LOCALE) a.setAttribute('aria-current', 'true');
-      if (on) a.href = location.pathname.replace(/^\/[a-z]{2}(?=\/)/, '/' + l[0]) + location.search;
+      // адреса мовної сторінки — з таблиці (he — лише зимова /he/self-winter), а не заміною коду мови в поточному шляху:
+      // інакше з /uk/self-new-year → /he/self-new-year (404), з /he/self-winter → /pl/self-winter (404). Поточна мова — та сама сторінка.
+      if (on) a.href = (l[0] === LOCALE ? location.pathname : (LANG_PATHS[l[0]] || '/' + l[0] + '/self-new-year')) + location.search;
       else { a.setAttribute('aria-disabled', 'true'); a.title = T.langSoon || 'Незабаром'; a.className += ' is-soon'; }
       a.addEventListener('click', function (e) { if (!on) return e.preventDefault(); track('ny_lang_click', { to: l[0] }); });
       li.appendChild(a); menu.appendChild(li);
