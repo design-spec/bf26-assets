@@ -656,6 +656,10 @@ section:has(.ny_plans){overflow-x:clip}
   .ny_plan.is-best{--ny-snow-h:140px}
   .ny_plan.is-best::after{top:20px;right:8px}
   .ny_plan.is-best .ny_plan-top{padding-right:calc(var(--ny-snow-w) + 4px)}}
+/* RTL (he): картка «Краща ціна» стоїть ліворуч — сніговик визирає з лівого (зовнішнього) краю, дзеркально */
+html[dir="rtl"] .ny_plan.is-best::after{right:auto;left:calc(var(--ny-snow-w) * -.89);transform:scaleX(-1)}
+@media (max-width:991px){html[dir="rtl"] .ny_plan.is-best::after{left:8px;right:auto}
+  html[dir="rtl"] .ny_plan.is-best .ny_plan-top{padding-right:0;padding-left:calc(var(--ny-snow-w) + 4px)}}
 /* <768 — сніговика немає; новорічна шапочка — на картці «Місячна підписка» (data-ny-months="1"), на правому верхньому куті:
    лівий кінець хутряного краю лежить на верхньому краї картки, правий — на правому боці.
    Шапочка — Webflow-асет 1156×1360, видима частина x 342–1146, y 44–927 (804×883): фон 143.78%, зсув 97.16% / 9.22%.
