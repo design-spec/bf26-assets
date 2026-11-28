@@ -673,6 +673,9 @@ html[dir="rtl"] .ny_plan.is-best::after{right:auto;left:calc(var(--ny-snow-w) * 
     background:url("https://cdn.prod.website-files.com/64997bee22af293e5156648a/6b045b74a4b5616fd73a371a_bc850cfa-ae27-4e77-a5c3-b8b8e63cb232.avif") 97.16% 9.22%/143.78% auto no-repeat;
     filter:drop-shadow(0 8px 12px rgba(22,3,48,.18))}
   .ny_plan[data-ny-months="1"] .ny_plan-title{padding-right:calc(var(--ny-hat-w) * .55)}}
+/* he (RTL, Ізраїль, 28.11): без сніговика і новорічної шапочки на картках цін */
+html[dir="rtl"] .ny_plan.is-best::after,html[dir="rtl"] .ny_plan[data-ny-months="1"]::after{content:none}
+html[dir="rtl"] .ny_plan.is-best .ny_plan-top,html[dir="rtl"] .ny_plan[data-ny-months="1"] .ny_plan-title{padding-left:0;padding-right:0}
 @media (max-width:1199px){.ny_plan-num{font-size:46px}.ny_plan{padding:28px 22px 20px}}
 @media (max-width:991px){.ny_plans{grid-template-columns:repeat(2,minmax(0,1fr))}}
 /* мобільний: одна колонка, довші пакети вище (як на allright.com), кнопка — одразу помаранчева в першій картці */
